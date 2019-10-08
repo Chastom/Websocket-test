@@ -15,7 +15,36 @@
         $('#selections').append('<li>' + selectionText + '</li');
     }
 
+    connection.clientMethods["pingAttack"] = (socketId, row, col) => {
+        var attackText = socketId + ' attacked: [' + row + ' ' + col + ']';
+        $('#attacks').append('<li>' + attackText + '</li');
+        console.log(attackText);
+        if (socketId != connection.connectionId) {
+            var cell = document.getElementById('grid1').rows[row].cells[col];
+            cell.style.backgroundColor = '#66a3ff';
+        }        
+    }
+
     connection.start();
+
+    $('#grid1').click(function (event) {
+        var target = $(event.target);
+        $td = target.closest('td');
+        $td.attr("bgcolor", "dimgrey");
+        //$td.html('X');
+        //paspausto langelio koordintes
+        var col = $td.index();
+        var row = $td.closest('tr').index();
+    });
+
+    $('#grid2').click(function (event) {
+        var target = $(event.target);
+        $td = target.closest('td');
+        $td.attr("bgcolor", "#ff6666");
+        var col = $td.index();
+        var row = $td.closest('tr').index();
+        connection.invoke("SendAttack", connection.connectionId, row.toString(), col.toString());
+    });
 
     var $selectioncontent = $('#selection-content');
     $selectioncontent.keyup(function (e) {

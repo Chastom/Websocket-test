@@ -9,6 +9,25 @@ body {
     margin-top: 20px;
 }
 
+.table td {   
+    height:35px;
+    border:2px solid #999999;
+}
+
+.table td:hover {
+    
+    color: #000000;
+    cursor: pointer;
+}
+
+#grid1 td:hover {
+    background-color: dimgrey;
+}
+
+#grid2 td:hover {
+    background-color: #ff6666;
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

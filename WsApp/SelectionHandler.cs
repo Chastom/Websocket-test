@@ -13,5 +13,10 @@ namespace WsApp
         {
             await InvokeClientMethodToAllAsync("pingSelection", socketId, selection);
         }
+
+        public async Task SendAttack(string socketId, string row, string col)
+        {
+            await InvokeClientMethodToAllAsync("pingAttack", socketId, row, col);
+        }
     }
 }
