@@ -3,7 +3,11 @@
     connection.enableLogging = true;
 
     connection.connectionMethods.onConnected = () => {
-
+       
+            var empt = "";
+            connection.invoke("AddPlayer", connection.connectionId, empt)
+        
+        
     }
 
     connection.connectionMethods.onDisconnected = () => {
@@ -14,7 +18,23 @@
         var selectionText = socketId + ' selected: ' + selection;
         $('#selections').append('<li>' + selectionText + '</li');
     }
-
+    connection.clientMethods["pingCreatedPlayer"] = (socketId) => {
+        var selectionText = socketId + ' CREATED! ';
+        $('#selections').append('<li>' + selectionText + '</li');
+    }
+    connection.clientMethods["pingFullArena"] = (socketId) => {
+        var selectionText = socketId + ' NEPRIDETA ARBA PILNA! ';
+        $('#selections').append('<li>' + selectionText + '</li');
+    }
+    connection.clientMethods["pingSelectedShipType"] = (socketId, selection) => {
+        var selectionText = socketId + ' selected: ' + selection;
+        $('#selections').append('<li>' + selectionText + '</li');
+    }
+    connection.clientMethods["AddInformation"] = (socketId, selection) => {
+        var selectionText = socketId + ' pridetas ';
+        $('#selections').append('<li>' + selectionText + '</li');
+    }
+    
     connection.clientMethods["pingAttack"] = (socketId, row, col) => {
         var attackText = socketId + ' attacked: [' + row + ' ' + col + ']';
         $('#attacks').append('<li>' + attackText + '</li');
@@ -26,7 +46,9 @@
     }
 
     connection.start();
-
+    $("#Kukuruznik").click(function (event) {
+        connection.invoke("SelectShipType", connection.connectionId, "Kukurunzik")
+    });
     $('#grid1').click(function (event) {
         var target = $(event.target);
         $td = target.closest('td');
@@ -35,6 +57,7 @@
         //paspausto langelio koordintes
         var col = $td.index();
         var row = $td.closest('tr').index();
+        connection.invoke("MetodasKurisPadedaLaiva", connection.connectionId, row.toString(), col.toString())
     });
 
     $('#grid2').click(function (event) {

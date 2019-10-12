@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebSocketManager;
@@ -33,6 +34,9 @@ namespace WsApp
 
             services.AddWebSocketManager();
             services.AddMvc();
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=BattleXDB;Trusted_Connection=True;ConnectRetryCount=0;MultipleActiveResultSets=true";
+            services.AddDbContext<Models.Context>
+                (options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,8 +3,10 @@
 }
 
 <div class="container top-space">
+    
     <div class="col-xs-6">
         My fleet:
+        
         <table id="grid1" class="table table-bordered" style="background-color:#e6f9ff">
             <tbody>
                 @for (int i = 0; i < 15; i++)
@@ -19,6 +21,7 @@
             </tbody>
         </table>
     </div>
+
     <div class="col-xs-6">
         Enemy fleet:
         <table id="grid2" class="table table-bordered" style="background-color:lightgrey">
@@ -47,7 +50,11 @@
         </div>
     </div>
 </div>
-
+<div class="" style="align-self:start">
+    <button type="button" id="Kukuruznik" class="btn btn-secondary" data-toggle="button" aria-pressed="false" autocomplete="off">
+        Kukuruznik
+    </button>
+</div>
 
 @section Scripts{
     <script data-main="scripts/main" src="https://rawgit.com/radu-matei/websocket-manager/master/src/WebSocketManager.Client.TS/dist/WebSocketManager.js"></script>
