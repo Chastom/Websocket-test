@@ -15,6 +15,8 @@ namespace WsApp
 {
     public class Program
     {
+        public static Context _context;
+
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
@@ -24,10 +26,11 @@ namespace WsApp
                 var services = scope.ServiceProvider;
 
                 try
-                {
-                    var context = services.GetRequiredService<Context>();
+                {                
+                    var context = services.GetRequiredService<Context>();                    
                     context.Database.Migrate();
                     SeedData.Initialize(services);
+                    _context = context;
                 }
                 catch (Exception ex)
                 {

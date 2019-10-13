@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebSocketManager;
 
 namespace WsApp
 {
@@ -32,15 +31,15 @@ namespace WsApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddWebSocketManager();
             services.AddMvc();
+            services.AddSignalR();
             var connection = @"Server=(localdb)\mssqllocaldb;Database=BattleXDB;Trusted_Connection=True;ConnectRetryCount=0;MultipleActiveResultSets=true";
             services.AddDbContext<Models.Context>
                 (options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -51,11 +50,12 @@ namespace WsApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseWebSockets();
-            app.MapWebSocketManager("/Play", serviceProvider.GetService<SelectionHandler>());
 
             app.UseStaticFiles();
-            //app.UseCookiePolicy();
+            app.UseSignalR(config =>
+            {
+                config.MapHub<SelectionHandler>("/Play");
+            });
 
             app.UseMvc(routes =>
             {

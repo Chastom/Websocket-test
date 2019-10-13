@@ -11,7 +11,7 @@ namespace WsApp.Controllers
 {
     public class PlayersController : Controller
     {
-        private static Context _context;
+        private Context _context;
 
         public PlayersController(Context context)
         {
@@ -38,17 +38,18 @@ namespace WsApp.Controllers
         // POST: Players/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool CreatePlayer(string socketId)
+        public bool CreatePlayer(string socketId, string selection)
         {
             if (SearchPlayerBySocketId(socketId)==false)
             {
                 Player tempPlayer = new Player();
-                tempPlayer.Username = socketId;
+                tempPlayer.Username = socketId + " + " + selection;
                 _context.Players.Add(tempPlayer);
+                _context.SaveChanges();
             }
             return true;
         }
-        public  bool SearchPlayerBySocketId( string socketId)
+        public bool SearchPlayerBySocketId( string socketId)
         {
             List<Player> play = _context.Players.Where(s => s.Username.Contains(socketId)).ToList();
             if (play.Count==0)
