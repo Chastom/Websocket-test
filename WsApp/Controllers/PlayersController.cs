@@ -38,16 +38,27 @@ namespace WsApp.Controllers
         // POST: Players/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool CreatePlayer(string socketId, string selection)
+        public bool CreatePlayer(string socketId)
         {
             if (SearchPlayerBySocketId(socketId)==false)
             {
                 Player tempPlayer = new Player();
-                tempPlayer.Username = socketId + " + " + selection;
+                tempPlayer.Username = socketId;
                 _context.Players.Add(tempPlayer);
                 _context.SaveChanges();
             }
             return true;
+        }
+
+        public int GetPlayerId(string socketId)
+        {
+            int id = -1;
+            List<Player> player = _context.Players.Where(s => s.Username.Contains(socketId)).ToList();
+            if (player.Count > 0)
+            {
+                id = player[0].PlayerId;
+            }            
+            return id;
         }
         public bool SearchPlayerBySocketId( string socketId)
         {
