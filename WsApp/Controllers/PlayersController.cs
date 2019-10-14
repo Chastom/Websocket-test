@@ -50,7 +50,12 @@ namespace WsApp.Controllers
             }
             return GetPlayerId(socketId);
         }
-
+         public bool AddPlayerID(int createdId, int CreatedBAId)
+        {
+            _context.Players.Where(s => s.PlayerId == createdId).FirstOrDefault().BattleArenaId = CreatedBAId;
+            _context.SaveChanges();
+            return true;
+        }
         public int GetPlayerId(string socketId)
         {
             int id = -1;

@@ -58,6 +58,7 @@ namespace WsApp
             Console.WriteLine("PLAYER ID"+createdId);
             int CreatedBAId = baController.CreateBA(createdId);
             Console.WriteLine("BA ID" + CreatedBAId);
+            bool editedBAId= playersController.AddPlayerID(createdId, CreatedBAId);
             int boardId = boardsController.CreateBoard(CreatedBAId);
             Console.WriteLine("BOARD ID" + boardId);
             bool edited = baController.AddBoardID(CreatedBAId, boardId);
