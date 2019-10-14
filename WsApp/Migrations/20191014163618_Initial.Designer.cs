@@ -10,7 +10,7 @@ using WsApp.Models;
 namespace WsApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191010075920_Initial")]
+    [Migration("20191014163618_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,9 @@ namespace WsApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PlayerArenaId");
+                    b.Property<int>("BoardId");
 
-                    b.Property<int>("PlayersList");
+                    b.Property<int>("PlayerId");
 
                     b.HasKey("BattleArenaId");
 
@@ -41,6 +41,8 @@ namespace WsApp.Migrations
                     b.Property<int>("BoardId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BattleArenaId");
 
                     b.HasKey("BoardId");
 
@@ -93,9 +95,9 @@ namespace WsApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("PlayerArenaId");
+                    b.Property<int>("BattleArenaId");
 
-                    b.Property<int>("PlayereArenaId");
+                    b.Property<string>("Socket");
 
                     b.Property<DateTime>("Timer");
 
@@ -105,22 +107,7 @@ namespace WsApp.Migrations
 
                     b.HasKey("PlayerId");
 
-                    b.HasIndex("PlayerArenaId");
-
                     b.ToTable("Players");
-                });
-
-            modelBuilder.Entity("WsApp.Models.PlayerArena", b =>
-                {
-                    b.Property<int>("PlayerArenaId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BattleArenaId");
-
-                    b.HasKey("PlayerArenaId");
-
-                    b.ToTable("PlayerArenas");
                 });
 
             modelBuilder.Entity("WsApp.Models.Ship", b =>
@@ -165,13 +152,6 @@ namespace WsApp.Migrations
                         .WithMany("Cells")
                         .HasForeignKey("BoardId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WsApp.Models.Player", b =>
-                {
-                    b.HasOne("WsApp.Models.PlayerArena")
-                        .WithMany("Players")
-                        .HasForeignKey("PlayerArenaId");
                 });
 #pragma warning restore 612, 618
         }

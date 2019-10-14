@@ -38,22 +38,23 @@ namespace WsApp.Controllers
         // POST: Players/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool CreatePlayer(string socketId)
+        public int CreatePlayer(string socketId)
         {
             if (SearchPlayerBySocketId(socketId)==false)
             {
                 Player tempPlayer = new Player();
-                tempPlayer.Username = socketId;
+                tempPlayer.Socket = socketId;
+                
                 _context.Players.Add(tempPlayer);
                 _context.SaveChanges();
             }
-            return true;
+            return GetPlayerId(socketId);
         }
 
         public int GetPlayerId(string socketId)
         {
             int id = -1;
-            List<Player> player = _context.Players.Where(s => s.Username.Contains(socketId)).ToList();
+            List<Player> player = _context.Players.Where(s => s.Socket.Contains(socketId)).ToList();
             if (player.Count > 0)
             {
                 id = player[0].PlayerId;
@@ -62,7 +63,7 @@ namespace WsApp.Controllers
         }
         public bool SearchPlayerBySocketId( string socketId)
         {
-            List<Player> play = _context.Players.Where(s => s.Username.Contains(socketId)).ToList();
+            List<Player> play = _context.Players.Where(s => s.Socket.Contains(socketId)).ToList();
             if (play.Count==0)
             {
                 return false;
@@ -72,7 +73,7 @@ namespace WsApp.Controllers
         public async Task<ActionResult> Create(string socketId)
         {
             Player player = new Player();
-            player.Username = socketId;
+            player.Socket = socketId;
 
             if (ModelState.IsValid)
             {

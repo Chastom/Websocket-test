@@ -9,9 +9,10 @@ namespace WsApp.Models
     {
         public int PlayerId { get; set; }
         public string Username { get; set; }
+        public string Socket { get; set; }
         public bool Turn { get; set; }
         public DateTime Timer { get; set; }
 
-        public int PlayereArenaId { get; set; }
+        public int BattleArenaId { get; set; }
     }
 }

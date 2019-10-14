@@ -16,7 +16,7 @@ namespace WsApp.Models
                     DbContextOptions<Context>>()))
             {
 
-                if (context.ShipTypes.Any())
+                if (context.ShipTypes.Any() && context.Coordinatess.Any())
                 {
                     return;   // DB has been seeded
                 }
@@ -61,7 +61,19 @@ namespace WsApp.Models
                         //ShipId = 5
                     }
                 );
-                
+                //Koordinaciu sukurimas
+                for (int x = 0; x < 15; x++)
+                {
+                    for (int y = 0; y < 15; y++)
+                    {
+                        int posx = x + 1;
+                        int posy = y + 1;
+                        context.Coordinatess.Add(new Coordinates { PosX = posx, PosY = posy });
+                        
+                    }
+                    //bbz kodel reik issaugot kas kiekviena eilute kad teisinga tvarka surasytu
+                    context.SaveChanges();
+                }
                 context.SaveChanges();
             }
         

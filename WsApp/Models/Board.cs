@@ -8,6 +8,7 @@ namespace WsApp.Models
     public class Board
     {
         public int BoardId { get; set; }
+        public int BattleArenaId { get; set; }
         public List<Cell> Cells { get; set; }
     }
 }

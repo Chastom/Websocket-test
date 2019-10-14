@@ -14,8 +14,8 @@ namespace WsApp.Migrations
                 {
                     BattleArenaId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PlayersList = table.Column<int>(nullable: false),
-                    PlayerArenaId = table.Column<int>(nullable: false)
+                    PlayerId = table.Column<int>(nullable: false),
+                    BoardId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,7 +27,8 @@ namespace WsApp.Migrations
                 columns: table => new
                 {
                     BoardId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BattleArenaId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,16 +51,20 @@ namespace WsApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlayerArenas",
+                name: "Players",
                 columns: table => new
                 {
-                    PlayerArenaId = table.Column<int>(nullable: false)
+                    PlayerId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Username = table.Column<string>(nullable: true),
+                    Socket = table.Column<string>(nullable: true),
+                    Turn = table.Column<bool>(nullable: false),
+                    Timer = table.Column<DateTime>(nullable: false),
                     BattleArenaId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayerArenas", x => x.PlayerArenaId);
+                    table.PrimaryKey("PK_Players", x => x.PlayerId);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,38 +121,10 @@ namespace WsApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Players",
-                columns: table => new
-                {
-                    PlayerId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Username = table.Column<string>(nullable: true),
-                    Turn = table.Column<bool>(nullable: false),
-                    Timer = table.Column<DateTime>(nullable: false),
-                    PlayereArenaId = table.Column<int>(nullable: false),
-                    PlayerArenaId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Players", x => x.PlayerId);
-                    table.ForeignKey(
-                        name: "FK_Players_PlayerArenas_PlayerArenaId",
-                        column: x => x.PlayerArenaId,
-                        principalTable: "PlayerArenas",
-                        principalColumn: "PlayerArenaId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Cells_BoardId",
                 table: "Cells",
                 column: "BoardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Players_PlayerArenaId",
-                table: "Players",
-                column: "PlayerArenaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -172,9 +149,6 @@ namespace WsApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Boards");
-
-            migrationBuilder.DropTable(
-                name: "PlayerArenas");
         }
     }
 }
