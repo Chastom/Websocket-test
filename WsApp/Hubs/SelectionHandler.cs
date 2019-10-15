@@ -12,14 +12,15 @@ namespace WsApp
         public Context _context;
         private PlayersController playersController;
         private BAController baController;
-        private BoardsController boardsController;
+        private CellsController cellsController;
 
         public SelectionHandler(Context context)
         {
             _context = context;
             playersController = new PlayersController(_context);
             baController = new BAController(_context);
-            boardsController = new BoardsController(_context);
+            cellsController = new CellsController(_context);
+            
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -59,9 +60,8 @@ namespace WsApp
             int CreatedBAId = baController.CreateBA(createdId);
             Console.WriteLine("BA ID" + CreatedBAId);
             bool editedBAId= playersController.AddPlayerID(createdId, CreatedBAId);
-            int boardId = boardsController.CreateBoard(CreatedBAId);
-            Console.WriteLine("BOARD ID" + boardId);
-            bool edited = baController.AddBoardID(CreatedBAId, boardId);
+            bool addedCells = cellsController.CreateCells(CreatedBAId);
+           // bool edited = baController.AddBoardID(CreatedBAId, boardId);
             //edit BA with boardIDs
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
             await base.OnConnectedAsync();

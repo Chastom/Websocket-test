@@ -25,26 +25,11 @@ namespace WsApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BoardId");
-
                     b.Property<int>("PlayerId");
 
                     b.HasKey("BattleArenaId");
 
                     b.ToTable("BattleArenas");
-                });
-
-            modelBuilder.Entity("WsApp.Models.Board", b =>
-                {
-                    b.Property<int>("BoardId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BattleArenaId");
-
-                    b.HasKey("BoardId");
-
-                    b.ToTable("Boards");
                 });
 
             modelBuilder.Entity("WsApp.Models.Cell", b =>
@@ -53,19 +38,21 @@ namespace WsApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BoardId");
-
-                    b.Property<int>("CoordinatesId");
+                    b.Property<int>("BattleArenaId");
 
                     b.Property<bool>("IsArmored");
 
                     b.Property<bool>("IsHit");
 
+                    b.Property<int>("PosX");
+
+                    b.Property<int>("PosY");
+
                     b.Property<int>("ShipId");
 
                     b.HasKey("CellId");
 
-                    b.HasIndex("BoardId");
+                    b.HasIndex("BattleArenaId");
 
                     b.ToTable("Cells");
                 });
@@ -146,9 +133,9 @@ namespace WsApp.Migrations
 
             modelBuilder.Entity("WsApp.Models.Cell", b =>
                 {
-                    b.HasOne("WsApp.Models.Board")
+                    b.HasOne("WsApp.Models.BattleArena")
                         .WithMany("Cells")
-                        .HasForeignKey("BoardId")
+                        .HasForeignKey("BattleArenaId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

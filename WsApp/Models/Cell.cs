@@ -10,9 +10,9 @@ namespace WsApp.Models
         public int CellId { get; set; }
         public bool IsHit { get; set; }
         public bool IsArmored { get; set; }
-
+        public int PosX { get; set; }
+        public int PosY { get; set; }
         public int ShipId { get; set; }
-        public int CoordinatesId { get; set; }
-        public int BoardId { get; set; }
+        public int BattleArenaId { get; set; }
     }
 }

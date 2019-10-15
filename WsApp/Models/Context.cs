@@ -18,7 +18,7 @@ namespace WsApp.Models
         public DbSet<Coordinates> Coordinatess { get; set; }
         public DbSet<Ship> Ships { get; set; }
         public DbSet<ShipType> ShipTypes { get; set; }
-        public DbSet<Board> Boards { get; set; }
+        //public DbSet<Board> Boards { get; set; }
         //public DbSet<PlayerArena> PlayerArenas { get; set; }
     }
 }

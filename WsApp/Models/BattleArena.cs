@@ -10,7 +10,7 @@ namespace WsApp.Models
         public int BattleArenaId { get; set; }
 
         public int PlayerId { get; set; }
-        public int BoardId { get; set; }
+        public ICollection<Cell> Cells { get; set; }
 
     }
 }

@@ -14,25 +14,11 @@ namespace WsApp.Migrations
                 {
                     BattleArenaId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PlayerId = table.Column<int>(nullable: false),
-                    BoardId = table.Column<int>(nullable: false)
+                    PlayerId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BattleArenas", x => x.BattleArenaId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Boards",
-                columns: table => new
-                {
-                    BoardId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BattleArenaId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Boards", x => x.BoardId);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,32 +92,30 @@ namespace WsApp.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     IsHit = table.Column<bool>(nullable: false),
                     IsArmored = table.Column<bool>(nullable: false),
+                    PosX = table.Column<int>(nullable: false),
+                    PosY = table.Column<int>(nullable: false),
                     ShipId = table.Column<int>(nullable: false),
-                    CoordinatesId = table.Column<int>(nullable: false),
-                    BoardId = table.Column<int>(nullable: false)
+                    BattleArenaId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cells", x => x.CellId);
                     table.ForeignKey(
-                        name: "FK_Cells_Boards_BoardId",
-                        column: x => x.BoardId,
-                        principalTable: "Boards",
-                        principalColumn: "BoardId",
+                        name: "FK_Cells_BattleArenas_BattleArenaId",
+                        column: x => x.BattleArenaId,
+                        principalTable: "BattleArenas",
+                        principalColumn: "BattleArenaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cells_BoardId",
+                name: "IX_Cells_BattleArenaId",
                 table: "Cells",
-                column: "BoardId");
+                column: "BattleArenaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "BattleArenas");
-
             migrationBuilder.DropTable(
                 name: "Cells");
 
@@ -148,7 +132,7 @@ namespace WsApp.Migrations
                 name: "ShipTypes");
 
             migrationBuilder.DropTable(
-                name: "Boards");
+                name: "BattleArenas");
         }
     }
 }

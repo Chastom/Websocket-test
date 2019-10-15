@@ -8,55 +8,53 @@ using WsApp.Models;
 
 namespace WsApp.Controllers
 {
-    public class BoardsController : Controller
+    public class CellsController : Controller
     {
         private Context _context;
 
-        public BoardsController(Context context)
+        public CellsController(Context context)
         {
             _context = context;
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]//ba ateina bet neveikia
-        public int CreateBoard(int battleArenaId)
-        {
-            Console.WriteLine("Ateina BA ID " + battleArenaId);
-            Board tempBoard = new Board();
-            tempBoard.BattleArenaId = battleArenaId;
-            _context.Boards.Add(tempBoard);
-            _context.SaveChanges();
-
-            return GetBoardId(battleArenaId);
-        }
-        public int GetBoardId(int battleArenaId)
-        {
-            int id = -1;
-            List<Board> board = _context.Boards.Where(s => s.BattleArenaId == battleArenaId).ToList();
-            if (board.Count > 0)
-            {
-                id = board[0].BoardId;
-            }
-            return id;
-        }
-        // GET: Boards
+        // GET: Cells
         public ActionResult Index()
         {
             return View();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public bool CreateCells(int battleArenaId)
+        {
+            for (int x = 0; x < 15; x++)
+            {
+                for (int y = 0; y < 15; y++)
+                {
+                    Cell tempCell = new Cell();
+                    tempCell.BattleArenaId = battleArenaId;
+                    tempCell.PosX = x;
+                    tempCell.PosY = y;
+                    _context.Cells.Add(tempCell);
+                }
+                _context.SaveChanges();
+            }
+            
+            _context.SaveChanges();
 
-        // GET: Boards/Details/5
+            return true;
+        }
+        // GET: Cells/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Boards/Create
+        // GET: Cells/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Boards/Create
+        // POST: Cells/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -73,13 +71,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Boards/Edit/5
+        // GET: Cells/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Boards/Edit/5
+        // POST: Cells/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -96,13 +94,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Boards/Delete/5
+        // GET: Cells/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Boards/Delete/5
+        // POST: Cells/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

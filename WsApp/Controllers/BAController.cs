@@ -55,14 +55,14 @@ namespace WsApp.Controllers
             }
             return id;
         }
-        public bool AddBoardID(int baId, int boardId)
-        {
-            _context.BattleArenas.Where(s => s.BattleArenaId == baId).FirstOrDefault().BoardId = boardId;
-            _context.SaveChanges();
+        //public bool AddBoardID(int baId, int boardId)
+        //{
+        //    _context.BattleArenas.Where(s => s.BattleArenaId == baId).FirstOrDefault().BoardId = boardId;
+        //    _context.SaveChanges();
            
-            return true;
+        //    return true;
 
-        }
+        //}
         // POST: BA/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
