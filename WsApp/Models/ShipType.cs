@@ -10,6 +10,7 @@ namespace WsApp.Models
         public int ShipTypeId { get; set; }
         public string Type { get; set; }
         public int Size { get; set; }
+        public int Count { get; set; }
 
         public int ShipId { get; set; }
     }

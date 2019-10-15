@@ -22,21 +22,6 @@ namespace WsApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Coordinatess",
-                columns: table => new
-                {
-                    CoordinatesId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PosX = table.Column<int>(nullable: false),
-                    PosY = table.Column<int>(nullable: false),
-                    CellId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Coordinatess", x => x.CoordinatesId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Players",
                 columns: table => new
                 {
@@ -77,6 +62,7 @@ namespace WsApp.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Type = table.Column<string>(nullable: true),
                     Size = table.Column<int>(nullable: false),
+                    Count = table.Column<int>(nullable: false),
                     ShipId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -118,9 +104,6 @@ namespace WsApp.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Cells");
-
-            migrationBuilder.DropTable(
-                name: "Coordinatess");
 
             migrationBuilder.DropTable(
                 name: "Players");

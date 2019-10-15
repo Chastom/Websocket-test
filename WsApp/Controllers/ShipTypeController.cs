@@ -17,7 +17,28 @@ namespace WsApp.Controllers
         {
             _context = context;
         }
+        public int GetCount(string type)
+        {
+            int id = -1;
+            List<ShipType> shipTypes = _context.ShipTypes.Where(s => s.Type.Contains(type)).ToList();
+            if (shipTypes.Count > 0)
+            {
+                id = shipTypes[0].Count;
+            }
 
+            return id;
+        }
+        public int GetSize (string type)
+        {
+            int id = -1;
+            List<ShipType> shipTypes = _context.ShipTypes.Where(s => s.Type.Contains(type)).ToList();
+            if (shipTypes.Count > 0)
+            {
+                id = shipTypes[0].Size;
+            }
+
+            return id;
+        }
         // GET: ShipType
         public async Task<IActionResult> Index()
         {

@@ -4,58 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WsApp.Models;
 
 namespace WsApp.Controllers
 {
-    public class CellsController : Controller
+    public class ShipsController : Controller
     {
-        private Context _context;
-
-        public CellsController(Context context)
-        {
-            _context = context;
-        }
-        // GET: Cells
+        // GET: Ships
         public ActionResult Index()
         {
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public bool CreateCells(int battleArenaId)
-        {
-            for (int x = 0; x < 15; x++)
-            {
-                for (int y = 0; y < 15; y++)
-                {
-                    Cell tempCell = new Cell();
-                    
-                    tempCell.BattleArenaId = battleArenaId;
-                    tempCell.PosX = x;
-                    tempCell.PosY = y;
-                    _context.Cells.Add(tempCell);
-                }
-                _context.SaveChanges();
-            }
-            
-            _context.SaveChanges();
 
-            return true;
-        }
-        // GET: Cells/Details/5
+        // GET: Ships/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Cells/Create
+        // GET: Ships/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Cells/Create
+        // POST: Ships/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -72,13 +44,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Cells/Edit/5
+        // GET: Ships/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Cells/Edit/5
+        // POST: Ships/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -95,13 +67,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Cells/Delete/5
+        // GET: Ships/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Cells/Delete/5
+        // POST: Ships/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

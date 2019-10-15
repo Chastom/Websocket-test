@@ -2,7 +2,13 @@
     var connection = new signalR.HubConnectionBuilder()
         .withUrl("http://localhost:5000/Play")
         .build();    
-
+    var BombardierCount = 0;
+    var CruiserCount = 0;
+    var SubmarinCount = 0;
+    var KukuruznikCount = 0;
+    var SchnicelCount = 0;
+    var selectedShipType = null;
+    var selectedSize = 0;
     connection.on("UserConnected", function (socketId) {
         var selectionText = 'New user connected with id: [' + socketId + ']';
         $('#selections').append('<li>' + selectionText + '</li');
@@ -19,18 +25,34 @@
         var messageText = 'id [' + userId + ']: ' + message;
         $('#selections').append('<li>' + messageText + '</li');
     });
+    //meta errora kazkoki bet lyg pazymi (kazkas su anonymous susije)
+    connection.on("pingSelectedShipType", function (socketId, selection, size) {
+        var selectionText = socketId + ' Selected ' + '  ' + selection;
+        $('#test').append('<li>' + selectionText + '</li');
+        selectedShipType = selection;
+        selectedSize = size;
+        console.log("pasirinko " + selected + "KurioDydis " + selectedSize);
+        
+    });
 
-    connection.on("pingDisableType", function (socketId, buttonId) {
+    connection.on("pingDisableType", function (socketId, selection, size) {
         //ideally (in a perfect world) reiktu naudot Groups. . .
         //https://www.youtube.com/watch?v=Kl3H4vMqYNo
+        var selectionText = socketId + ' Selected ' + '  ' + selection;
+        $('#test').append('<li>' + selectionText + '</li');
+        selectedShipType = selection;
+        selectedSize = size;
+        console.log("pasirinko " + selectedShipType + "KurioDydis " + selectedSize);
         connection.invoke('getConnectionId')
             .then(function (connectionId) {
-                console.log("disable: " + buttonId);
+                console.log("disable: " + selection);
+                
                 if (socketId == connectionId) { //jei daug kur reiks might as well i sesija isimest ta id
                     //jeigu disablint:
                     //document.getElementById(buttonId).disabled = true;
                     //jeigu nematomu padaryt, kad isvis neliktu
-                    document.getElementById(buttonId).style.display = "none";
+                    
+                    document.getElementById(selection).style.display = "none";
                 }                
             }).catch(err => console.error(err.toString()));;        
     });
@@ -53,20 +75,28 @@
 
 
     //dinamiskai reiktu padaryt kad visu onclick toks pat tik i invoke argumentus paduoda id tarkim kaip type
-    document.getElementById('typeA').onclick = function () {
-        connection.invoke("SelectShipType", "typeA");
+    //$("#typeE").click(function (event) {
+    //    connection.invoke("SelectShipType", "typeE")
+    //});
+    document.getElementById('Bombardier').onclick = function () {
+        BombardierCount++;
+        connection.invoke("SelectShipType", "Bombardier", BombardierCount);
     };
-    document.getElementById('typeB').onclick = function () {
-        connection.invoke("SelectShipType", "typeB");
+    document.getElementById('Cruiser').onclick = function () {
+        CruiserCount++;
+        connection.invoke("SelectShipType", "Cruiser", CruiserCount);
     };
-    document.getElementById('typeC').onclick = function () {
-        connection.invoke("SelectShipType", "typeC");
+    document.getElementById('Submarin').onclick = function () {
+        SubmarinCount++;
+        connection.invoke("SelectShipType", "Submarin", SubmarinCount);
     };
-    document.getElementById('typeD').onclick = function () {
-        connection.invoke("SelectShipType", "typeD");
+    document.getElementById('Kukuruznik').onclick = function () {
+        KukuruznikCount++;
+        connection.invoke("SelectShipType", "Kukuruznik", KukuruznikCount);
     };
-    document.getElementById('typeE').onclick = function () {
-        connection.invoke("SelectShipType", "typeE");
+    document.getElementById('Schnicel').onclick = function () {
+        SchnicelCount++;
+        connection.invoke("SelectShipType", "Schnicel", SchnicelCount);
     };
 
 

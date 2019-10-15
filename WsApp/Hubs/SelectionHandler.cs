@@ -13,13 +13,14 @@ namespace WsApp
         private PlayersController playersController;
         private BAController baController;
         private CellsController cellsController;
-
+        private ShipTypeController shipTypeController;
         public SelectionHandler(Context context)
         {
             _context = context;
             playersController = new PlayersController(_context);
             baController = new BAController(_context);
             cellsController = new CellsController(_context);
+            shipTypeController = new ShipTypeController(_context);
             
         }
 
@@ -28,11 +29,22 @@ namespace WsApp
             await Clients.All.SendAsync("AddInformation", socketId, selection);
         }
 
-        public Task SelectShipType(string type)
+        public async Task SelectShipType(string type, int count)
+
         {
             var socketId = Context.ConnectionId;
+            Console.WriteLine("ATEINA TYPE " +type);
+            int shipCount = shipTypeController.GetCount(type);
+            int sizeCount = shipTypeController.GetSize(type);
+            Console.WriteLine("Skaicius " + shipCount + " " + count);
+            if (shipCount == count)
+            {
+                await Clients.All.SendAsync("pingDisableType", socketId, type, sizeCount);
+            }
+            else
+                await Clients.All.SendAsync("pingSelectedShipType", socketId, type, sizeCount);
             //patikrint kelinta sito konkretaus type laiva jau deda, jei paskutinis tai disablint buttona
-            return Clients.All.SendAsync("pingDisableType", socketId, type);
+
         }
         public async Task MetodasKurisPadedaLaiva(string socketId, string row, string col)
         {

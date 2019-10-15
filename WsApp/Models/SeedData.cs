@@ -16,7 +16,7 @@ namespace WsApp.Models
                     DbContextOptions<Context>>()))
             {
 
-                if (context.ShipTypes.Any() && context.Coordinatess.Any())
+                if (context.ShipTypes.Any())
                 {
                     return;   // DB has been seeded
                 }
@@ -25,7 +25,8 @@ namespace WsApp.Models
                     {
                         //ShipTypeId = 1,
                         Type = "Bombardier",
-                        Size = 8
+                        Size = 8,
+                        Count = 1
                         //ShipId=1
                     },
 
@@ -33,7 +34,8 @@ namespace WsApp.Models
                     {
                        // ShipTypeId = 2,
                         Type = "Cruiser",
-                        Size = 4
+                        Size = 4,
+                        Count = 2
                        // ShipId = 2
 
                     },
@@ -43,6 +45,7 @@ namespace WsApp.Models
                         //ShipTypeId = 3,
                         Type = "Submarin",
                         Size = 3,
+                        Count = 1
                         //ShipId = 3
                     },
 
@@ -50,30 +53,32 @@ namespace WsApp.Models
                     {
                         //ShipTypeId = 4,
                         Type = "Kukuruznik",
-                        Size = 2
+                        Size = 2,
+                        Count = 2
                         //ShipId = 4
                     },
                     new ShipType
                     {
                         //ShipTypeId = 5,
                         Type = "Schnicel",
-                        Size = 1
+                        Size = 1,
+                        Count = 5
                         //ShipId = 5
                     }
                 );
-                //Koordinaciu sukurimas
-                for (int x = 0; x < 15; x++)
-                {
-                    for (int y = 0; y < 15; y++)
-                    {
-                        int posx = x + 1;
-                        int posy = y + 1;
-                        context.Coordinatess.Add(new Coordinates { PosX = posx, PosY = posy });
+                ////Koordinaciu sukurimas
+                //for (int x = 0; x < 15; x++)
+                //{
+                //    for (int y = 0; y < 15; y++)
+                //    {
+                //        int posx = x + 1;
+                //        int posy = y + 1;
+                //        context.Coordinatess.Add(new Coordinates { PosX = posx, PosY = posy });
                         
-                    }
-                    //bbz kodel reik issaugot kas kiekviena eilute kad teisinga tvarka surasytu
-                    context.SaveChanges();
-                }
+                //    }
+                //    //bbz kodel reik issaugot kas kiekviena eilute kad teisinga tvarka surasytu
+                //    context.SaveChanges();
+                //}
                 context.SaveChanges();
             }
         

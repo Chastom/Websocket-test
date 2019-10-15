@@ -57,23 +57,6 @@ namespace WsApp.Migrations
                     b.ToTable("Cells");
                 });
 
-            modelBuilder.Entity("WsApp.Models.Coordinates", b =>
-                {
-                    b.Property<int>("CoordinatesId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CellId");
-
-                    b.Property<int>("PosX");
-
-                    b.Property<int>("PosY");
-
-                    b.HasKey("CoordinatesId");
-
-                    b.ToTable("Coordinatess");
-                });
-
             modelBuilder.Entity("WsApp.Models.Player", b =>
                 {
                     b.Property<int>("PlayerId")
@@ -119,6 +102,8 @@ namespace WsApp.Migrations
                     b.Property<int>("ShipTypeId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count");
 
                     b.Property<int>("ShipId");
 
