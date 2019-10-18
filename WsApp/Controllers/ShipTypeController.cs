@@ -28,6 +28,16 @@ namespace WsApp.Controllers
 
             return id;
         }
+        public int GetId(string type)
+        {
+            int id = -99;
+            List<ShipType> shipTypes = _context.ShipTypes.Where(s => s.Type.Contains(type)).ToList();
+            if (shipTypes.Count > 0)
+            {
+                id = shipTypes[0].ShipTypeId;
+            }
+            return id;
+        }
         public int GetSize (string type)
         {
             int id = -1;

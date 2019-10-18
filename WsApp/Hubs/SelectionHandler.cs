@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WsApp.Controllers;
 using WsApp.Models;
@@ -14,6 +15,9 @@ namespace WsApp
         private BAController baController;
         private CellsController cellsController;
         private ShipTypeController shipTypeController;
+        private ShipsController shipsController;
+        private DualsController dualsController;
+
         public SelectionHandler(Context context)
         {
             _context = context;
@@ -21,6 +25,8 @@ namespace WsApp
             baController = new BAController(_context);
             cellsController = new CellsController(_context);
             shipTypeController = new ShipTypeController(_context);
+            shipsController = new ShipsController(_context);
+            dualsController = new DualsController(_context);
             
         }
 
@@ -33,10 +39,10 @@ namespace WsApp
 
         {
             var socketId = Context.ConnectionId;
-            Console.WriteLine("ATEINA TYPE " +type);
+            //Console.WriteLine("ATEINA TYPE " +type);
             int shipCount = shipTypeController.GetCount(type);
             int sizeCount = shipTypeController.GetSize(type);
-            Console.WriteLine("Skaicius " + shipCount + " " + count);
+            //Console.WriteLine("Skaicius " + shipCount + " " + count);
             if (shipCount == count)
             {
                 await Clients.All.SendAsync("pingDisableType", socketId, type, sizeCount);
@@ -46,10 +52,41 @@ namespace WsApp
             //patikrint kelinta sito konkretaus type laiva jau deda, jei paskutinis tai disablint buttona
 
         }
-        public async Task MetodasKurisPadedaLaiva(string socketId, string row, string col)
+        public async Task Ready(string socketId)
         {
+            int playerId = playersController.GetPlayerId(socketId);
+            int battleArenaId = baController.GetBAId(playerId);
 
-            await Clients.All.SendAsync("pingSelection", socketId, row, col);
+            int dualCount = dualsController.CountDuals();
+            Console.WriteLine(dualCount);
+            if (dualCount ==0)
+            {
+                dualsController.StartDual(socketId, battleArenaId);
+            }
+            if (dualCount==1)
+            {
+                dualsController.JoinDual(socketId, battleArenaId);
+            }
+            else
+                await Clients.All.SendAsync("FullDual", socketId);
+        }
+        public async Task MetodasKurisPadedaLaiva(string socketId, string row, string col, string shipType)
+        {
+            int posX = Int32.Parse(row);
+            int posY = Int32.Parse(col);
+            int playerId = playersController.GetPlayerId(socketId);
+            Console.WriteLine("Player Socket " + socketId);
+            int battleArenaId = baController.GetBAId(playerId);
+            int cellId = cellsController.ReturnCellId(posX, posY, battleArenaId);
+            if (cellId != 99)
+            {
+                Console.WriteLine("Koordinates " + posX + " " + posY + "Cell ID " + cellId);
+                int shipTypeId = shipTypeController.GetId(shipType);
+                bool isAddedShip = shipsController.AddShip(cellId, shipTypeId, shipType);
+                Console.WriteLine(isAddedShip);
+                await Clients.All.SendAsync("pingSelection", socketId, row, col);
+            }
+            //await Clients.All.SendAsync("pingSelection", socketId, row, col);
         }
         public async Task SendAttack(string socketId, string row, string col)
         {
@@ -68,9 +105,9 @@ namespace WsApp
         {
             var socketId = Context.ConnectionId;
             int createdId = playersController.CreatePlayer(socketId);
-            Console.WriteLine("PLAYER ID"+createdId);
+           // Console.WriteLine("PLAYER ID"+createdId);
             int CreatedBAId = baController.CreateBA(createdId);
-            Console.WriteLine("BA ID" + CreatedBAId);
+           // Console.WriteLine("BA ID" + CreatedBAId);
             bool editedBAId= playersController.AddPlayerID(createdId, CreatedBAId);
             bool addedCells = cellsController.CreateCells(CreatedBAId);
            // bool edited = baController.AddBoardID(CreatedBAId, boardId);

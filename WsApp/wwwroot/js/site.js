@@ -8,10 +8,13 @@
     var KukuruznikCount = 0;
     var SchnicelCount = 0;
     var selectedShipType = null;
-    var selectedSize = 0;
+    var selectedSize = -1;
+    //Laikinai socketID 
+    var SOCKETID = null;
     connection.on("UserConnected", function (socketId) {
         var selectionText = 'New user connected with id: [' + socketId + ']';
         $('#selections').append('<li>' + selectionText + '</li');
+        SOCKETID = socketId;
         console.log("prisijunge");
     });
 
@@ -98,8 +101,29 @@
         SchnicelCount++;
         connection.invoke("SelectShipType", "Schnicel", SchnicelCount);
     };
+    document.getElementById('Ready').onclick = function () {
+        connection.invoke("Ready", SOCKETID);
+    };
+    //nepaduoda socketId
+    $('#grid1').click(function (event) {
+        if (selectedShipType != null && selectedSize != 0) {
+           
+                var target = $(event.target);
+                $td = target.closest('td');
+                $td.attr("bgcolor", "dimgrey");
 
-
+                //$td.html('X');
+                //paspausto langelio koordintes
+                var col = $td.index();
+                var row = $td.closest('tr').index();
+                selectedSize = selectedSize - 1;
+            console.log("Padejo " + selectedShipType + " Laiva ");
+            connection.invoke("MetodasKurisPadedaLaiva", SOCKETID, row.toString(), col.toString(), selectedShipType)
+            
+            
+        }
+        
+    });
     //connection.clientMethods["pingCreatedPlayer"] = (socketId) => {
     //    var selectionText = socketId + ' CREATED! ';
     //    $('#selections').append('<li>' + selectionText + '</li');

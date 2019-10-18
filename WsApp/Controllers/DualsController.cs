@@ -8,44 +8,62 @@ using WsApp.Models;
 
 namespace WsApp.Controllers
 {
-    public class ShipsController : Controller
+    public class DualsController : Controller
     {
         private Context _context;
 
-        public ShipsController(Context context)
+        public DualsController(Context context)
         {
             _context = context;
         }
-        public bool AddShip(int cellId,int shipTypeId, string shipType)
-        {
-            Ship tempShip = new Ship();
-            tempShip.CellId = cellId;
-            tempShip.Name = shipType;
-            tempShip.ShipTypeId = shipTypeId;
-            
-            _context.Ships.Add(tempShip);
-            _context.SaveChanges();
-            return true;
-        }
-        // GET: Ships
+        // GET: Duals
         public ActionResult Index()
         {
             return View();
         }
+        public int CountDuals()
+        {
+            return _context.Duals.Count();
+        }
+        public int DualId()
+        {
+            return _context.Duals.Where(s => s.FirstPlayerSocketId != null).FirstOrDefault().DualId; 
+        }
+        public bool StartDual(string socketId, int baId)
+        {
+            Dual tempDual = new Dual();
+            tempDual.FirstPlayerBAId = baId;
+            tempDual.FirstPlayerSocketId = socketId;
+            _context.Duals.Add(tempDual);
+            _context.SaveChanges();
+            return true;
 
-        // GET: Ships/Details/5
+        }
+        public bool JoinDual(string socketId, int baId)
+        {
+            List<Dual> duals = _context.Duals.Where(s => s.DualId== DualId() && s.SecondPlayerSocketId==null).ToList();
+            if (duals.Count > 0)
+            {
+                _context.Duals.Where(s => s.DualId == DualId()).FirstOrDefault().SecondPlayerSocketId = socketId;
+                _context.Duals.Where(s => s.DualId == DualId()).FirstOrDefault().SecondPlayerBAId = baId;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        // GET: Duals/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Ships/Create
+        // GET: Duals/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Ships/Create
+        // POST: Duals/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -62,13 +80,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Ships/Edit/5
+        // GET: Duals/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Ships/Edit/5
+        // POST: Duals/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -85,13 +103,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Ships/Delete/5
+        // GET: Duals/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Ships/Delete/5
+        // POST: Duals/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

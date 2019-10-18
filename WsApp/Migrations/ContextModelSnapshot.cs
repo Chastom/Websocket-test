@@ -57,6 +57,27 @@ namespace WsApp.Migrations
                     b.ToTable("Cells");
                 });
 
+            modelBuilder.Entity("WsApp.Models.Dual", b =>
+                {
+                    b.Property<int>("DualId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FirstPlayerBAId");
+
+                    b.Property<string>("FirstPlayerSocketId");
+
+                    b.Property<int>("PlayerTurnId");
+
+                    b.Property<int>("SecondPlayerBAId");
+
+                    b.Property<string>("SecondPlayerSocketId");
+
+                    b.HasKey("DualId");
+
+                    b.ToTable("Duals");
+                });
+
             modelBuilder.Entity("WsApp.Models.Player", b =>
                 {
                     b.Property<int>("PlayerId")
