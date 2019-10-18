@@ -57,9 +57,9 @@ namespace WsApp.Migrations
                     b.ToTable("Cells");
                 });
 
-            modelBuilder.Entity("WsApp.Models.Dual", b =>
+            modelBuilder.Entity("WsApp.Models.Duel", b =>
                 {
-                    b.Property<int>("DualId")
+                    b.Property<int>("DuelId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -73,9 +73,9 @@ namespace WsApp.Migrations
 
                     b.Property<string>("SecondPlayerSocketId");
 
-                    b.HasKey("DualId");
+                    b.HasKey("DuelId");
 
-                    b.ToTable("Duals");
+                    b.ToTable("Duels");
                 });
 
             modelBuilder.Entity("WsApp.Models.Player", b =>

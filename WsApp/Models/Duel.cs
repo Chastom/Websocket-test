@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace WsApp.Models
 {
-    public class Dual
+    public class Duel
     {
-        public int DualId { get; set; }
+        public int DuelId { get; set; }
         public int PlayerTurnId { get; set; }
         public int FirstPlayerBAId { get; set; }
         public int SecondPlayerBAId { get; set; }

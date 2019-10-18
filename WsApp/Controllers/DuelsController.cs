@@ -8,62 +8,67 @@ using WsApp.Models;
 
 namespace WsApp.Controllers
 {
-    public class DualsController : Controller
+    public class DuelsController : Controller
     {
         private Context _context;
 
-        public DualsController(Context context)
+        public DuelsController(Context context)
         {
             _context = context;
         }
-        // GET: Duals
+        // GET: Duels
         public ActionResult Index()
         {
             return View();
         }
-        public int CountDuals()
+        public int CountDuels()
         {
-            return _context.Duals.Count();
+            return _context.Duels.Count();
         }
-        public int DualId()
+        public int DuelId()
         {
-            return _context.Duals.Where(s => s.FirstPlayerSocketId != null).FirstOrDefault().DualId; 
+            return _context.Duels.Where(s => s.FirstPlayerSocketId != null).FirstOrDefault().DuelId; 
         }
-        public bool StartDual(string socketId, int baId)
+        public bool StartDuel(string socketId, int baId)
         {
-            Dual tempDual = new Dual();
-            tempDual.FirstPlayerBAId = baId;
-            tempDual.FirstPlayerSocketId = socketId;
-            _context.Duals.Add(tempDual);
+            Duel tempDuel = new Duel();
+            tempDuel.FirstPlayerBAId = baId;
+            tempDuel.FirstPlayerSocketId = socketId;
+            _context.Duels.Add(tempDuel);
             _context.SaveChanges();
             return true;
 
         }
-        public bool JoinDual(string socketId, int baId)
+        public bool JoinDuel(string socketId, int baId)
         {
-            List<Dual> duals = _context.Duals.Where(s => s.DualId== DualId() && s.SecondPlayerSocketId==null).ToList();
-            if (duals.Count > 0)
+            List<Duel> duels = _context.Duels.Where(s => s.DuelId== DuelId() && s.SecondPlayerSocketId==null).ToList();
+            if (duels.Count > 0)
             {
-                _context.Duals.Where(s => s.DualId == DualId()).FirstOrDefault().SecondPlayerSocketId = socketId;
-                _context.Duals.Where(s => s.DualId == DualId()).FirstOrDefault().SecondPlayerBAId = baId;
+                _context.Duels.Where(s => s.DuelId == DuelId()).FirstOrDefault().SecondPlayerSocketId = socketId;
+                _context.Duels.Where(s => s.DuelId == DuelId()).FirstOrDefault().SecondPlayerBAId = baId;
                 _context.SaveChanges();
                 return true;
             }
+            List<Duel> fullduels = _context.Duels.Where(s => s.DuelId == DuelId() && s.SecondPlayerSocketId != null).ToList();
+            if (fullduels.Count >0)
+            {
+                return false;
+            }
             return false;
         }
-        // GET: Duals/Details/5
+        // GET: Duels/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Duals/Create
+        // GET: Duels/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Duals/Create
+        // POST: Duels/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -80,13 +85,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Duals/Edit/5
+        // GET: Duels/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Duals/Edit/5
+        // POST: Duels/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -103,13 +108,13 @@ namespace WsApp.Controllers
             }
         }
 
-        // GET: Duals/Delete/5
+        // GET: Duels/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Duals/Delete/5
+        // POST: Duels/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

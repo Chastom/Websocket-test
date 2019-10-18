@@ -23,7 +23,11 @@
         $('#test').append('<li>' + selectionText + '</li');
         console.log("iskviesta");
     });
-
+    connection.on("PingFullDual", function (socketId) {
+        var selectionText = socketId + ' Unlucky! Arena is full ';
+        $('#test').append('<li>' + selectionText + '</li');
+        console.log("Trecias nereikalingas :)");
+    });
     connection.on("pingMessage", function (userId, message) {
         var messageText = 'id [' + userId + ']: ' + message;
         $('#selections').append('<li>' + messageText + '</li');

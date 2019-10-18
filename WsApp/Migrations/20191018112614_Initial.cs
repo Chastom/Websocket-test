@@ -22,10 +22,10 @@ namespace WsApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Duals",
+                name: "Duels",
                 columns: table => new
                 {
-                    DualId = table.Column<int>(nullable: false)
+                    DuelId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     PlayerTurnId = table.Column<int>(nullable: false),
                     FirstPlayerBAId = table.Column<int>(nullable: false),
@@ -35,7 +35,7 @@ namespace WsApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Duals", x => x.DualId);
+                    table.PrimaryKey("PK_Duels", x => x.DuelId);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,7 +123,7 @@ namespace WsApp.Migrations
                 name: "Cells");
 
             migrationBuilder.DropTable(
-                name: "Duals");
+                name: "Duels");
 
             migrationBuilder.DropTable(
                 name: "Players");

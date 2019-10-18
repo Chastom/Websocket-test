@@ -10,7 +10,7 @@ using WsApp.Models;
 namespace WsApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191018072853_Initial")]
+    [Migration("20191018112614_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,9 +59,9 @@ namespace WsApp.Migrations
                     b.ToTable("Cells");
                 });
 
-            modelBuilder.Entity("WsApp.Models.Dual", b =>
+            modelBuilder.Entity("WsApp.Models.Duel", b =>
                 {
-                    b.Property<int>("DualId")
+                    b.Property<int>("DuelId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -75,9 +75,9 @@ namespace WsApp.Migrations
 
                     b.Property<string>("SecondPlayerSocketId");
 
-                    b.HasKey("DualId");
+                    b.HasKey("DuelId");
 
-                    b.ToTable("Duals");
+                    b.ToTable("Duels");
                 });
 
             modelBuilder.Entity("WsApp.Models.Player", b =>

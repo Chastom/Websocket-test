@@ -16,7 +16,7 @@ namespace WsApp
         private CellsController cellsController;
         private ShipTypeController shipTypeController;
         private ShipsController shipsController;
-        private DualsController dualsController;
+        private DuelsController duelsController;
 
         public SelectionHandler(Context context)
         {
@@ -26,7 +26,7 @@ namespace WsApp
             cellsController = new CellsController(_context);
             shipTypeController = new ShipTypeController(_context);
             shipsController = new ShipsController(_context);
-            dualsController = new DualsController(_context);
+            duelsController = new DuelsController(_context);
             
         }
 
@@ -57,18 +57,24 @@ namespace WsApp
             int playerId = playersController.GetPlayerId(socketId);
             int battleArenaId = baController.GetBAId(playerId);
 
-            int dualCount = dualsController.CountDuals();
+            int dualCount = duelsController.CountDuels();
             Console.WriteLine(dualCount);
             if (dualCount ==0)
             {
-                dualsController.StartDual(socketId, battleArenaId);
+                duelsController.StartDuel(socketId, battleArenaId);
+                //grazinti kazka kas leistu pradeti atakas
             }
             if (dualCount==1)
             {
-                dualsController.JoinDual(socketId, battleArenaId);
+               bool rez = duelsController.JoinDuel(socketId, battleArenaId);
+                if (rez ==false)
+                {
+                    await Clients.All.SendAsync("PingFullDual", socketId);
+                }
+                //irgi grazint kazka 
             }
             else
-                await Clients.All.SendAsync("FullDual", socketId);
+                await Clients.All.SendAsync("PingFullDual", socketId);
         }
         public async Task MetodasKurisPadedaLaiva(string socketId, string row, string col, string shipType)
         {
