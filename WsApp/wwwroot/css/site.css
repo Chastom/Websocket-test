@@ -21,7 +21,7 @@ body {
 }
 
 #grid1 td:hover {
-    background-color: dimgrey;
+    background-color: dimgrey !important;
 }
 
 #grid2 td:hover {

@@ -111,10 +111,39 @@ namespace WsApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ShipSelections",
+                columns: table => new
+                {
+                    ShipSelectionId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Count = table.Column<int>(nullable: false),
+                    Size = table.Column<int>(nullable: false),
+                    ButtonId = table.Column<string>(nullable: true),
+                    IsSelected = table.Column<bool>(nullable: false),
+                    PlayerId = table.Column<int>(nullable: true),
+                    ShipTypeId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShipSelections", x => x.ShipSelectionId);
+                    table.ForeignKey(
+                        name: "FK_ShipSelections_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "PlayerId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Cells_BattleArenaId",
                 table: "Cells",
                 column: "BattleArenaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipSelections_PlayerId",
+                table: "ShipSelections",
+                column: "PlayerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -126,16 +155,19 @@ namespace WsApp.Migrations
                 name: "Duels");
 
             migrationBuilder.DropTable(
-                name: "Players");
+                name: "Ships");
 
             migrationBuilder.DropTable(
-                name: "Ships");
+                name: "ShipSelections");
 
             migrationBuilder.DropTable(
                 name: "ShipTypes");
 
             migrationBuilder.DropTable(
                 name: "BattleArenas");
+
+            migrationBuilder.DropTable(
+                name: "Players");
         }
     }
 }

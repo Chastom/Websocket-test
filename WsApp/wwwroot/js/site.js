@@ -1,20 +1,11 @@
 ﻿$(document).ready(function () {
     var connection = new signalR.HubConnectionBuilder()
         .withUrl("http://localhost:5000/Play")
-        .build();    
-    var BombardierCount = 0;
-    var CruiserCount = 0;
-    var SubmarinCount = 0;
-    var KukuruznikCount = 0;
-    var SchnicelCount = 0;
-    var selectedShipType = null;
-    var selectedSize = -1;
-    //Laikinai socketID 
-    var SOCKETID = null;
+        .build();
+
     connection.on("UserConnected", function (socketId) {
         var selectionText = 'New user connected with id: [' + socketId + ']';
         $('#selections').append('<li>' + selectionText + '</li');
-        SOCKETID = socketId;
         console.log("prisijunge");
     });
 
@@ -32,41 +23,42 @@
         var messageText = 'id [' + userId + ']: ' + message;
         $('#selections').append('<li>' + messageText + '</li');
     });
-    //meta errora kazkoki bet lyg pazymi (kazkas su anonymous susije)
-    connection.on("pingSelectedShipType", function (socketId, selection, size) {
-        var selectionText = socketId + ' Selected ' + '  ' + selection;
-        $('#test').append('<li>' + selectionText + '</li');
-        selectedShipType = selection;
-        selectedSize = size;
-        console.log("pasirinko " + selected + "KurioDydis " + selectedSize);
-        
+
+    connection.on("pingShipPlaced", function (row, col) {
+        var cell = document.getElementById('grid1').rows[row].cells[col];
+        cell.style.backgroundColor = '#696969';
     });
 
-    connection.on("pingDisableType", function (socketId, selection, size) {
-        //ideally (in a perfect world) reiktu naudot Groups. . .
-        //https://www.youtube.com/watch?v=Kl3H4vMqYNo
-        var selectionText = socketId + ' Selected ' + '  ' + selection;
-        $('#test').append('<li>' + selectionText + '</li');
-        selectedShipType = selection;
-        selectedSize = size;
-        console.log("pasirinko " + selectedShipType + "KurioDydis " + selectedSize);
-        connection.invoke('getConnectionId')
-            .then(function (connectionId) {
-                console.log("disable: " + selection);
-                
-                if (socketId == connectionId) { //jei daug kur reiks might as well i sesija isimest ta id
-                    //jeigu disablint:
-                    //document.getElementById(buttonId).disabled = true;
-                    //jeigu nematomu padaryt, kad isvis neliktu
-                    
-                    document.getElementById(selection).style.display = "none";
-                }                
-            }).catch(err => console.error(err.toString()));;        
+    connection.on("invalidSelection", function (row, col) {
+        var cell = document.getElementById('grid1').rows[row].cells[col];
+        var previous = cell.style.backgroundColor;
+        cell.style.backgroundColor = '#ffb3b3';
+        setTimeout(function () {
+            cell.style.backgroundColor = previous;
+        }, 250);
+    });
+
+    connection.on("pingDisable", function (buttonId) {
+        for (var i = 0; i < 5; i++) {
+            if (i != buttonId) {
+                var button = document.getElementById("button" + i).disabled = true;
+            }
+        }
+    });
+    connection.on("pingRemove", function (row, col, buttonId) {
+        var cell = document.getElementById('grid1').rows[row].cells[col];
+        cell.style.backgroundColor = '#696969';
+        document.getElementById(buttonId).style.display = "none";
+        for (var i = 0; i < 5; i++) {
+            if (i != buttonId[6]) {
+                var button = document.getElementById("button" + i).disabled = false;
+            }
+        }
     });
 
     connection.start().catch(function (err) {
         return console.error(err.toString());
-    });    
+    });
 
     var $selectioncontent = $('#selection-content');
     $selectioncontent.keyup(function (e) {
@@ -76,58 +68,52 @@
                 return false;
             }
             connection.invoke("SendMessage", message);
-            $selectioncontent.val('');            
+            $selectioncontent.val('');
         }
     });
 
 
-    //dinamiskai reiktu padaryt kad visu onclick toks pat tik i invoke argumentus paduoda id tarkim kaip type
-    //$("#typeE").click(function (event) {
-    //    connection.invoke("SelectShipType", "typeE")
-    //});
-    document.getElementById('Bombardier').onclick = function () {
-        BombardierCount++;
-        connection.invoke("SelectShipType", "Bombardier", BombardierCount);
+
+
+    //var counter = 0;
+    //var button = document.getElementById("button" + counter);
+    //var types = ["Bombardier", "Cruiser", "Submarin", "Kukuruznik", "Schnicel"];
+    //while (button) {
+    //    button.addEventListener("click", function () {
+    //        connection.invoke("SelectShipType", types[counter]);
+    //    })
+    //    button = document.getElementById("button" + (++counter));
+    //}
+
+
+    document.getElementById('button0').onclick = function () {
+        connection.invoke("SelectShipType", "Bombardier", "button0");
     };
-    document.getElementById('Cruiser').onclick = function () {
-        CruiserCount++;
-        connection.invoke("SelectShipType", "Cruiser", CruiserCount);
+    document.getElementById('button1').onclick = function () {
+        connection.invoke("SelectShipType", "Cruiser", "button1");
     };
-    document.getElementById('Submarin').onclick = function () {
-        SubmarinCount++;
-        connection.invoke("SelectShipType", "Submarin", SubmarinCount);
+    document.getElementById('button2').onclick = function () {
+        connection.invoke("SelectShipType", "Submarin", "button2");
     };
-    document.getElementById('Kukuruznik').onclick = function () {
-        KukuruznikCount++;
-        connection.invoke("SelectShipType", "Kukuruznik", KukuruznikCount);
+    document.getElementById('button3').onclick = function () {
+        connection.invoke("SelectShipType", "Kukuruznik", "button3");
     };
-    document.getElementById('Schnicel').onclick = function () {
-        SchnicelCount++;
-        connection.invoke("SelectShipType", "Schnicel", SchnicelCount);
+    document.getElementById('button4').onclick = function () {
+        connection.invoke("SelectShipType", "Schnicel", "button4");
     };
+
     document.getElementById('Ready').onclick = function () {
         connection.invoke("Ready", SOCKETID);
     };
-    //nepaduoda socketId
-    $('#grid1').click(function (event) {
-        if (selectedShipType != null && selectedSize != 0) {
-           
-                var target = $(event.target);
-                $td = target.closest('td');
-                $td.attr("bgcolor", "dimgrey");
 
-                //$td.html('X');
-                //paspausto langelio koordintes
-                var col = $td.index();
-                var row = $td.closest('tr').index();
-                selectedSize = selectedSize - 1;
-            console.log("Padejo " + selectedShipType + " Laiva ");
-            connection.invoke("MetodasKurisPadedaLaiva", SOCKETID, row.toString(), col.toString(), selectedShipType)
-            
-            
-        }
-        
+    $('#grid1').click(function (event) {
+        var target = $(event.target);
+        $td = target.closest('td');
+        var col = $td.index();
+        var row = $td.closest('tr').index();
+        connection.invoke("PlaceShipValidation", row.toString(), col.toString())
     });
+
     //connection.clientMethods["pingCreatedPlayer"] = (socketId) => {
     //    var selectionText = socketId + ' CREATED! ';
     //    $('#selections').append('<li>' + selectionText + '</li');

@@ -10,7 +10,7 @@ using WsApp.Models;
 namespace WsApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191018112614_Initial")]
+    [Migration("20191020203022_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,6 +120,31 @@ namespace WsApp.Migrations
                     b.ToTable("Ships");
                 });
 
+            modelBuilder.Entity("WsApp.Models.ShipSelection", b =>
+                {
+                    b.Property<int>("ShipSelectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ButtonId");
+
+                    b.Property<int>("Count");
+
+                    b.Property<bool>("IsSelected");
+
+                    b.Property<int?>("PlayerId");
+
+                    b.Property<int>("ShipTypeId");
+
+                    b.Property<int>("Size");
+
+                    b.HasKey("ShipSelectionId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("ShipSelections");
+                });
+
             modelBuilder.Entity("WsApp.Models.ShipType", b =>
                 {
                     b.Property<int>("ShipTypeId")
@@ -145,6 +170,13 @@ namespace WsApp.Migrations
                         .WithMany("Cells")
                         .HasForeignKey("BattleArenaId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("WsApp.Models.ShipSelection", b =>
+                {
+                    b.HasOne("WsApp.Models.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId");
                 });
 #pragma warning restore 612, 618
         }

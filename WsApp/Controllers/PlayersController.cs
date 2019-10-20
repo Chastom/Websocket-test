@@ -17,6 +17,13 @@ namespace WsApp.Controllers
         {
             _context = context;
         }
+
+        public Player GetPlayer(string socketId)
+        {
+            List<Player> player = _context.Players.Where(s => s.Socket.Contains(socketId)).ToList();
+            return player[0];
+        }
+
         // GET: Players
         public ActionResult Index()
         {

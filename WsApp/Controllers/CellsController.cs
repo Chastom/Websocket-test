@@ -45,16 +45,13 @@ namespace WsApp.Controllers
         }
         public int ReturnCellId(int posx, int posy, int battleArenaId)
         {
-            int id = -99;
+            int id = -1;
             List<Cell> ba = _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).ToList();
             if (ba.Count > 0)
             {
                 //id = ba[0].BattleArenaId;
                 id = ba[0].CellId;
             }
-
-
-
             return id;
         }
         // GET: Cells/Details/5

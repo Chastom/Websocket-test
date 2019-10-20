@@ -17,6 +17,12 @@ namespace WsApp.Controllers
         {
             _context = context;
         }
+
+        public ShipType GetShipType(string type)
+        {
+            List<ShipType> shipTypes = _context.ShipTypes.Where(s => s.Type.Contains(type)).ToList();
+            return shipTypes[0];
+        }
         public int GetCount(string type)
         {
             int id = -1;

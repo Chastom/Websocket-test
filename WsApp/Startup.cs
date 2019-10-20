@@ -32,7 +32,11 @@ namespace WsApp
             });
 
             services.AddMvc();
-            services.AddSignalR();
+            //services.AddSignalR();
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
             var connection = @"Server=(localdb)\mssqllocaldb;Database=BattleXDB;Trusted_Connection=True;ConnectRetryCount=0;MultipleActiveResultSets=true";
             services.AddDbContext<Models.Context>
                 (options => options.UseSqlServer(connection));
