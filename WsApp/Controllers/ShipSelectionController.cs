@@ -124,12 +124,20 @@ namespace WsApp.Controllers
             Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
             Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
             Cell below = ReturnCell(posX, posY - 1, cell.BattleArenaId);
-            List<Cell> nearbyCells = new List<Cell>() { right, left, above, below };
+            Cell diag1 = ReturnCell(posX + 1, posY + 1, cell.BattleArenaId);
+            Cell diag2 = ReturnCell(posX - 1, posY - 1, cell.BattleArenaId);
+            Cell diag3 = ReturnCell(posX - 1, posY + 1, cell.BattleArenaId);
+            Cell diag4 = ReturnCell(posX + 1, posY - 1, cell.BattleArenaId);
+            List<Cell> nearbyCells = new List<Cell>() { right, left, above, below, diag1, diag2, diag3, diag4 };
 
-            for(int i=0; i< nearbyCells.Count; i++)
+            for (int i = 0; i < nearbyCells.Count; i++)
             {
                 Ship ship = GetShip(nearbyCells[i].ShipId);
-                if(nearbyCells[i].ShipId != 0 && type.ShipTypeId != ship.ShipTypeId)
+                if (type.Type == "Schnicel" && nearbyCells[i].ShipId != 0)
+                {
+                    return false;
+                }
+                if (nearbyCells[i].ShipId != 0 && type.ShipTypeId != ship.ShipTypeId)
                 {
                     return false;
                 }
