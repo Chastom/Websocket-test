@@ -48,6 +48,12 @@ namespace WsApp.Controllers
             return _context.ShipSelections.Where(s => s.Player.Socket.Contains(socketId)).FirstOrDefault();
         }
 
+        public ShipType GetShipType(string socketId)
+        {
+            ShipSelection selection = GetSelection(socketId);
+            return _context.ShipTypes.Where(s => s.ShipTypeId.Equals(selection.ShipTypeId)).FirstOrDefault();
+        }
+
         /*             
            checking if ShipSelection table is generated for this player
            otherwise, it means that the selection button was not selected
@@ -71,7 +77,7 @@ namespace WsApp.Controllers
         public bool PlaceShip(string socketId)
         {
             ShipSelection selection = GetSelection(socketId);
-            ShipType type = _context.ShipTypes.Where(s => s.ShipTypeId.Equals(selection.ShipTypeId)).FirstOrDefault();
+            ShipType type = GetShipType(socketId);
             int count = selection.Count;
             int size = selection.Size;
             size--;
@@ -90,6 +96,68 @@ namespace WsApp.Controllers
             selection.Count = count;
             _context.SaveChanges();
             return true;
+        }
+
+        public bool ValidatePlacement(string socketId, int posX, int posY, Cell cell, List<Cell> cells)
+        {
+            ShipType type = GetShipType(socketId);
+
+            if (cell.ShipId == 0)
+            {
+                if (NoCellsNearby(posX, posY, cell, type))
+                {
+                    int shipId = AddShip(cell.CellId, type.ShipTypeId, type.Type, type.Size);
+                    cell.ShipId = shipId;
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool NoCellsNearby(int posX, int posY, Cell cell, ShipType type)
+        {
+            Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
+            Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
+            Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
+            Cell below = ReturnCell(posX, posY - 1, cell.BattleArenaId);
+            List<Cell> nearbyCells = new List<Cell>() { right, left, above, below };
+
+            for(int i=0; i< nearbyCells.Count; i++)
+            {
+                Ship ship = GetShip(nearbyCells[i].ShipId);
+                if(nearbyCells[i].ShipId != 0 && type.ShipTypeId != ship.ShipTypeId)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public Cell ReturnCell(int posx, int posy, int battleArenaId)
+        {
+            return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
+        }
+
+        public int AddShip(int cellId, int shipTypeId, string shipType, int size)
+        {
+            Ship tempShip = new Ship();
+            tempShip.CellId = cellId;
+            tempShip.Name = shipType;
+            tempShip.ShipTypeId = shipTypeId;
+            tempShip.RemainingTiles = size;
+
+            _context.Ships.Add(tempShip);
+            _context.SaveChanges();
+            return tempShip.ShipId;
+        }
+
+        public Ship GetShip(int shipId)
+        {
+            return _context.Ships.Where(s => s.ShipId.Equals(shipId)).FirstOrDefault();
         }
 
         public string GetButtonId(string socketId)

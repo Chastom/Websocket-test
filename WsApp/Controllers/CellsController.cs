@@ -43,6 +43,18 @@ namespace WsApp.Controllers
 
             return true;
         }
+
+        public Cell ReturnCell(int posx, int posy, int battleArenaId)
+        {
+            return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
+        }
+
+        public List<Cell> ReturnAllCells(int battleArenaId)
+        {
+            return _context.Cells.Where(s => s.BattleArenaId == battleArenaId).ToList();
+        }
+
+
         public int ReturnCellId(int posx, int posy, int battleArenaId)
         {
             int id = -1;

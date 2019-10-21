@@ -32,10 +32,10 @@
     connection.on("invalidSelection", function (row, col) {
         var cell = document.getElementById('grid1').rows[row].cells[col];
         var previous = cell.style.backgroundColor;
-        cell.style.backgroundColor = '#ffb3b3';
+        cell.setAttribute('style', 'background-color:#ffb3b3 !important');
         setTimeout(function () {
             cell.style.backgroundColor = previous;
-        }, 250);
+        }, 300);
     });
 
     connection.on("pingDisable", function (buttonId) {
@@ -45,9 +45,7 @@
             }
         }
     });
-    connection.on("pingRemove", function (row, col, buttonId) {
-        var cell = document.getElementById('grid1').rows[row].cells[col];
-        cell.style.backgroundColor = '#696969';
+    connection.on("pingRemove", function (buttonId) {
         document.getElementById(buttonId).style.display = "none";
         for (var i = 0; i < 5; i++) {
             if (i != buttonId[6]) {

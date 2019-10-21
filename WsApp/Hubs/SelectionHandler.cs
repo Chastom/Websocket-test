@@ -59,20 +59,31 @@ namespace WsApp
             }
             else
             {
-                //int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
-                //int cellId = cellsController.ReturnCellId(posX, posY, battleArenaId);
-                bool placed = shipSelectionController.PlaceShip(socketId);
-                if (placed)
+                int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
+                Cell cell = cellsController.ReturnCell(posX, posY, battleArenaId);
+                List<Cell> cells = cellsController.ReturnAllCells(battleArenaId);
+
+                bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, cell, cells);
+
+                if (canPlace)
                 {
-                    await Clients.Caller.SendAsync("pingShipPlaced", row, col);
+                    bool placed = shipSelectionController.PlaceShip(socketId);
+                    if (placed)
+                    {
+                        await Clients.Caller.SendAsync("pingShipPlaced", row, col);
+                    }
+                    else
+                    {
+                        string id = shipSelectionController.GetButtonId(socketId);
+                        await Clients.Caller.SendAsync("pingShipPlaced", row, col);
+                        await Clients.Caller.SendAsync("pingRemove", id);
+                    }
                 }
                 else
                 {
-                    string id = shipSelectionController.GetButtonId(socketId);
-                    await Clients.Caller.SendAsync("pingRemove", row, col, id);
+                    await Clients.Caller.SendAsync("invalidSelection", row, col);
                 }
-                
-            }    
+            }
         }
 
         public async Task RemoveShipType()
