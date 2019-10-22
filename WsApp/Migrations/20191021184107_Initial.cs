@@ -63,6 +63,7 @@ namespace WsApp.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     RemainingTiles = table.Column<int>(nullable: false),
+                    SocketId = table.Column<string>(nullable: true),
                     ShipTypeId = table.Column<int>(nullable: false),
                     CellId = table.Column<int>(nullable: false)
                 },

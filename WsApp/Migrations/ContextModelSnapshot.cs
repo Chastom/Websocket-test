@@ -113,6 +113,8 @@ namespace WsApp.Migrations
 
                     b.Property<int>("ShipTypeId");
 
+                    b.Property<string>("SocketId");
+
                     b.HasKey("ShipId");
 
                     b.ToTable("Ships");

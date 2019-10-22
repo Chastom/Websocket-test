@@ -100,26 +100,99 @@ namespace WsApp.Controllers
 
         public bool ValidatePlacement(string socketId, int posX, int posY, Cell cell, List<Cell> cells)
         {
+            ShipSelection selection = GetSelection(socketId);
             ShipType type = GetShipType(socketId);
 
             if (cell.ShipId == 0)
             {
                 if (NoCellsNearby(posX, posY, cell, type))
                 {
-                    int shipId = AddShip(cell.CellId, type.ShipTypeId, type.Type, type.Size);
+                    List<Ship> ships = GetShipsByType(type.ShipTypeId, socketId);
+                    int shipId = 0;
+                    if (ships.Count < type.Count - selection.Count + 1)
+                    {
+                        if (NoShipNearby(posX, posY, cell, new Ship(), true))
+                        {
+                            shipId = AddShip(cell.CellId, type.ShipTypeId, type.Type, type.Size, socketId);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        shipId = ships[ships.Count - 1].ShipId;
+                        if (!CorrectPlacement(type, selection, ships[ships.Count - 1], cell, posX, posY))
+                        {
+                            return false;
+                        }
+                    }
                     cell.ShipId = shipId;
                     return true;
                 }
-                return false;
             }
-            else
+            return false;
+
+        }
+
+        public bool CorrectPlacement(ShipType type, ShipSelection selection, Ship ship, Cell cell, int posX, int posY)
+        {
+            int shipPartsSelected = type.Size - selection.Size;
+
+            //check if nearby ship is from the same sequence
+            if (NoShipNearby(posX, posY, cell, ship, false))
             {
-                return false;
+                List<string> directions = new List<string> { "above", "below", "right", "left" };
+                for (int i = 0; i < 4; i++)
+                {
+                    int sequence = ShipSequence(shipPartsSelected, posX, posY, ship, cell, directions[i]);
+                    if (sequence == shipPartsSelected)
+                    {
+                        return true;
+                    }
+                }
             }
+            return false;
+        }
+
+        public int ShipSequence(int shipPartsSelected, int posX, int posY, Ship ship, Cell cell, string direction)
+        {
+            int sequence = 0;
+            for (int i = 0; i < shipPartsSelected; i++)
+            {
+                Cell cellConnect;
+                switch (direction)
+                {
+                    case "above":
+                        cellConnect = ReturnCell(posX, posY + i + 1, cell.BattleArenaId);
+                        break;
+                    case "below":
+                        cellConnect = ReturnCell(posX, posY - i - 1, cell.BattleArenaId);
+                        break;
+                    case "right":
+                        cellConnect = ReturnCell(posX + i + 1, posY, cell.BattleArenaId);
+                        break;
+                    default:
+                        cellConnect = ReturnCell(posX - i - 1, posY, cell.BattleArenaId);
+                        break;
+                }
+
+                Ship shipConnect = GetShip(cellConnect.ShipId);
+                if (shipConnect != null)
+                {
+                    if (ship.ShipId == shipConnect.ShipId)
+                    {
+                        sequence++;
+                    }
+                }
+            }
+            return sequence;
         }
 
         public bool NoCellsNearby(int posX, int posY, Cell cell, ShipType type)
         {
+            //jei x = 0/14 | y = 0/14 nereik checkint atitinkamu pusiu
             Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
             Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
             Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
@@ -145,18 +218,51 @@ namespace WsApp.Controllers
             return true;
         }
 
+        public bool NoShipNearby(int posX, int posY, Cell cell, Ship ship, bool isNew)
+        {
+            //jei x = 0/14 | y = 0/14 nereik checkint atitinkamu pusiu
+            Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
+            Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
+            Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
+            Cell below = ReturnCell(posX, posY - 1, cell.BattleArenaId);
+            Cell diag1 = ReturnCell(posX + 1, posY + 1, cell.BattleArenaId);
+            Cell diag2 = ReturnCell(posX - 1, posY - 1, cell.BattleArenaId);
+            Cell diag3 = ReturnCell(posX - 1, posY + 1, cell.BattleArenaId);
+            Cell diag4 = ReturnCell(posX + 1, posY - 1, cell.BattleArenaId);
+            List<Cell> nearbyCells = new List<Cell>() { right, left, above, below, diag1, diag2, diag3, diag4 };
+
+            for (int i = 0; i < nearbyCells.Count; i++)
+            {
+                if (isNew && nearbyCells[i].ShipId != 0)
+                {
+                    return false;
+                }
+                else if (nearbyCells[i].ShipId != 0 && nearbyCells[i].ShipId != ship.ShipId)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public List<Ship> GetShipsByType(int typeId, string socketId)
+        {
+            return _context.Ships.Where(s => s.ShipTypeId.Equals(typeId) && s.SocketId == socketId).ToList();
+        }
+
         public Cell ReturnCell(int posx, int posy, int battleArenaId)
         {
             return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
         }
 
-        public int AddShip(int cellId, int shipTypeId, string shipType, int size)
+        public int AddShip(int cellId, int shipTypeId, string shipType, int size, string socketId)
         {
             Ship tempShip = new Ship();
             tempShip.CellId = cellId;
             tempShip.Name = shipType;
             tempShip.ShipTypeId = shipTypeId;
             tempShip.RemainingTiles = size;
+            tempShip.SocketId = socketId;
 
             _context.Ships.Add(tempShip);
             _context.SaveChanges();
