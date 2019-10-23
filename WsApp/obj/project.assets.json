@@ -12544,24 +12544,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\TK\\.nuget\\packages\\": {},
+    "C:\\Users\\tadkup\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\VS_repos\\New folder\\WsApp\\WsApp.csproj",
+      "projectUniqueName": "C:\\Users\\tadkup\\Desktop\\Repo\\Websocket-test\\WsApp\\WsApp.csproj",
       "projectName": "WsApp",
-      "projectPath": "D:\\VS_repos\\New folder\\WsApp\\WsApp.csproj",
-      "packagesPath": "C:\\Users\\TK\\.nuget\\packages\\",
-      "outputPath": "D:\\VS_repos\\New folder\\WsApp\\obj\\",
+      "projectPath": "C:\\Users\\tadkup\\Desktop\\Repo\\Websocket-test\\WsApp\\WsApp.csproj",
+      "packagesPath": "C:\\Users\\tadkup\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tadkup\\Desktop\\Repo\\Websocket-test\\WsApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\TK\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\tadkup\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
@@ -12600,6 +12603,7 @@
             "version": "[2.1.2, )"
           },
           "Microsoft.NETCore.App": {
+            "suppressParent": "All",
             "target": "Package",
             "version": "[2.1.0, )",
             "autoReferenced": true
@@ -12610,10 +12614,16 @@
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

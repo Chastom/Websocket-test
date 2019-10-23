@@ -27,7 +27,7 @@ namespace WsApp.Migrations
                 {
                     DuelId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PlayerTurnId = table.Column<int>(nullable: false),
+                    PlayerTurnId = table.Column<string>(nullable: true),
                     FirstPlayerBAId = table.Column<int>(nullable: false),
                     SecondPlayerBAId = table.Column<int>(nullable: false),
                     FirstPlayerSocketId = table.Column<string>(nullable: true),

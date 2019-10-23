@@ -27,6 +27,13 @@ namespace WsApp.Controllers
             _context.SaveChanges();
             return true;
         }
+        public bool AttackShip(int cellId)
+        {
+            List<Ship> tmp = _context.Ships.Where(s => s.CellId == cellId).ToList();
+            _context.Ships.Where(s => s.CellId == cellId).FirstOrDefault().RemainingTiles = tmp[0].RemainingTiles-1;
+
+            return true;
+        }
         // GET: Ships
         public ActionResult Index()
         {

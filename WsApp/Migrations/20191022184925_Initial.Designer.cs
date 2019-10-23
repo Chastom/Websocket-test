@@ -10,7 +10,7 @@ using WsApp.Models;
 namespace WsApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191020203022_Initial")]
+    [Migration("20191022184925_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,7 @@ namespace WsApp.Migrations
 
                     b.Property<string>("FirstPlayerSocketId");
 
-                    b.Property<int>("PlayerTurnId");
+                    b.Property<string>("PlayerTurnId");
 
                     b.Property<int>("SecondPlayerBAId");
 

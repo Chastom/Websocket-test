@@ -67,7 +67,7 @@ namespace WsApp.Migrations
 
                     b.Property<string>("FirstPlayerSocketId");
 
-                    b.Property<int>("PlayerTurnId");
+                    b.Property<string>("PlayerTurnId");
 
                     b.Property<int>("SecondPlayerBAId");
 
