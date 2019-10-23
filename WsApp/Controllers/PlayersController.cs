@@ -23,7 +23,11 @@ namespace WsApp.Controllers
             List<Player> player = _context.Players.Where(s => s.Socket.Contains(socketId)).ToList();
             return player[0];
         }
-
+        public bool IsPlayersTurn( string socketId)
+        {
+            Player tmp = GetPlayer(socketId);
+            return tmp.Turn;
+        }
         // GET: Players
         public ActionResult Index()
         {

@@ -46,7 +46,40 @@ namespace WsApp
 
             await Clients.Caller.SendAsync("pingDisable", buttonId[6]);
         }
+        public async Task Atack(string row, string col)
+        {
+            var socketId = Context.ConnectionId;
+            int posX = Int32.Parse(row);
+            int posY = Int32.Parse(col);
+             
+            if (playersController.IsPlayersTurn(socketId) == false)
+            {
+                await Clients.Caller.SendAsync("invalidTurn", row, col);
+            }
+            else
+            {
+                Player atacker = playersController.GetPlayer(socketId);
+                int battleArenaId = baController.GetBAId(atacker.PlayerId);
+                int attackedCellId = cellsController.AttackCell(posX, posY, battleArenaId); 
+                if (attackedCellId ==-2)
+                {
+                    await Clients.Caller.SendAsync("cellHasBeenAttacked", row, col);
+                }
+                if (attackedCellId ==-1)
+                {
+                    //pakeisti turna kitam zaidejui ir parasyt pranesima
+                    duelsController.ChangeTurns(socketId);
+                    await Clients.Caller.SendAsync("shotMissed");
+                    await Clients.Others.SendAsync("changedTurn");
 
+                }
+                else
+                {
+                    shipsController.AttackShip(attackedCellId);
+                }
+                
+            }
+        }
         public async Task PlaceShipValidation(string row, string col)
         {
             var socketId = Context.ConnectionId;
@@ -95,8 +128,9 @@ namespace WsApp
                 await Clients.Caller.SendAsync("pingRemoveType", type);
             }
         }
-        public async Task Ready(string socketId)
+        public async Task Ready()
         {
+            var socketId = Context.ConnectionId;
             int playerId = playersController.GetPlayerId(socketId);
             int battleArenaId = baController.GetBAId(playerId);
 
@@ -105,19 +139,18 @@ namespace WsApp
             if (dualCount == 0)
             {
                 duelsController.StartDuel(socketId, battleArenaId);
-                //grazinti kazka kas leistu pradeti atakas
+                await Clients.Caller.SendAsync("PingWaitingOponent", socketId);
             }
             if (dualCount == 1)
             {
                 bool rez = duelsController.JoinDuel(socketId, battleArenaId);
                 if (rez == false)
                 {
-                    await Clients.All.SendAsync("PingFullDual", socketId);
+                    await Clients.Caller.SendAsync("PingFullDual", socketId);
                 }
-                //irgi grazint kazka 
+                await Clients.All.SendAsync("PingGameIsStarted", socketId);
             }
-            else
-                await Clients.All.SendAsync("PingFullDual", socketId);
+            
         }
         public async Task MetodasKurisPadedaLaiva(string row, string col, string shipType)
         {

@@ -48,7 +48,28 @@ namespace WsApp.Controllers
         {
             return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
         }
-
+        public int AttackCell(int posx, int posy, int battleArenaId)
+        {
+            int cellId = -1;
+            Cell tmp = ReturnCell(posx, posy, battleArenaId);
+            if (tmp.IsHit == true)
+            {
+                return -2;
+            }
+            if (tmp.IsHit ==false && tmp.ShipId==0)
+            {
+                _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault().IsHit = true;
+                _context.SaveChanges();
+                return -1;
+            }           
+            else
+            {
+                _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault().IsHit = true;
+                _context.SaveChanges();
+                cellId = _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault().CellId;
+            }
+            return cellId;
+        }
         public List<Cell> ReturnAllCells(int battleArenaId)
         {
             return _context.Cells.Where(s => s.BattleArenaId == battleArenaId).ToList();

@@ -8,7 +8,7 @@ namespace WsApp.Models
     public class Duel
     {
         public int DuelId { get; set; }
-        public int PlayerTurnId { get; set; }
+        public string PlayerTurnId { get; set; }
         public int FirstPlayerBAId { get; set; }
         public int SecondPlayerBAId { get; set; }
         public string FirstPlayerSocketId { get; set; }

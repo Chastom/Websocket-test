@@ -19,6 +19,27 @@
         $('#test').append('<li>' + selectionText + '</li');
         console.log("Trecias nereikalingas :)");
     });
+    connection.on("PingWaitingOponent", function (socketId) {
+        var selectionText = socketId + ' Laukia priesininko ';
+        $('#selections').append('<li>' + selectionText + '</li');
+        console.log("Laukiama priesininko");
+    });
+    connection.on("PingGameIsStarted", function (socketId) {
+        var selectionText = 'Zaidimas pradetas';
+        $('#selections').append('<li>' + selectionText + '</li');
+        console.log("Zaidimas pradetas");
+    });
+    connection.on("invalidTurn", function (row, col) {
+        var cell = document.getElementById('grid2').rows[row].cells[col];
+        var previous = cell.style.backgroundColor;
+        cell.setAttribute('style', 'background-color:#ffb3b3 !important');
+        setTimeout(function () {
+            cell.style.backgroundColor = previous;
+        }, 300);
+        var selectionText = 'Ne jusu ejimas';
+        $('#selections').append('<li>' + selectionText + '</li');
+        console.log("Ne jusu ejimas");
+    });
     connection.on("pingMessage", function (userId, message) {
         var messageText = 'id [' + userId + ']: ' + message;
         $('#selections').append('<li>' + messageText + '</li');
@@ -101,7 +122,7 @@
     };
 
     document.getElementById('Ready').onclick = function () {
-        connection.invoke("Ready", SOCKETID);
+        connection.invoke("Ready");
     };
 
     $('#grid1').click(function (event) {
@@ -111,7 +132,13 @@
         var row = $td.closest('tr').index();
         connection.invoke("PlaceShipValidation", row.toString(), col.toString())
     });
-
+    $('#grid2').click(function (event) {
+        var target = $(event.target);
+        $td = target.closest('td');
+        var col = $td.index();
+        var row = $td.closest('tr').index();
+        connection.invoke("Atack", row.toString(), col.toString())
+    });
     //connection.clientMethods["pingCreatedPlayer"] = (socketId) => {
     //    var selectionText = socketId + ' CREATED! ';
     //    $('#selections').append('<li>' + selectionText + '</li');
