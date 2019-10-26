@@ -177,13 +177,15 @@ namespace WsApp.Controllers
                         cellConnect = ReturnCell(posX - i - 1, posY, cell.BattleArenaId);
                         break;
                 }
-
-                Ship shipConnect = GetShip(cellConnect.ShipId);
-                if (shipConnect != null)
+                if (cellConnect != null)
                 {
-                    if (ship.ShipId == shipConnect.ShipId)
+                    Ship shipConnect = GetShip(cellConnect.ShipId);
+                    if (shipConnect != null)
                     {
-                        sequence++;
+                        if (ship.ShipId == shipConnect.ShipId)
+                        {
+                            sequence++;
+                        }
                     }
                 }
             }
@@ -192,7 +194,6 @@ namespace WsApp.Controllers
 
         public bool NoCellsNearby(int posX, int posY, Cell cell, ShipType type)
         {
-            //jei x = 0/14 | y = 0/14 nereik checkint atitinkamu pusiu
             Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
             Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
             Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
@@ -205,14 +206,17 @@ namespace WsApp.Controllers
 
             for (int i = 0; i < nearbyCells.Count; i++)
             {
-                Ship ship = GetShip(nearbyCells[i].ShipId);
-                if (type.Type == "Schnicel" && nearbyCells[i].ShipId != 0)
+                if (nearbyCells[i] != null)
                 {
-                    return false;
-                }
-                if (nearbyCells[i].ShipId != 0 && type.ShipTypeId != ship.ShipTypeId)
-                {
-                    return false;
+                    Ship ship = GetShip(nearbyCells[i].ShipId);
+                    if (type.Type == "Schnicel" && nearbyCells[i].ShipId != 0)
+                    {
+                        return false;
+                    }
+                    if (nearbyCells[i].ShipId != 0 && type.ShipTypeId != ship.ShipTypeId)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -220,7 +224,6 @@ namespace WsApp.Controllers
 
         public bool NoShipNearby(int posX, int posY, Cell cell, Ship ship, bool isNew)
         {
-            //jei x = 0/14 | y = 0/14 nereik checkint atitinkamu pusiu
             Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
             Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
             Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
@@ -233,13 +236,16 @@ namespace WsApp.Controllers
 
             for (int i = 0; i < nearbyCells.Count; i++)
             {
-                if (isNew && nearbyCells[i].ShipId != 0)
+                if (nearbyCells[i] != null)
                 {
-                    return false;
-                }
-                else if (nearbyCells[i].ShipId != 0 && nearbyCells[i].ShipId != ship.ShipId)
-                {
-                    return false;
+                    if (isNew && nearbyCells[i].ShipId != 0)
+                    {
+                        return false;
+                    }
+                    else if (nearbyCells[i].ShipId != 0 && nearbyCells[i].ShipId != ship.ShipId)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;

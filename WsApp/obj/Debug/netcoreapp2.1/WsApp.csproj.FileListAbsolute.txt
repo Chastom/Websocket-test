@@ -69,43 +69,6 @@ C:\Users\tadkup\Desktop\Websocket-test-master\Websocket-test-master\WsApp\obj\De
 C:\Users\tadkup\Desktop\Websocket-test-master\Websocket-test-master\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Details.cshtml.g.cs
 C:\Users\tadkup\Desktop\Websocket-test-master\Websocket-test-master\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Edit.cshtml.g.cs
 C:\Users\tadkup\Desktop\Websocket-test-master\Websocket-test-master\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Index.cshtml.g.cs
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.deps.json
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.runtimeconfig.json
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.runtimeconfig.dev.json
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.dll
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.pdb
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.Views.dll
-D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.Views.pdb
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csprojAssemblyReference.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CoreCompileInputs.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorAssemblyInfo.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorAssemblyInfo.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.AssemblyInfoInputs.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.AssemblyInfo.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.TagHelpers.input.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.TagHelpers.output.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorCoreGenerate.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\About.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Contact.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Index.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Privacy.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\Error.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_CookieConsentPartial.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_Layout.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_ValidationScriptsPartial.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Create.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Delete.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Details.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Edit.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Index.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\_ViewImports.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\_ViewStart.g.cshtml.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorTargetAssemblyInfo.cache
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorTargetAssemblyInfo.cs
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.Views.pdb
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.dll
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.pdb
-D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CopyComplete
 C:\Users\tadkup\Desktop\Repo\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\appsettings.Development.json
 C:\Users\tadkup\Desktop\Repo\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\appsettings.json
 C:\Users\tadkup\Desktop\Repo\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
@@ -184,3 +147,40 @@ B:\Mokslai\KetvirtasKursas\Objektinis\WsApp\WsApp\obj\Debug\netcoreapp2.1\WsApp.
 B:\Mokslai\KetvirtasKursas\Objektinis\WsApp\WsApp\obj\Debug\netcoreapp2.1\WsApp.dll
 B:\Mokslai\KetvirtasKursas\Objektinis\WsApp\WsApp\obj\Debug\netcoreapp2.1\WsApp.pdb
 B:\Mokslai\KetvirtasKursas\Objektinis\WsApp\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CopyComplete
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.deps.json
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.runtimeconfig.json
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.runtimeconfig.dev.json
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.dll
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.pdb
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.Views.dll
+D:\VS_repos\New folder\WsApp\bin\Debug\netcoreapp2.1\WsApp.Views.pdb
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CoreCompileInputs.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorAssemblyInfo.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorAssemblyInfo.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.AssemblyInfoInputs.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.AssemblyInfo.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.TagHelpers.input.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.TagHelpers.output.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorCoreGenerate.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\About.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Contact.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Index.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Privacy.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\Error.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_CookieConsentPartial.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_Layout.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_ValidationScriptsPartial.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Create.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Delete.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Details.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Edit.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Index.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\_ViewImports.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\_ViewStart.g.cshtml.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorTargetAssemblyInfo.cache
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorTargetAssemblyInfo.cs
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.Views.pdb
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.dll
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.pdb
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CopyComplete
+D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csprojAssemblyReference.cache

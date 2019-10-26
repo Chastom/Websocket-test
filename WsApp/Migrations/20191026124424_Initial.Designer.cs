@@ -10,7 +10,7 @@ using WsApp.Models;
 namespace WsApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191022184925_Initial")]
+    [Migration("20191026124424_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,6 +114,8 @@ namespace WsApp.Migrations
                     b.Property<int>("RemainingTiles");
 
                     b.Property<int>("ShipTypeId");
+
+                    b.Property<string>("SocketId");
 
                     b.HasKey("ShipId");
 

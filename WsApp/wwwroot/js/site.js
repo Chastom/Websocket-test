@@ -121,7 +121,7 @@
         connection.invoke("SelectShipType", "Schnicel", "button4");
     };
 
-    document.getElementById('Ready').onclick = function () {
+    document.getElementById('ready').onclick = function () {
         connection.invoke("Ready");
     };
 
