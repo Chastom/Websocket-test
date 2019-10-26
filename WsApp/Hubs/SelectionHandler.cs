@@ -29,7 +29,6 @@ namespace WsApp
             shipsController = new ShipsController(_context);
             duelsController = new DuelsController(_context);
             shipSelectionController = new ShipSelectionController(_context);
-
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -93,16 +92,17 @@ namespace WsApp
             else
             {
                 int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
-                Cell cell = cellsController.ReturnCell(posX, posY, battleArenaId);
-                List<Cell> cells = cellsController.ReturnAllCells(battleArenaId);
+                bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
 
-                bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, cell, cells);
+                Console.WriteLine("======================================================================= can place = " + canPlace);
 
                 if (canPlace)
                 {
+                    
                     bool placed = shipSelectionController.PlaceShip(socketId);
                     if (placed)
                     {
+                        Console.WriteLine("==================================================================placed");
                         await Clients.Caller.SendAsync("pingShipPlaced", row, col);
                     }
                     else
@@ -152,21 +152,7 @@ namespace WsApp
             }
             
         }
-        public async Task MetodasKurisPadedaLaiva(string row, string col, string shipType)
-        {
-            string socketId = Context.ConnectionId;
-            int posX = Int32.Parse(row);
-            int posY = Int32.Parse(col);
-            int playerId = playersController.GetPlayerId(socketId);
-            Console.WriteLine("Player Socket " + socketId);
-            int battleArenaId = baController.GetBAId(playerId);
-            int cellId = cellsController.ReturnCellId(posX, posY, battleArenaId);
-            Console.WriteLine("Koordinates " + posX + " " + posY + "Cell ID " + cellId);
-            int shipTypeId = shipTypeController.GetId(shipType);
-            bool isAddedShip = shipsController.AddShip(cellId, shipTypeId, shipType);
-            Console.WriteLine(isAddedShip);
-            await Clients.All.SendAsync("pingSelection", socketId, row, col);
-        }
+
         public async Task SendAttack(string socketId, string row, string col)
         {
             await Clients.All.SendAsync("pingAttack", socketId, row, col);
@@ -184,21 +170,10 @@ namespace WsApp
         {
             var socketId = Context.ConnectionId;
             int createdId = playersController.CreatePlayer(socketId);
-            // Console.WriteLine("PLAYER ID"+createdId);
             int CreatedBAId = baController.CreateBA(createdId);
-            // Console.WriteLine("BA ID" + CreatedBAId);
             bool editedBAId = playersController.AddPlayerID(createdId, CreatedBAId);
-            bool addedCells = cellsController.CreateCells(CreatedBAId);
-            // bool edited = baController.AddBoardID(CreatedBAId, boardId);
-            //edit BA with boardIDs
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
             await base.OnConnectedAsync();
         }
-
-        //but this is not a perfect world :3
-        //public string GetConnectionId()
-        //{
-        //    return Context.ConnectionId;
-        //}
     }
 }

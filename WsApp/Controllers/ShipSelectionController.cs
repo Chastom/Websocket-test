@@ -98,22 +98,26 @@ namespace WsApp.Controllers
             return true;
         }
 
-        public bool ValidatePlacement(string socketId, int posX, int posY, Cell cell, List<Cell> cells)
+        public bool ValidatePlacement(string socketId, int posX, int posY, int arenaId)
         {
             ShipSelection selection = GetSelection(socketId);
             ShipType type = GetShipType(socketId);
+            Cell cell = ReturnCell(posX, posY, arenaId);
 
-            if (cell.ShipId == 0)
+            if (cell == null)
             {
-                if (NoCellsNearby(posX, posY, cell, type))
+                if (NoCellsNearby(posX, posY, arenaId, type))
                 {
                     List<Ship> ships = GetShipsByType(type.ShipTypeId, socketId);
                     int shipId = 0;
                     if (ships.Count < type.Count - selection.Count + 1)
                     {
-                        if (NoShipNearby(posX, posY, cell, new Ship(), true))
+                        if (NoShipNearby(posX, posY, arenaId, new Ship(), true))
                         {
-                            shipId = AddShip(cell.CellId, type.ShipTypeId, type.Type, type.Size, socketId);
+                            shipId = AddShip(arenaId, type.ShipTypeId, type.Type, type.Size, socketId, posX, posY);
+                            //cell was created when adding a new ship
+                            ReturnCell(posX, posY, arenaId).ShipId = shipId;
+                            return true;
                         }
                         else
                         {
@@ -123,30 +127,29 @@ namespace WsApp.Controllers
                     else
                     {
                         shipId = ships[ships.Count - 1].ShipId;
-                        if (!CorrectPlacement(type, selection, ships[ships.Count - 1], cell, posX, posY))
+                        if (!CorrectPlacement(type, selection, ships[ships.Count - 1], arenaId, posX, posY))
                         {
                             return false;
                         }
                     }
-                    cell.ShipId = shipId;
+                    CreateCell(posX, posY, arenaId).ShipId = shipId;
                     return true;
                 }
             }
             return false;
-
         }
 
-        public bool CorrectPlacement(ShipType type, ShipSelection selection, Ship ship, Cell cell, int posX, int posY)
+        public bool CorrectPlacement(ShipType type, ShipSelection selection, Ship ship, int arenaId, int posX, int posY)
         {
             int shipPartsSelected = type.Size - selection.Size;
 
             //check if nearby ship is from the same sequence
-            if (NoShipNearby(posX, posY, cell, ship, false))
+            if (NoShipNearby(posX, posY, arenaId, ship, false))
             {
                 List<string> directions = new List<string> { "above", "below", "right", "left" };
                 for (int i = 0; i < 4; i++)
                 {
-                    int sequence = ShipSequence(shipPartsSelected, posX, posY, ship, cell, directions[i]);
+                    int sequence = ShipSequence(shipPartsSelected, posX, posY, ship, directions[i], arenaId);
                     if (sequence == shipPartsSelected)
                     {
                         return true;
@@ -156,7 +159,7 @@ namespace WsApp.Controllers
             return false;
         }
 
-        public int ShipSequence(int shipPartsSelected, int posX, int posY, Ship ship, Cell cell, string direction)
+        public int ShipSequence(int shipPartsSelected, int posX, int posY, Ship ship, string direction, int arenaId)
         {
             int sequence = 0;
             for (int i = 0; i < shipPartsSelected; i++)
@@ -165,16 +168,16 @@ namespace WsApp.Controllers
                 switch (direction)
                 {
                     case "above":
-                        cellConnect = ReturnCell(posX, posY + i + 1, cell.BattleArenaId);
+                        cellConnect = ReturnCell(posX, posY + i + 1, arenaId);
                         break;
                     case "below":
-                        cellConnect = ReturnCell(posX, posY - i - 1, cell.BattleArenaId);
+                        cellConnect = ReturnCell(posX, posY - i - 1, arenaId);
                         break;
                     case "right":
-                        cellConnect = ReturnCell(posX + i + 1, posY, cell.BattleArenaId);
+                        cellConnect = ReturnCell(posX + i + 1, posY, arenaId);
                         break;
                     default:
-                        cellConnect = ReturnCell(posX - i - 1, posY, cell.BattleArenaId);
+                        cellConnect = ReturnCell(posX - i - 1, posY, arenaId);
                         break;
                 }
                 if (cellConnect != null)
@@ -192,16 +195,16 @@ namespace WsApp.Controllers
             return sequence;
         }
 
-        public bool NoCellsNearby(int posX, int posY, Cell cell, ShipType type)
+        public bool NoCellsNearby(int posX, int posY, int arenaId, ShipType type)
         {
-            Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
-            Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
-            Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
-            Cell below = ReturnCell(posX, posY - 1, cell.BattleArenaId);
-            Cell diag1 = ReturnCell(posX + 1, posY + 1, cell.BattleArenaId);
-            Cell diag2 = ReturnCell(posX - 1, posY - 1, cell.BattleArenaId);
-            Cell diag3 = ReturnCell(posX - 1, posY + 1, cell.BattleArenaId);
-            Cell diag4 = ReturnCell(posX + 1, posY - 1, cell.BattleArenaId);
+            Cell right = ReturnCell(posX + 1, posY, arenaId);
+            Cell left = ReturnCell(posX - 1, posY, arenaId);
+            Cell above = ReturnCell(posX, posY + 1, arenaId);
+            Cell below = ReturnCell(posX, posY - 1, arenaId);
+            Cell diag1 = ReturnCell(posX + 1, posY + 1, arenaId);
+            Cell diag2 = ReturnCell(posX - 1, posY - 1, arenaId);
+            Cell diag3 = ReturnCell(posX - 1, posY + 1, arenaId);
+            Cell diag4 = ReturnCell(posX + 1, posY - 1, arenaId);
             List<Cell> nearbyCells = new List<Cell>() { right, left, above, below, diag1, diag2, diag3, diag4 };
 
             for (int i = 0; i < nearbyCells.Count; i++)
@@ -222,16 +225,16 @@ namespace WsApp.Controllers
             return true;
         }
 
-        public bool NoShipNearby(int posX, int posY, Cell cell, Ship ship, bool isNew)
+        public bool NoShipNearby(int posX, int posY, int arenaId, Ship ship, bool isNew)
         {
-            Cell right = ReturnCell(posX + 1, posY, cell.BattleArenaId);
-            Cell left = ReturnCell(posX - 1, posY, cell.BattleArenaId);
-            Cell above = ReturnCell(posX, posY + 1, cell.BattleArenaId);
-            Cell below = ReturnCell(posX, posY - 1, cell.BattleArenaId);
-            Cell diag1 = ReturnCell(posX + 1, posY + 1, cell.BattleArenaId);
-            Cell diag2 = ReturnCell(posX - 1, posY - 1, cell.BattleArenaId);
-            Cell diag3 = ReturnCell(posX - 1, posY + 1, cell.BattleArenaId);
-            Cell diag4 = ReturnCell(posX + 1, posY - 1, cell.BattleArenaId);
+            Cell right = ReturnCell(posX + 1, posY, arenaId);
+            Cell left = ReturnCell(posX - 1, posY, arenaId);
+            Cell above = ReturnCell(posX, posY + 1, arenaId);
+            Cell below = ReturnCell(posX, posY - 1, arenaId);
+            Cell diag1 = ReturnCell(posX + 1, posY + 1, arenaId);
+            Cell diag2 = ReturnCell(posX - 1, posY - 1, arenaId);
+            Cell diag3 = ReturnCell(posX - 1, posY + 1, arenaId);
+            Cell diag4 = ReturnCell(posX + 1, posY - 1, arenaId);
             List<Cell> nearbyCells = new List<Cell>() { right, left, above, below, diag1, diag2, diag3, diag4 };
 
             for (int i = 0; i < nearbyCells.Count; i++)
@@ -261,10 +264,10 @@ namespace WsApp.Controllers
             return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
         }
 
-        public int AddShip(int cellId, int shipTypeId, string shipType, int size, string socketId)
+        public int AddShip(int arenaId, int shipTypeId, string shipType, int size, string socketId, int posX, int posY)
         {
             Ship tempShip = new Ship();
-            tempShip.CellId = cellId;
+            tempShip.CellId = CreateCell(posX, posY, arenaId).CellId;
             tempShip.Name = shipType;
             tempShip.ShipTypeId = shipTypeId;
             tempShip.RemainingTiles = size;
@@ -278,6 +281,19 @@ namespace WsApp.Controllers
         public Ship GetShip(int shipId)
         {
             return _context.Ships.Where(s => s.ShipId.Equals(shipId)).FirstOrDefault();
+        }
+
+        public Cell CreateCell(int x, int y, int arenaId)
+        {
+            Cell temp = new Cell();
+            temp.BattleArenaId = arenaId;
+            temp.PosX = x;
+            temp.PosY = y;
+            temp.IsHit = false;
+            temp.IsArmored = false;
+            _context.Cells.Add(temp);
+            _context.SaveChanges();
+            return temp;
         }
 
         public string GetButtonId(string socketId)

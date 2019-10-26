@@ -7,7 +7,7 @@
         var selectionText = 'New user connected with id: [' + socketId + ']';
         $('#selections').append('<li>' + selectionText + '</li');
         console.log("prisijunge");
-    });
+    });  
 
     connection.on("pingCreatedPlayer", function (socketId, selection) {
         var selectionText = socketId + ' CREATED! ' + '  ' + selection;
@@ -60,10 +60,18 @@
     });
 
     connection.on("pingDisable", function (buttonId) {
+        var count = 0;
         for (var i = 0; i < 5; i++) {
             if (i != buttonId) {
                 var button = document.getElementById("button" + i).disabled = true;
             }
+            if (document.getElementById("button" + i).disabled == true) {
+                count++;
+            }
+        }
+        //checking if all ships were selected
+        if (count == 4) {
+            document.getElementById("ready").disabled = false;
         }
     });
     connection.on("pingRemove", function (buttonId) {
