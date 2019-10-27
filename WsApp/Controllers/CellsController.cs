@@ -18,27 +18,41 @@ namespace WsApp.Controllers
         {
             return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
         }
-        public int AttackCell(int posx, int posy, int battleArenaId)
+
+        public bool AttackCell(int posx, int posy, string socketId)
         {
-            int cellId = -1;
-            Cell tmp = ReturnCell(posx, posy, battleArenaId);
-            if (tmp.IsHit == true)
+            Cell cell = ReturnCell(posx, posy, GetOpponentArenaId(socketId));
+
+            if (cell == null)
             {
-                return -2;
+                return false;
             }
-            if (tmp.IsHit ==false && tmp.ShipId==0)
+            else if (cell.IsHit != true)
             {
-                _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault().IsHit = true;
-                _context.SaveChanges();
-                return -1;
-            }           
+                cell.IsHit = true;
+                Ship ship = GetShip(cell.ShipId);
+                ship.RemainingTiles--;
+                return true;
+            }
+            return false;
+        }
+
+        public int GetOpponentArenaId(string socketId)
+        {
+            Duel duel = _context.Duels.Where(s => s.FirstPlayerSocketId == socketId || s.SecondPlayerSocketId == socketId).FirstOrDefault();
+            if (duel.FirstPlayerSocketId == socketId)
+            {
+                return duel.SecondPlayerBAId;
+            }
             else
             {
-                _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault().IsHit = true;
-                _context.SaveChanges();
-                cellId = _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault().CellId;
+                return duel.FirstPlayerBAId;
             }
-            return cellId;
+        }
+
+        public Ship GetShip(int shipId)
+        {
+            return _context.Ships.Where(s => s.ShipId.Equals(shipId)).FirstOrDefault();
         }
 
         public List<Cell> ReturnAllCells(int battleArenaId)
@@ -56,6 +70,6 @@ namespace WsApp.Controllers
                 id = ba[0].CellId;
             }
             return id;
-        }       
+        }
     }
 }

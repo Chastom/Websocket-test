@@ -50,33 +50,28 @@ namespace WsApp
             var socketId = Context.ConnectionId;
             int posX = Int32.Parse(row);
             int posY = Int32.Parse(col);
-             
-            if (playersController.IsPlayersTurn(socketId) == false)
+
+            if (duelsController.isPlayerTurn(socketId) == false)
             {
                 await Clients.Caller.SendAsync("invalidTurn", row, col);
             }
             else
             {
-                Player atacker = playersController.GetPlayer(socketId);
-                int battleArenaId = baController.GetBAId(atacker.PlayerId);
-                int attackedCellId = cellsController.AttackCell(posX, posY, battleArenaId); 
-                if (attackedCellId ==-2)
+                string enemySockeId = duelsController.GetOpponentSocketId(socketId);
+                bool didHit = cellsController.AttackCell(posX, posY, socketId);
+                Console.WriteLine("============================================= did hit ->>> " + didHit);
+                if (didHit == false)
                 {
-                    await Clients.Caller.SendAsync("cellHasBeenAttacked", row, col);
-                }
-                if (attackedCellId ==-1)
-                {
-                    //pakeisti turna kitam zaidejui ir parasyt pranesima
                     duelsController.ChangeTurns(socketId);
-                    await Clients.Caller.SendAsync("shotMissed");
-                    await Clients.Others.SendAsync("changedTurn");
-
+                    await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, false, false);
+                    await Clients.Caller.SendAsync("pingAttack", row, col, false, true);
+                    //await Clients.Others.SendAsync("changedTurn");
                 }
                 else
                 {
-                    shipsController.AttackShip(attackedCellId);
+                    await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, true, false);
+                    await Clients.Caller.SendAsync("pingAttack", row, col, true, true);
                 }
-                
             }
         }
         public async Task PlaceShipValidation(string row, string col)
@@ -94,15 +89,12 @@ namespace WsApp
                 int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
                 bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
 
-                Console.WriteLine("======================================================================= can place = " + canPlace);
-
                 if (canPlace)
                 {
-                    
+
                     bool placed = shipSelectionController.PlaceShip(socketId);
                     if (placed)
                     {
-                        Console.WriteLine("==================================================================placed");
                         await Clients.Caller.SendAsync("pingShipPlaced", row, col);
                     }
                     else
@@ -150,7 +142,6 @@ namespace WsApp
                 }
                 await Clients.All.SendAsync("PingGameIsStarted", socketId);
             }
-            
         }
 
         public async Task SendAttack(string socketId, string row, string col)
