@@ -117,6 +117,7 @@ namespace WsApp.Controllers
                             shipId = AddShip(arenaId, type.ShipTypeId, type.Type, type.Size, socketId, posX, posY);
                             //cell was created when adding a new ship
                             ReturnCell(posX, posY, arenaId).ShipId = shipId;
+                            _context.SaveChanges();
                             return true;
                         }
                         else
@@ -133,6 +134,7 @@ namespace WsApp.Controllers
                         }
                     }
                     CreateCell(posX, posY, arenaId).ShipId = shipId;
+                    _context.SaveChanges();
                     return true;
                 }
             }

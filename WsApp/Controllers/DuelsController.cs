@@ -97,7 +97,6 @@ namespace WsApp.Controllers
         public bool isPlayerTurn(string socketId)
         {
             Duel duel = _context.Duels.Where(s => s.FirstPlayerSocketId == socketId || s.SecondPlayerSocketId == socketId).FirstOrDefault();
-            Console.WriteLine("===========================================" + (duel.PlayerTurnId == socketId));
             return duel.PlayerTurnId == socketId;
         }
 

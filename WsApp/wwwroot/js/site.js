@@ -65,7 +65,7 @@
         if (didHit) {
             cell.style.backgroundColor = '#ff6666';                       
         } else {
-            cell.style.backgroundColor = '#011bfe'; 
+            cell.style.backgroundColor = '#386C99'; 
         }         
     });
 
