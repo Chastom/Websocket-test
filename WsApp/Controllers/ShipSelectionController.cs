@@ -271,7 +271,8 @@ namespace WsApp.Controllers
             Ship tempShip = new Ship();
             tempShip.CellId = CreateCell(posX, posY, arenaId).CellId;
             tempShip.Name = shipType;
-            tempShip.ShipTypeId = shipTypeId;
+            //tempShip.ShipTypeId = shipTypeId;
+            tempShip.setState(shipTypeId);
             tempShip.RemainingTiles = size;
             tempShip.SocketId = socketId;
 

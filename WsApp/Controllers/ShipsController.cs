@@ -25,7 +25,8 @@ namespace WsApp.Controllers
             Ship tempShip = shipFactory.GetShip("NormalShip");
             tempShip.CellId = cellId;
             tempShip.Name = shipType;
-            tempShip.ShipTypeId = shipTypeId;
+            //tempShip.ShipTypeId = shipTypeId;
+            tempShip.setState(shipTypeId);
             
             _context.Ships.Add(tempShip);
             _context.SaveChanges();
