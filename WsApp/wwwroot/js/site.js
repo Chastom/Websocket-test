@@ -148,7 +148,7 @@
     };
 
     document.getElementById('ready').onclick = function () {
-        connection.invoke("Ready");
+        connection.invoke("ReadySingleton");
     };
 
     $('#grid1').click(function (event) {
