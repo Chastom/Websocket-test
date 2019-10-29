@@ -8,7 +8,7 @@ namespace WsApp.Observers
 {
     public abstract class Observer
     {
-        protected Ship ship;
+        public Ship ship;
         public abstract void update();
     }
 }

@@ -17,7 +17,7 @@ namespace WsApp.Observers
         override
         public void update()
         {
-            Console.WriteLine("Ship ID has changed! New value: " + ship.getState());
+            Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxx  xxxx Ship ID has changed! New value: " + ship.getState());
         }
     }
 }

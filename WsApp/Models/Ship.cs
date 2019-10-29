@@ -32,12 +32,14 @@ namespace WsApp.Models
 
         public void attach(Observer obs)
         {
-            observers.Add(obs);
+            Console.WriteLine("ososososososososososossososososososososososososo");
+            this.observers.Add(obs);
         }
 
         public void notifyAllObservers()
         {
-            foreach (Observer a in observers)
+            Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxx  xxxx Ship ID has changed! New value: " + this.getState());
+            foreach (Observer a in this.observers)
             {
                 a.update();
             }

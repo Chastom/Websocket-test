@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WsApp.Models;
 using WsApp.Interfaces;
 using WsApp.Factory;
+using WsApp.Observers;
 
 namespace WsApp.Controllers
 {
@@ -23,6 +24,8 @@ namespace WsApp.Controllers
             //Ship tempShip = new Ship();
             ShipFactory shipFactory = new ShipFactory();
             Ship tempShip = shipFactory.GetShip("NormalShip");
+            Console.WriteLine("Atejau ideti naujaji observeri--------------------------------------------------------------------");
+            ShipIDObserver observeris = new ShipIDObserver(tempShip);
             tempShip.CellId = cellId;
             tempShip.Name = shipType;
             //tempShip.ShipTypeId = shipTypeId;
