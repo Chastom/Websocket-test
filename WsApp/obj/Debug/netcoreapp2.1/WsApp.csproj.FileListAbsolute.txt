@@ -184,3 +184,42 @@ D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.dll
 D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.pdb
 D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CopyComplete
 D:\VS_repos\New folder\WsApp\obj\Debug\netcoreapp2.1\WsApp.csprojAssemblyReference.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\appsettings.Development.json
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\appsettings.json
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\Properties\launchSettings.json
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.deps.json
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.runtimeconfig.json
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.runtimeconfig.dev.json
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.dll
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.pdb
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.Views.dll
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\bin\Debug\netcoreapp2.1\WsApp.Views.pdb
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.csprojAssemblyReference.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorAssemblyInfo.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorAssemblyInfo.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.AssemblyInfoInputs.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.AssemblyInfo.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.TagHelpers.input.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.TagHelpers.output.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorCoreGenerate.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\About.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Contact.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Index.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Privacy.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\Error.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_CookieConsentPartial.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_Layout.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Create.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Delete.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Details.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Edit.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\ShipType\Index.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\_ViewImports.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\Razor\Views\_ViewStart.cshtml.g.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorTargetAssemblyInfo.cache
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.RazorTargetAssemblyInfo.cs
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.Views.pdb
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.dll
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.pdb
+D:\Objektinis Programu projektavimas\Websocket-test\WsApp\obj\Debug\netcoreapp2.1\WsApp.csproj.CopyComplete
