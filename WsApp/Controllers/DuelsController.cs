@@ -26,7 +26,20 @@ namespace WsApp.Controllers
         {
             return _context.Duels.Where(s => s.FirstPlayerSocketId != null).FirstOrDefault().DuelId;
         }
+        public Duel CreateDuel()
+        {
 
+            if (CountDuels() == 0)
+            {
+                Duel duel = new Duel();
+                _context.Duels.Add(duel);
+                _context.SaveChanges();
+                return duel;
+            }
+            else
+                return _context.Duels.First();
+
+        }
         public bool StartDuel(string socketId, int baId)
         {
             Duel tempDuel = new Duel();
@@ -37,7 +50,25 @@ namespace WsApp.Controllers
             return true;
 
         }
+        public string SetTurn(Duel duel)
+        {
+            Random rnd = new Random();
+            int turnRND = rnd.Next(1, 3);
 
+            if (turnRND ==1)
+            {
+               duel.PlayerTurnId = duel.FirstPlayerSocketId;
+                _context.SaveChanges();
+                return duel.PlayerTurnId;
+
+            }
+            else
+            {
+               duel.PlayerTurnId = duel.SecondPlayerSocketId;
+                _context.SaveChanges();
+                return duel.PlayerTurnId;
+            }
+        }
         //buvo planas padaryti taip, jog DUEL lenteleje butu TIK VIENAS irasas, todel ieskoma irasu kuriuose pirmas dalyvis yra NE NULL, o antras NULL
         public bool JoinDuel(string socketId, int baId)
         {

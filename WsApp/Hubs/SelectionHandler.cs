@@ -121,29 +121,57 @@ namespace WsApp
                 await Clients.Caller.SendAsync("pingRemoveType", type);
             }
         }
-        public async Task Ready()
+
+        public async Task ReadySingleton()
         {
             var socketId = Context.ConnectionId;
             int playerId = playersController.GetPlayerId(socketId);
             int battleArenaId = baController.GetBAId(playerId);
 
-            int dualCount = duelsController.CountDuels();
-            Console.WriteLine(dualCount);
-            if (dualCount == 0)
+            Duel duel = duelsController.CreateDuel();
+            if (duel.FirstPlayerSocketId == null)
             {
-                duelsController.StartDuel(socketId, battleArenaId);
+                duel.FirstPlayerSocketId = socketId;
+                duel.FirstPlayerBAId = battleArenaId;
+                _context.SaveChanges();
                 await Clients.Caller.SendAsync("PingWaitingOponent", socketId);
             }
-            if (dualCount == 1)
+            else if (duel.FirstPlayerSocketId != null && duel.SecondPlayerSocketId==null)
             {
-                bool rez = duelsController.JoinDuel(socketId, battleArenaId);
-                if (rez == false)
-                {
-                    await Clients.Caller.SendAsync("PingFullDual", socketId);
-                }
+                duel.SecondPlayerSocketId = socketId;
+                duel.SecondPlayerBAId = battleArenaId;
+                _context.SaveChanges();
+                string firstTurnSocketId = duelsController.SetTurn(duel);
                 await Clients.All.SendAsync("PingGameIsStarted", socketId);
             }
+            else
+            {
+                await Clients.Caller.SendAsync("PingFullDual", socketId);
+            }
         }
+        //public async Task Ready()
+        //{
+        //    var socketId = Context.ConnectionId;
+        //    int playerId = playersController.GetPlayerId(socketId);
+        //    int battleArenaId = baController.GetBAId(playerId);
+
+        //    int dualCount = duelsController.CountDuels();
+        //    Console.WriteLine(dualCount);
+        //    if (dualCount == 0)
+        //    {
+        //        duelsController.StartDuel(socketId, battleArenaId);
+        //        await Clients.Caller.SendAsync("PingWaitingOponent", socketId);
+        //    }
+        //    if (dualCount == 1)
+        //    {
+        //        bool rez = duelsController.JoinDuel(socketId, battleArenaId);
+        //        if (rez == false)
+        //        {
+        //            await Clients.Caller.SendAsync("PingFullDual", socketId);
+        //        }
+        //        await Clients.All.SendAsync("PingGameIsStarted", socketId);
+        //    }
+        //}
 
         public async Task SendAttack(string socketId, string row, string col)
         {
