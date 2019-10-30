@@ -21,6 +21,7 @@ namespace WsApp
 
         public SelectionHandler(Context context)
         {
+            Console.WriteLine("Nu o cia ar veikiaiaiaiaaiaiaiaiaiaiaiai");
             _context = context;
             playersController = new PlayersController(_context);
             baController = new BAController(_context);

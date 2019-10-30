@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WsApp.Models;
+using WsApp.Interfaces;
+using WsApp.Factory;
 
 namespace WsApp.Controllers
 {
-    public class BAController : Controller
+    public class BAController : Controller, IBattleArena
     {
         private Context _context;
 
@@ -38,7 +40,9 @@ namespace WsApp.Controllers
         [ValidateAntiForgeryToken]
         public int CreateBA(int playerId)
         {
-            BattleArena tempBA = new BattleArena();
+            //BattleArena tempBA = new BattleArena();
+            AbstractFactory abstractFactory = FactoryProducer.getFactory(false);
+            BattleArena tempBA = abstractFactory.getBattleArena("basic");
             tempBA.PlayerId = playerId;
             _context.BattleArenas.Add(tempBA);
                 _context.SaveChanges();
