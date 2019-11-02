@@ -9,7 +9,7 @@
         console.log("prisijunge");
     });
 
-    connection.on("pingGameStart", function () {
+    connection.on("pingGameStarted", function () {
         var btn = document.getElementById("ready");
         btn.innerText = "The game has started!";
     });
@@ -60,11 +60,13 @@
         }, 300);
     });
 
-    connection.on("pingAttack", function (row, col, didHit, isAttacker) {
+    connection.on("pingAttack", function (row, col, attackOutcome, isAttacker) {
         var tableId = isAttacker == true ? 'grid2' : 'grid1';
         var cell = document.getElementById(tableId).rows[row].cells[col];
-        if (didHit) {
+        if (attackOutcome == 'Hit') {
             cell.style.backgroundColor = '#ff6666';
+        } else if (attackOutcome == 'Armor') {
+            cell.style.backgroundColor = '#696969';
         } else {
             cell.style.backgroundColor = '#386C99';
         }

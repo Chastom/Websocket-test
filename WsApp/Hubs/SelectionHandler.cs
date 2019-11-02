@@ -61,18 +61,25 @@ namespace WsApp
             else
             {
                 string enemySockeId = duelsController.GetOpponentSocketId(socketId);
-                bool didHit = cellsController.AttackCell(posX, posY, socketId);
-                if (didHit == false)
+                AttackOutcome attack = cellsController.AttackCell(posX, posY, socketId);
+                switch (attack)
                 {
-                    duelsController.ChangeTurns(socketId);
-                    await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, false, false);
-                    await Clients.Caller.SendAsync("pingAttack", row, col, false, true);
-                    //await Clients.Others.SendAsync("changedTurn");
-                }
-                else
-                {
-                    await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, true, false);
-                    await Clients.Caller.SendAsync("pingAttack", row, col, true, true);
+                    case AttackOutcome.Hit:
+                        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Hit", false);
+                        await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
+                        break;
+                    case AttackOutcome.Armor:
+                        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
+                        await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
+                        break;
+                    //Missed and Invalid realization not finished...
+                    //For now, both trigger default switch
+                    default:
+                        duelsController.ChangeTurns(socketId);
+                        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Missed", false);
+                        await Clients.Caller.SendAsync("pingAttack", row, col, "Missed", true);
+                        //await Clients.Others.SendAsync("changedTurn");
+                        break;
                 }
             }
         }

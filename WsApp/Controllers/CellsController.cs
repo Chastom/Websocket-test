@@ -19,22 +19,33 @@ namespace WsApp.Controllers
             return _context.Cells.Where(s => s.PosX == posx && s.PosY == posy && s.BattleArenaId == battleArenaId).FirstOrDefault();
         }
 
-        public bool AttackCell(int posx, int posy, string socketId)
+        public AttackOutcome AttackCell(int posx, int posy, string socketId)
         {
             Cell cell = ReturnCell(posx, posy, GetOpponentArenaId(socketId));
 
             if (cell == null)
             {
-                return false;
+                return AttackOutcome.Missed;
             }
             else if (cell.IsHit != true)
             {
-                cell.IsHit = true;
-                Ship ship = GetShip(cell.ShipId);
-                ship.RemainingTiles--;
-                return true;
+                if (cell.IsArmored == true)
+                {
+                    cell.IsArmored = false;
+                    _context.SaveChanges();
+                    return AttackOutcome.Armor;
+                }
+                else
+                {
+                    cell.IsHit = true;
+                    Ship ship = GetShip(cell.ShipId);
+                    ship.RemainingTiles--;
+                    _context.SaveChanges();
+                    return AttackOutcome.Hit;
+                }
+
             }
-            return false;
+            return AttackOutcome.Invalid;
         }
 
         public int GetOpponentArenaId(string socketId)
