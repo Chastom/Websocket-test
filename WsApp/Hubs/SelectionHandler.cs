@@ -77,19 +77,19 @@ namespace WsApp
             }
         }
 
-        public bool SelectArmor()
+        public async Task SelectArmor()
         {
-            string id = Context.ConnectionId;
-            if (armorSelection.IsArmorSelected(id))
+            string socketId = Context.ConnectionId;               
+            if (armorSelection.IsArmorSelected(socketId))
             {
-                armorSelection.Deselect(id);
-                return false;
+                armorSelection.Deselect(socketId);
             }
             else
             {                
-                armorSelection.AddArmorSelection(id);
+                armorSelection.AddArmorSelection(socketId);
             }
-            return true;
+            int count = armorSelection.GetArmorCount(socketId);
+            await Clients.Caller.SendAsync("pingArmorCount", count);
         }
 
         public async Task PlaceShipValidation(string row, string col)
@@ -105,6 +105,8 @@ namespace WsApp
                 bool armored = armorSelection.ArmorUp(posX, posY, battleArenaId, socketId);
                 if (armored)
                 {
+                    int count = armorSelection.GetArmorCount(socketId);
+                    await Clients.Caller.SendAsync("pingArmorCount", count);
                     await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
                 }
                 else

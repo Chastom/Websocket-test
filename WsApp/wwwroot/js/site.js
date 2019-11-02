@@ -14,6 +14,13 @@
         btn.innerText = "The game has started!";
     });
 
+    connection.on("pingArmorCount", function (count) {
+        var text = 'Armor left: ' + count;
+        document.getElementById("armorCount").innerText = text;
+    });
+
+
+
     connection.on("invalidTurn", function (row, col) {
         var cell = document.getElementById('grid2').rows[row].cells[col];
         var previous = cell.style.backgroundColor;
@@ -41,7 +48,7 @@
             cell.style.backgroundColor = armorColor;
         } else {
             cell.style.backgroundColor = shipColor;
-        }        
+        }
     });
 
     connection.on("invalidSelection", function (row, col) {
@@ -125,7 +132,7 @@
         var btn = document.getElementById("btnArmor");
         var color = btn.style.backgroundColor;
         if (color == "rgb(204, 163, 0)") {
-            btn.style.backgroundColor = "#997a00";            
+            btn.style.backgroundColor = "#997a00";
         } else {
             btn.style.backgroundColor = "#cca300";
         }

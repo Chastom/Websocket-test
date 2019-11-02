@@ -58,6 +58,16 @@ namespace WsApp
             return _context.ArmorSelections.Where(s => s.SocketId == socketId).FirstOrDefault();
         }
 
+        public int GetArmorCount(string socketId)
+        {
+            ArmorSelection armor = GetArmorSelection(socketId);
+            if (armor != null)
+            {
+                return armor.ArmorSize;
+            }
+            return 0;
+        }
+
         private void CreateArmorSelection(string socketId)
         {
             ArmorSelection temp = new ArmorSelection();
