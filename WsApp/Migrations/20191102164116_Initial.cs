@@ -9,6 +9,21 @@ namespace WsApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ArmorSelections",
+                columns: table => new
+                {
+                    ArmorSelectionId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SocketId = table.Column<string>(nullable: true),
+                    Selected = table.Column<bool>(nullable: false),
+                    ArmorSize = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArmorSelections", x => x.ArmorSelectionId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BattleArenas",
                 columns: table => new
                 {
@@ -149,6 +164,9 @@ namespace WsApp.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ArmorSelections");
+
             migrationBuilder.DropTable(
                 name: "Cells");
 

@@ -29,13 +29,19 @@
         var messageText = message;
         if (userId != null) {
             messageText = 'id [' + userId + ']: ' + message;
-        }        
+        }
         $('#selections').append('<li>' + messageText + '</li');
     });
 
-    connection.on("pingShipPlaced", function (row, col) {
+    connection.on("pingShipPlaced", function (row, col, armored) {
+        var armorColor = "#cca300";
+        var shipColor = '#696969';
         var cell = document.getElementById('grid1').rows[row].cells[col];
-        cell.style.backgroundColor = '#696969';
+        if (armored) {
+            cell.style.backgroundColor = armorColor;
+        } else {
+            cell.style.backgroundColor = shipColor;
+        }        
     });
 
     connection.on("invalidSelection", function (row, col) {
@@ -51,10 +57,10 @@
         var tableId = isAttacker == true ? 'grid2' : 'grid1';
         var cell = document.getElementById(tableId).rows[row].cells[col];
         if (didHit) {
-            cell.style.backgroundColor = '#ff6666';                       
+            cell.style.backgroundColor = '#ff6666';
         } else {
-            cell.style.backgroundColor = '#386C99'; 
-        }         
+            cell.style.backgroundColor = '#386C99';
+        }
     });
 
     connection.on("pingDisable", function (buttonId) {
@@ -98,20 +104,6 @@
         }
     });
 
-
-
-
-    //var counter = 0;
-    //var button = document.getElementById("button" + counter);
-    //var types = ["Bombardier", "Cruiser", "Submarin", "Kukuruznik", "Schnicel"];
-    //while (button) {
-    //    button.addEventListener("click", function () {
-    //        connection.invoke("SelectShipType", types[counter]);
-    //    })
-    //    button = document.getElementById("button" + (++counter));
-    //}
-
-
     document.getElementById('button0').onclick = function () {
         connection.invoke("SelectShipType", "Bombardier", "button0");
     };
@@ -128,10 +120,21 @@
         connection.invoke("SelectShipType", "Schnicel", "button4");
     };
 
+    document.getElementById('btnArmor').onclick = function () {
+        connection.invoke("SelectArmor");
+        var btn = document.getElementById("btnArmor");
+        var color = btn.style.backgroundColor;
+        if (color == "rgb(204, 163, 0)") {
+            btn.style.backgroundColor = "#997a00";            
+        } else {
+            btn.style.backgroundColor = "#cca300";
+        }
+    };
+
     document.getElementById('ready').onclick = function () {
         connection.invoke("ReadySingleton");
         var btn = document.getElementById("ready");
-        btn.innerText  = "Searching for opponent...";
+        btn.innerText = "Searching for opponent...";
         btn.disabled = true;
     };
 

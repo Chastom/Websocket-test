@@ -18,6 +18,7 @@ namespace WsApp
         private ShipsController shipsController;
         private DuelsController duelsController;
         private ShipSelectionController shipSelectionController;
+        private ArmorSelectionController armorSelection;
 
         public SelectionHandler(Context context)
         {
@@ -29,6 +30,7 @@ namespace WsApp
             shipsController = new ShipsController(_context);
             duelsController = new DuelsController(_context);
             shipSelectionController = new ShipSelectionController(_context);
+            armorSelection = new ArmorSelectionController(_context);
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -45,6 +47,7 @@ namespace WsApp
 
             await Clients.Caller.SendAsync("pingDisable", buttonId[6]);
         }
+
         public async Task Atack(string row, string col)
         {
             var socketId = Context.ConnectionId;
@@ -59,7 +62,6 @@ namespace WsApp
             {
                 string enemySockeId = duelsController.GetOpponentSocketId(socketId);
                 bool didHit = cellsController.AttackCell(posX, posY, socketId);
-                Console.WriteLine("============================================= did hit ->>> " + didHit);
                 if (didHit == false)
                 {
                     duelsController.ChangeTurns(socketId);
@@ -74,39 +76,72 @@ namespace WsApp
                 }
             }
         }
+
+        public bool SelectArmor()
+        {
+            string id = Context.ConnectionId;
+            if (armorSelection.IsArmorSelected(id))
+            {
+                armorSelection.Deselect(id);
+                return false;
+            }
+            else
+            {                
+                armorSelection.AddArmorSelection(id);
+            }
+            return true;
+        }
+
         public async Task PlaceShipValidation(string row, string col)
         {
             var socketId = Context.ConnectionId;
             int posX = Int32.Parse(row);
             int posY = Int32.Parse(col);
+            int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
 
-            if (!shipSelectionController.IsValid(socketId))
+            //armor placement
+            if (armorSelection.IsArmorSelected(socketId))
             {
-                await Clients.Caller.SendAsync("invalidSelection", row, col);
-            }
-            else
-            {
-                int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
-                bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
-
-                if (canPlace)
+                bool armored = armorSelection.ArmorUp(posX, posY, battleArenaId, socketId);
+                if (armored)
                 {
-
-                    bool placed = shipSelectionController.PlaceShip(socketId);
-                    if (placed)
-                    {
-                        await Clients.Caller.SendAsync("pingShipPlaced", row, col);
-                    }
-                    else
-                    {
-                        string id = shipSelectionController.GetButtonId(socketId);
-                        await Clients.Caller.SendAsync("pingShipPlaced", row, col);
-                        await Clients.Caller.SendAsync("pingRemove", id);
-                    }
+                    await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
                 }
                 else
                 {
                     await Clients.Caller.SendAsync("invalidSelection", row, col);
+                }
+            }
+            //ship placement | cant place a ship if armor function is selected
+            else
+            {
+                if (!shipSelectionController.IsValid(socketId))
+                {
+                    await Clients.Caller.SendAsync("invalidSelection", row, col);
+                }
+                else
+                {                    
+                    bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
+
+                    if (canPlace)
+                    {
+
+                        bool placed = shipSelectionController.PlaceShip(socketId);
+                        if (placed)
+                        {
+                            await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
+                        }
+                        else
+                        {
+                            string id = shipSelectionController.GetButtonId(socketId);
+                            await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
+                            await Clients.Caller.SendAsync("pingRemove", id);
+                        }
+                    }
+                    else
+                    {
+                        await Clients.Caller.SendAsync("invalidSelection", row, col);
+                    }
                 }
             }
         }
@@ -135,7 +170,7 @@ namespace WsApp
                 _context.SaveChanges();
                 await Clients.Caller.SendAsync("pingMessage", playerId, "Waiting for opponent...");
             }
-            else if (duel.FirstPlayerSocketId != null && duel.SecondPlayerSocketId==null)
+            else if (duel.FirstPlayerSocketId != null && duel.SecondPlayerSocketId == null)
             {
                 duel.SecondPlayerSocketId = socketId;
                 duel.SecondPlayerBAId = battleArenaId;

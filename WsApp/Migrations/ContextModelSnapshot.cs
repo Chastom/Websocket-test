@@ -19,6 +19,23 @@ namespace WsApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("WsApp.Models.ArmorSelection", b =>
+                {
+                    b.Property<int>("ArmorSelectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ArmorSize");
+
+                    b.Property<bool>("Selected");
+
+                    b.Property<string>("SocketId");
+
+                    b.HasKey("ArmorSelectionId");
+
+                    b.ToTable("ArmorSelections");
+                });
+
             modelBuilder.Entity("WsApp.Models.BattleArena", b =>
                 {
                     b.Property<int>("BattleArenaId")

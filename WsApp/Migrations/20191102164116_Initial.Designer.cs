@@ -10,7 +10,7 @@ using WsApp.Models;
 namespace WsApp.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20191102102251_Initial")]
+    [Migration("20191102164116_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,23 @@ namespace WsApp.Migrations
                 .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("WsApp.Models.ArmorSelection", b =>
+                {
+                    b.Property<int>("ArmorSelectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ArmorSize");
+
+                    b.Property<bool>("Selected");
+
+                    b.Property<string>("SocketId");
+
+                    b.HasKey("ArmorSelectionId");
+
+                    b.ToTable("ArmorSelections");
+                });
 
             modelBuilder.Entity("WsApp.Models.BattleArena", b =>
                 {
