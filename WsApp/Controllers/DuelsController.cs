@@ -26,6 +26,7 @@ namespace WsApp.Controllers
         {
             return _context.Duels.Where(s => s.FirstPlayerSocketId != null).FirstOrDefault().DuelId;
         }
+
         public Duel CreateDuel()
         {
 
@@ -40,74 +41,25 @@ namespace WsApp.Controllers
                 return _context.Duels.First();
 
         }
-        public bool StartDuel(string socketId, int baId)
-        {
-            Duel tempDuel = new Duel();
-            tempDuel.FirstPlayerBAId = baId;
-            tempDuel.FirstPlayerSocketId = socketId;
-            _context.Duels.Add(tempDuel);
-            _context.SaveChanges();
-            return true;
 
-        }
         public string SetTurn(Duel duel)
         {
             Random rnd = new Random();
             int turnRND = rnd.Next(1, 3);
 
-            if (turnRND ==1)
+            if (turnRND == 1)
             {
-               duel.PlayerTurnId = duel.FirstPlayerSocketId;
+                duel.PlayerTurnId = duel.FirstPlayerSocketId;
                 _context.SaveChanges();
                 return duel.PlayerTurnId;
 
             }
             else
             {
-               duel.PlayerTurnId = duel.SecondPlayerSocketId;
+                duel.PlayerTurnId = duel.SecondPlayerSocketId;
                 _context.SaveChanges();
                 return duel.PlayerTurnId;
             }
-        }
-        //buvo planas padaryti taip, jog DUEL lenteleje butu TIK VIENAS irasas, todel ieskoma irasu kuriuose pirmas dalyvis yra NE NULL, o antras NULL
-        public bool JoinDuel(string socketId, int baId)
-        {
-            List<Duel> duels = _context.Duels.Where(s => s.DuelId == DuelId() && s.SecondPlayerSocketId == null).ToList();
-            if (duels.Count > 0)
-            {
-                _context.Duels.Where(s => s.DuelId == DuelId()).FirstOrDefault().SecondPlayerSocketId = socketId;
-                _context.Duels.Where(s => s.DuelId == DuelId()).FirstOrDefault().SecondPlayerBAId = baId;
-                _context.SaveChanges();
-
-                Random rnd = new Random();
-                int turnRND = rnd.Next(1, 3);
-                if (turnRND == 1)
-                {
-                    List<Duel> firstPlayerID = _context.Duels.Where(s => s.FirstPlayerSocketId != null).ToList();
-                    _context.Duels.Where(s => s.DuelId == DuelId()).FirstOrDefault().PlayerTurnId = firstPlayerID[0].FirstPlayerSocketId;
-                    _context.SaveChanges();
-                    _context.Players.Where(s => s.Socket == firstPlayerID[0].FirstPlayerSocketId).FirstOrDefault().Turn = true;
-                    _context.SaveChanges();
-                    return true;
-                }
-                if (turnRND == 2)
-                {
-
-                    _context.Duels.Where(s => s.DuelId == DuelId()).FirstOrDefault().PlayerTurnId = socketId;
-                    _context.SaveChanges();
-                    _context.Players.Where(s => s.Socket == socketId).FirstOrDefault().Turn = true;
-                    _context.SaveChanges();
-                    return true;
-                }
-                return true;
-            }
-            //jeigu nera tai grazinama FALSE
-            List<Duel> fullduels = _context.Duels.Where(s => s.DuelId == DuelId() && s.SecondPlayerSocketId != null).ToList();
-            if (fullduels.Count > 0)
-            {
-                return false;
-            }
-            return false;
         }
 
         public void ChangeTurns(string socketId)
@@ -142,6 +94,22 @@ namespace WsApp.Controllers
             {
                 return duel.FirstPlayerSocketId;
             }
+        }
+
+        public void removeDuel(string socketId)
+        {
+            Duel duel = _context.Duels.Where(s => s.FirstPlayerSocketId == socketId || s.SecondPlayerSocketId == socketId).FirstOrDefault();
+            if (duel != null)
+            {
+                _context.Remove(duel);
+                _context.SaveChanges();
+            }
+        }
+
+        public void deleteDuels()
+        {
+            _context.Duels.RemoveRange(_context.Duels);
+            _context.SaveChanges();
         }
     }
 }

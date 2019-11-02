@@ -21,7 +21,6 @@ namespace WsApp
 
         public SelectionHandler(Context context)
         {
-            Console.WriteLine("Nu o cia ar veikiaiaiaiaaiaiaiaiaiaiaiai");
             _context = context;
             playersController = new PlayersController(_context);
             baController = new BAController(_context);
@@ -134,7 +133,7 @@ namespace WsApp
                 duel.FirstPlayerSocketId = socketId;
                 duel.FirstPlayerBAId = battleArenaId;
                 _context.SaveChanges();
-                await Clients.Caller.SendAsync("PingWaitingOponent", socketId);
+                await Clients.Caller.SendAsync("pingMessage", playerId, "Waiting for opponent...");
             }
             else if (duel.FirstPlayerSocketId != null && duel.SecondPlayerSocketId==null)
             {
@@ -142,11 +141,12 @@ namespace WsApp
                 duel.SecondPlayerBAId = battleArenaId;
                 _context.SaveChanges();
                 string firstTurnSocketId = duelsController.SetTurn(duel);
-                await Clients.All.SendAsync("PingGameIsStarted", socketId);
+                await Clients.All.SendAsync("pingMessage", null, "The game has started!");
+                await Clients.All.SendAsync("pingGameStarted");
             }
             else
             {
-                await Clients.Caller.SendAsync("PingFullDual", socketId);
+                await Clients.Caller.SendAsync("pingMessage", playerId, "No available duels at the moment...");
             }
         }
         //public async Task Ready()
@@ -173,12 +173,8 @@ namespace WsApp
         //    }
         //}
 
-        public async Task SendAttack(string socketId, string row, string col)
-        {
-            await Clients.All.SendAsync("pingAttack", socketId, row, col);
-        }
 
-        //messages :D
+        //messages
         public Task SendMessage(string message)
         {
             int userId = playersController.GetPlayerId(Context.ConnectionId);
@@ -194,6 +190,18 @@ namespace WsApp
             bool editedBAId = playersController.AddPlayerID(createdId, CreatedBAId);
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
             await base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            var socketId = Context.ConnectionId;
+            duelsController.removeDuel(socketId);
+            return base.OnDisconnectedAsync(exception);
+        }
+
+        public void DeleteDuels()
+        {
+            duelsController.deleteDuels();
         }
     }
 }

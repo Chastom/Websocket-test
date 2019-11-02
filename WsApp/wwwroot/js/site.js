@@ -9,26 +9,11 @@
         console.log("prisijunge");
     });
 
-    connection.on("pingCreatedPlayer", function (socketId, selection) {
-        var selectionText = socketId + ' CREATED! ' + '  ' + selection;
-        $('#test').append('<li>' + selectionText + '</li');
-        console.log("iskviesta");
+    connection.on("pingGameStart", function () {
+        var btn = document.getElementById("ready");
+        btn.innerText = "The game has started!";
     });
-    connection.on("PingFullDual", function (socketId) {
-        var selectionText = socketId + ' Unlucky! Arena is full ';
-        $('#test').append('<li>' + selectionText + '</li');
-        console.log("Trecias nereikalingas :)");
-    });
-    connection.on("PingWaitingOponent", function (socketId) {
-        var selectionText = socketId + ' Laukia priesininko ';
-        $('#selections').append('<li>' + selectionText + '</li');
-        console.log("Laukiama priesininko");
-    });
-    connection.on("PingGameIsStarted", function (socketId) {
-        var selectionText = 'Zaidimas pradetas';
-        $('#selections').append('<li>' + selectionText + '</li');
-        console.log("Zaidimas pradetas");
-    });
+
     connection.on("invalidTurn", function (row, col) {
         var cell = document.getElementById('grid2').rows[row].cells[col];
         var previous = cell.style.backgroundColor;
@@ -41,7 +26,10 @@
         console.log("Ne jusu ejimas");
     });
     connection.on("pingMessage", function (userId, message) {
-        var messageText = 'id [' + userId + ']: ' + message;
+        var messageText = message;
+        if (userId != null) {
+            messageText = 'id [' + userId + ']: ' + message;
+        }        
         $('#selections').append('<li>' + messageText + '</li');
     });
 
@@ -76,13 +64,6 @@
             }
         }
     });
-
-    //========== can be removed later ===========
-    //for testing purposes adding a button to start the game without placing all the ships beforehand
-    document.getElementById('buttonTesting').onclick = function () {
-        document.getElementById("ready").disabled = false;
-    };
-    //========== can be removed later ===========
 
     connection.on("pingRemove", function (buttonId) {
         document.getElementById(buttonId).style.display = "none";
@@ -149,7 +130,21 @@
 
     document.getElementById('ready').onclick = function () {
         connection.invoke("ReadySingleton");
+        var btn = document.getElementById("ready");
+        btn.innerText  = "Searching for opponent...";
+        btn.disabled = true;
     };
+
+    //========== can be removed later ===========
+    //for testing purposes adding a button to start the game without placing all the ships beforehand
+    document.getElementById('buttonTesting').onclick = function () {
+        document.getElementById("ready").disabled = false;
+    };
+
+    document.getElementById('buttonTesting2').onclick = function () {
+        connection.invoke("DeleteDuels");
+    };
+    //========== can be removed later ===========
 
     $('#grid1').click(function (event) {
         var target = $(event.target);
