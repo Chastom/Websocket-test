@@ -135,8 +135,10 @@
         var color = btn.style.backgroundColor;
         if (color == "rgb(204, 163, 0)") {
             btn.style.backgroundColor = "#997a00";
+            $('#grid1').addClass('armorGrid');
         } else {
             btn.style.backgroundColor = "#cca300";
+            $('#grid1').removeClass('armorGrid');
         }
     };
 
