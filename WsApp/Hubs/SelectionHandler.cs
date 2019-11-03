@@ -69,6 +69,7 @@ namespace WsApp
                         await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
                         break;
                     case AttackOutcome.Armor:
+                        duelsController.ChangeTurns(socketId);
                         await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
                         await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
                         break;
