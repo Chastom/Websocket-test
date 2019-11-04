@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WsApp.Models;
+using WsApp.Decorators;
 
 namespace WsApp
 {
@@ -86,7 +87,9 @@ namespace WsApp
             {
                 if (cell.IsArmored == false && armorSelection.ArmorSize >= 1)
                 {
-                    cell.IsArmored = true;
+                    //cell.IsArmored = true;
+                    ArmorDecorator decorator = new ArmorDecorator(cell);
+                    decorator.AddArmor();
                     armorSelection.ArmorSize--;
                     _context.SaveChanges();                    
                     return true;
