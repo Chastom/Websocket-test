@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WsApp.Controllers;
 using WsApp.Models;
+using WsApp.Strategies;
 
 namespace WsApp
 {
@@ -61,39 +62,39 @@ namespace WsApp
             else
             {
                 string enemySockeId = duelsController.GetOpponentSocketId(socketId);
-                AttackOutcome attack = cellsController.AttackCell(posX, posY, socketId);
-                switch (attack)
-                {
-                    case AttackOutcome.Hit:
-                        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Hit", false);
-                        await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
-                        break;
-                    case AttackOutcome.Armor:
-                        duelsController.ChangeTurns(socketId);
-                        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
-                        await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
-                        break;
-                    //Missed and Invalid realization not finished...
-                    //For now, both trigger default switch
-                    default:
-                        duelsController.ChangeTurns(socketId);
-                        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Missed", false);
-                        await Clients.Caller.SendAsync("pingAttack", row, col, "Missed", true);
-                        //await Clients.Others.SendAsync("changedTurn");
-                        break;
-                }
+                //AttackOutcome attack = cellsController.AttackCell(posX, posY, socketId);
+                //switch (attack)
+                //{
+                //    case AttackOutcome.Hit:
+                //        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Hit", false);
+                //        await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
+                //        break;
+                //    case AttackOutcome.Armor:
+                //        duelsController.ChangeTurns(socketId);
+                //        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
+                //        await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
+                //        break;
+                //    //Missed and Invalid realization not finished...
+                //    //For now, both trigger default switch
+                //    default:
+                //        duelsController.ChangeTurns(socketId);
+                //        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Missed", false);
+                //        await Clients.Caller.SendAsync("pingAttack", row, col, "Missed", true);
+                //        //await Clients.Others.SendAsync("changedTurn");
+                //        break;
+                //}
             }
         }
 
         public async Task SelectArmor()
         {
-            string socketId = Context.ConnectionId;               
+            string socketId = Context.ConnectionId;
             if (armorSelection.IsArmorSelected(socketId))
             {
                 armorSelection.Deselect(socketId);
             }
             else
-            {                
+            {
                 armorSelection.AddArmorSelection(socketId);
             }
             int count = armorSelection.GetArmorCount(socketId);
@@ -130,7 +131,7 @@ namespace WsApp
                     await Clients.Caller.SendAsync("invalidSelection", row, col);
                 }
                 else
-                {                    
+                {
                     bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
 
                     if (canPlace)
@@ -222,6 +223,8 @@ namespace WsApp
         //messages
         public Task SendMessage(string message)
         {
+            //Console.WriteLine("==================================================== size: " + strategyHolder.strategySelectors.Count);
+            StrategyHolder.Print();
             int userId = playersController.GetPlayerId(Context.ConnectionId);
             return Clients.All.SendAsync("pingMessage", userId, message);
         }
@@ -233,6 +236,11 @@ namespace WsApp
             int createdId = playersController.CreatePlayer(socketId);
             int CreatedBAId = baController.CreateBA(createdId);
             bool editedBAId = playersController.AddPlayerID(createdId, CreatedBAId);
+
+            //setting Strategy for newly connected player to -> BasicAttack
+            //strategySelectors.Add(new StrategySelector(socketId, new BasicAttack(_context)));
+            StrategyHolder.AddStrategySelector(new PlayerStrategy(socketId, new BasicAttack(_context)));
+
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
             await base.OnConnectedAsync();
         }
@@ -247,6 +255,41 @@ namespace WsApp
         public void DeleteDuels()
         {
             duelsController.deleteDuels();
-        }
+        }        
+
+
     }
+
+    //public static class StrategyHolder
+    //{
+    //    public static List<StrategySelector> strategySelectors = new List<StrategySelector>();
+
+    //    public static void AddStrategySelector(StrategySelector strategySelector)
+    //    {
+    //        strategySelectors.Add(strategySelector);
+    //        Console.WriteLine("==================================================== strategy added ->>> ");
+    //    }
+
+    //    public static void Print()
+    //    {
+    //        for (int i = 0; i < strategySelectors.Count; i++)
+    //        {
+    //            Console.WriteLine("============================================== STRATEGY --------> " + i);
+    //        }
+    //    }
+        
+    //}
+
+    //public class StrategySelector
+    //{
+    //    public string socketId;
+    //    public Strategy activeStrategy;
+
+    //    public StrategySelector(string id, Strategy active)
+    //    {
+    //        socketId = id;
+    //        activeStrategy = active;
+    //    }
+    //}
+
 }
