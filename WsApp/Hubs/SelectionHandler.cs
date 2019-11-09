@@ -20,6 +20,7 @@ namespace WsApp
         private DuelsController duelsController;
         private ShipSelectionController shipSelectionController;
         private ArmorSelectionController armorSelection;
+        private StrategyController strategyController;
 
         public SelectionHandler(Context context)
         {
@@ -32,6 +33,7 @@ namespace WsApp
             duelsController = new DuelsController(_context);
             shipSelectionController = new ShipSelectionController(_context);
             armorSelection = new ArmorSelectionController(_context);
+            strategyController = new StrategyController(_context);
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -62,27 +64,36 @@ namespace WsApp
             else
             {
                 string enemySockeId = duelsController.GetOpponentSocketId(socketId);
-                //AttackOutcome attack = cellsController.AttackCell(posX, posY, socketId);
-                //switch (attack)
-                //{
-                //    case AttackOutcome.Hit:
-                //        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Hit", false);
-                //        await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
-                //        break;
-                //    case AttackOutcome.Armor:
-                //        duelsController.ChangeTurns(socketId);
-                //        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
-                //        await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
-                //        break;
-                //    //Missed and Invalid realization not finished...
-                //    //For now, both trigger default switch
-                //    default:
-                //        duelsController.ChangeTurns(socketId);
-                //        await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Missed", false);
-                //        await Clients.Caller.SendAsync("pingAttack", row, col, "Missed", true);
-                //        //await Clients.Others.SendAsync("changedTurn");
-                //        break;
-                //}
+
+                //returns active caller's strategy
+                Strategy activeStrategy = StrategyHolder.GetPlayerStrategy(socketId);
+                //executing the strategy returns all affected cells as AttackOutcome 
+                List<AttackOutcome> outcomes = strategyController.Attack(posX, posY, socketId);
+                //for every outcome we inform both players
+
+                foreach(AttackOutcome attack in outcomes)
+                {
+                    switch (attack)
+                    {
+                        case AttackOutcome.Hit:
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Hit", false);
+                            await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
+                            break;
+                        case AttackOutcome.Armor:
+                            duelsController.ChangeTurns(socketId);
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
+                            await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
+                            break;
+                        //Missed and Invalid realization not finished...
+                        //For now, both trigger default switch
+                        default:
+                            duelsController.ChangeTurns(socketId);
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Missed", false);
+                            await Clients.Caller.SendAsync("pingAttack", row, col, "Missed", true);
+                            //await Clients.Others.SendAsync("changedTurn");
+                            break;
+                    }
+                }                
             }
         }
 
@@ -223,13 +234,10 @@ namespace WsApp
         //messages
         public Task SendMessage(string message)
         {
-            //Console.WriteLine("==================================================== size: " + strategyHolder.strategySelectors.Count);
-            StrategyHolder.Print();
             int userId = playersController.GetPlayerId(Context.ConnectionId);
             return Clients.All.SendAsync("pingMessage", userId, message);
         }
 
-        //cia reik ne tik player sukurt lentele bet DB sutvarkyt kad ir battle arena ir viskas butu
         public override async Task OnConnectedAsync()
         {
             var socketId = Context.ConnectionId;
@@ -238,9 +246,8 @@ namespace WsApp
             bool editedBAId = playersController.AddPlayerID(createdId, CreatedBAId);
 
             //setting Strategy for newly connected player to -> BasicAttack
-            //strategySelectors.Add(new StrategySelector(socketId, new BasicAttack(_context)));
-            StrategyHolder.AddStrategySelector(new PlayerStrategy(socketId, new BasicAttack(_context)));
-
+            StrategyHolder.AddStrategy(socketId, new BasicAttack());
+        
             await Clients.All.SendAsync("UserConnected", Context.ConnectionId);
             await base.OnConnectedAsync();
         }

@@ -9,16 +9,37 @@ namespace WsApp.Strategies
 {
     public abstract class Strategy
     {
-        public Context _context;
-        public CellsController cellController;
+        public List<Cell> cells;
+        public List<Ship> ships;
 
-        public Strategy(Context context)
+        public abstract List<AttackOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships);
+
+        //-----------------------------------------------------------
+        //Db context methods implementation to eliminate context dependancy       
+      
+        public Cell ReturnCell(int posx, int posy)
         {
-            cellController = new CellsController(context);
-            _context = context;
+            foreach(var cell in cells)
+            {
+                if(cell.PosX == posx && cell.PosY == posy)
+                {
+                    return cell;
+                }
+            }
+            return null;
         }
 
-        public abstract List<AttackOutcome> AttackCell(int posx, int posy, string socketId);
+        public Ship GetShip(int shipId)
+        {
+            foreach(var ship in ships)
+            {
+                if (ship.ShipId.Equals(shipId))
+                {
+                    return ship;
+                }
+            }
+            return null;
+        }
 
     }
 }

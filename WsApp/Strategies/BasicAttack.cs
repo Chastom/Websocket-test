@@ -8,18 +8,22 @@ namespace WsApp.Strategies
 {
     public class BasicAttack : Strategy
     {
-        public BasicAttack(Context context) : base(context)
+        public BasicAttack() : base()
         {
         }
 
-        public override List<AttackOutcome> AttackCell(int posx, int posy, string socketId)
+        public override List<AttackOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships)
         {
+            this.cells = cells;
+            this.ships = ships;
+
             List<AttackOutcome> outcomes = new List<AttackOutcome>();
 
-            Cell cell = cellController.ReturnCell(posx, posy, cellController.GetOpponentArenaId(socketId));
+            Cell cell = ReturnCell(posx, posy);
 
             if (cell == null)
             {
+                Console.WriteLine("======================================================= MISSED ");
                 outcomes.Add(AttackOutcome.Missed);
                 return outcomes;
             }
@@ -27,24 +31,33 @@ namespace WsApp.Strategies
             {
                 if (cell.IsArmored == true)
                 {
+                    Console.WriteLine("======================================================= ARMOR ");
                     cell.IsArmored = false;
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                     outcomes.Add(AttackOutcome.Armor);
                     return outcomes;
                 }
                 else
                 {
                     cell.IsHit = true;
-                    Ship ship = cellController.GetShip(cell.ShipId);
+                    Ship ship = GetShip(cell.ShipId);
                     ship.RemainingTiles--;
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
+                    Console.WriteLine("======================================================= HIT ");
                     outcomes.Add(AttackOutcome.Hit);
                     return outcomes;
                 }
 
             }
+            Console.WriteLine("======================================================= INVALID ");
             outcomes.Add(AttackOutcome.Invalid);
             return outcomes;
+        }
+
+
+        public override string ToString()
+        {
+            return "[BASIC ATTACK]";
         }
     }
 }

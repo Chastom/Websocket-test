@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WsApp.Models;
 
 namespace WsApp.Strategies
 {
-    public class StrategyHolder
+    public static class StrategyHolder
     {
+        public static Context context;
         public static List<PlayerStrategy> playersStrategies = new List<PlayerStrategy>();
 
-        public static void AddStrategySelector(PlayerStrategy strategySelector)
+        public static void AddStrategy(string socketId, Strategy strategy)
         {
-            playersStrategies.Add(strategySelector);
+            playersStrategies.Add(new PlayerStrategy(socketId, strategy));
             Console.WriteLine("==================================================== strategy added ->>> ");
         }
 
@@ -19,17 +21,18 @@ namespace WsApp.Strategies
         {
             for (int i = 0; i < playersStrategies.Count; i++)
             {
-                Console.WriteLine("============================================== STRATEGY --------> " + i);
+                Console.WriteLine("============================================== STRATEGY --------> " 
+                    + i  + "  player: " + playersStrategies[i].socketId + "  strategy: " + playersStrategies[i].activeStrategy.ToString());
             }
         }
 
-        public static PlayerStrategy GetPlayerStrategy(string socketId)
+        public static Strategy GetPlayerStrategy(string socketId)
         {
             for (int i = 0; i < playersStrategies.Count; i++)
             {
                 if(playersStrategies[i].socketId == socketId)
                 {
-                    return playersStrategies[i];
+                    return playersStrategies[i].activeStrategy;
                 }
             }
             return null;
