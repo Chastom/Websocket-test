@@ -51,6 +51,21 @@ namespace WsApp
             await Clients.Caller.SendAsync("pingDisable", buttonId[6]);
         }
 
+        public void SelectStrategy(string strategy)
+        {
+            string socketId = Context.ConnectionId;
+            switch (strategy)
+            {
+                case "Laser":
+                    StrategyHolder.ChangeActiveStrategy(socketId, new LaserAttack());
+                    break;
+                //default case always sets strategy to Basic Attack
+                default:
+                    StrategyHolder.ChangeActiveStrategy(socketId, new BasicAttack());
+                    break;
+            }
+        }
+
         public async Task Atack(string row, string col)
         {
             var socketId = Context.ConnectionId;
@@ -93,7 +108,7 @@ namespace WsApp
                             //await Clients.Others.SendAsync("changedTurn");
                             break;
                     }
-                }                
+                }  
             }
         }
 

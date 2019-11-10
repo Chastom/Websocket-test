@@ -12,6 +12,8 @@
     connection.on("pingGameStarted", function () {
         var btn = document.getElementById("ready");
         btn.innerText = "The game has started!";
+        var btn = document.getElementById("shipPlacementMenu").hidden = true;
+        var btn = document.getElementById("attackStrategyMenu").hidden = false;
     });
 
     connection.on("pingArmorCount", function (count) {
@@ -128,7 +130,6 @@
     document.getElementById('button4').onclick = function () {
         connection.invoke("SelectShipType", "Schnicel", "button4");
     };
-
     document.getElementById('btnArmor').onclick = function () {
         connection.invoke("SelectArmor");
         var btn = document.getElementById("btnArmor");
@@ -141,6 +142,13 @@
             $('#grid1').removeClass('armorGrid');
         }
     };
+    document.getElementById('btnBasicAttack').onclick = function () {
+        connection.invoke("SelectStrategy", "Basic");
+    };
+    document.getElementById('btnLaserAttack').onclick = function () {
+        connection.invoke("SelectStrategy", "Laser");
+    };
+    
 
     document.getElementById('ready').onclick = function () {
         connection.invoke("ReadySingleton");

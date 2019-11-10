@@ -17,6 +17,19 @@ namespace WsApp.Strategies
             Console.WriteLine("==================================================== strategy added ->>> ");
         }
 
+        public static void ChangeActiveStrategy(string socketId, Strategy strategy)
+        {
+            for (int i = 0; i < playersStrategies.Count; i++)
+            {
+                if(playersStrategies[i].socketId.Equals(socketId))
+                {
+                    playersStrategies[i].activeStrategy = strategy;
+                    Console.WriteLine("=========================================================== STRATEGY UPDATED TO -> " + playersStrategies[i].activeStrategy.ToString());
+                    break;
+                }
+            }
+        }
+
         public static void Print()
         {
             for (int i = 0; i < playersStrategies.Count; i++)
