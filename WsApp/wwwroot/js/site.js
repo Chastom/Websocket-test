@@ -54,6 +54,11 @@
         }
     });
 
+    connection.on("undoShip", function (row, col) {
+        var cell = document.getElementById('grid1').rows[row].cells[col];
+        cell.style.backgroundColor = "";
+    });
+
     connection.on("invalidSelection", function (row, col) {
         var cell = document.getElementById('grid1').rows[row].cells[col];
         var previous = cell.style.backgroundColor;
@@ -75,6 +80,22 @@
         }
     });
 
+    connection.on("undoButtons", function (activeButton, removedButtons) {
+        for (var i = 0; i < 5; i++) {
+            var button = document.getElementById("button" + i);
+            button.style.display = "inline";
+            button.disabled = false;
+        }
+        for (var i = 0; i < removedButtons.length; i++) {
+            var button = document.getElementById("button" + removedButtons[i]).style.display = "none";
+        }
+        for (var i = 0; i < 5; i++) {
+            if (i != activeButton && !removedButtons.includes(i)) {
+                var button = document.getElementById("button" + i).disabled = true;
+            }
+        }
+    });
+
     connection.on("pingDisable", function (buttonId) {
         for (var i = 0; i < 5; i++) {
             if (i != buttonId) {
@@ -84,10 +105,10 @@
     });
 
     connection.on("pingRemove", function (buttonId) {
-        document.getElementById(buttonId).style.display = "none";
+        document.getElementById("button" + buttonId).style.display = "none";
         var count = 0;
         for (var i = 0; i < 5; i++) {
-            if (i != buttonId[6]) {
+            if (i != buttonId) {
                 var button = document.getElementById("button" + i).disabled = false;
             }
             if (document.getElementById("button" + i).style.display == "none") {
@@ -117,20 +138,25 @@
     });
 
     document.getElementById('button0').onclick = function () {
-        connection.invoke("SelectShipType", "Bombardier", "button0");
+        connection.invoke("SelectShipType", "Bombardier", "0");
     };
     document.getElementById('button1').onclick = function () {
-        connection.invoke("SelectShipType", "Cruiser", "button1");
+        connection.invoke("SelectShipType", "Cruiser", "1");
     };
     document.getElementById('button2').onclick = function () {
-        connection.invoke("SelectShipType", "Submarin", "button2");
+        connection.invoke("SelectShipType", "Submarin", "2");
     };
     document.getElementById('button3').onclick = function () {
-        connection.invoke("SelectShipType", "Kukuruznik", "button3");
+        connection.invoke("SelectShipType", "Kukuruznik", "3");
     };
     document.getElementById('button4').onclick = function () {
-        connection.invoke("SelectShipType", "Schnicel", "button4");
+        connection.invoke("SelectShipType", "Schnicel", "4");
     };
+
+    document.getElementById('btnUndo').onclick = function () {
+        connection.invoke("CommandUndo");
+    };
+
     document.getElementById('btnArmor').onclick = function () {
         connection.invoke("SelectArmor");
         var btn = document.getElementById("btnArmor");
@@ -143,6 +169,7 @@
             $('#grid1').removeClass('armorGrid');
         }
     };
+
     document.getElementById('btnBasicAttack').onclick = function () {
         connection.invoke("SelectStrategy", "Basic");
         ChangeButtonColor('btnBasicAttack');
@@ -158,14 +185,14 @@
 
     function ChangeButtonColor(id) {
         var btn = document.getElementById(id);
-        btn.style.backgroundColor = "#0000ff";      
+        btn.style.backgroundColor = "#0000ff";
         ResetOtherButtonsColors(id);
     }
 
     function ResetOtherButtonsColors(id) {
         if (id != 'btnBasicAttack') {
             var btn = document.getElementById('btnBasicAttack');
-            btn.style.backgroundColor = "#337ab7"; 
+            btn.style.backgroundColor = "#337ab7";
         }
         if (id != 'btnLaserAttack') {
             var btn = document.getElementById('btnLaserAttack');

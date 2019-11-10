@@ -37,6 +37,32 @@ namespace WsApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Commands",
+                columns: table => new
+                {
+                    PlacementCommandId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SocketId = table.Column<string>(nullable: true),
+                    IsArmor = table.Column<bool>(nullable: false),
+                    SelectionShipSelectionId = table.Column<int>(nullable: false),
+                    SelectionCount = table.Column<int>(nullable: false),
+                    SelectionSize = table.Column<int>(nullable: false),
+                    SelectionButtonId = table.Column<string>(nullable: true),
+                    SelectionIsSelected = table.Column<bool>(nullable: false),
+                    SelectionShipTypeId = table.Column<int>(nullable: false),
+                    SelectionButton0IsRemoved = table.Column<bool>(nullable: false),
+                    SelectionButton1IsRemoved = table.Column<bool>(nullable: false),
+                    SelectionButton2IsRemoved = table.Column<bool>(nullable: false),
+                    SelectionButton3IsRemoved = table.Column<bool>(nullable: false),
+                    SelectionButton4IsRemoved = table.Column<bool>(nullable: false),
+                    CellId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Commands", x => x.PlacementCommandId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Duels",
                 columns: table => new
                 {
@@ -137,6 +163,11 @@ namespace WsApp.Migrations
                     Size = table.Column<int>(nullable: false),
                     ButtonId = table.Column<string>(nullable: true),
                     IsSelected = table.Column<bool>(nullable: false),
+                    Button0IsRemoved = table.Column<bool>(nullable: false),
+                    Button1IsRemoved = table.Column<bool>(nullable: false),
+                    Button2IsRemoved = table.Column<bool>(nullable: false),
+                    Button3IsRemoved = table.Column<bool>(nullable: false),
+                    Button4IsRemoved = table.Column<bool>(nullable: false),
                     PlayerId = table.Column<int>(nullable: true),
                     ShipTypeId = table.Column<int>(nullable: false)
                 },
@@ -169,6 +200,9 @@ namespace WsApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cells");
+
+            migrationBuilder.DropTable(
+                name: "Commands");
 
             migrationBuilder.DropTable(
                 name: "Duels");

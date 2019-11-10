@@ -20,5 +20,6 @@ namespace WsApp.Models
         public DbSet<ShipType> ShipTypes { get; set; }
         public DbSet<Duel> Duels { get; set; }
         public DbSet<ArmorSelection> ArmorSelections { get; set; }
+        public DbSet<PlacementCommand> Commands { get; set; }
     }
 }

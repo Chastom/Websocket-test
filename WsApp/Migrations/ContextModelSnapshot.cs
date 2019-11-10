@@ -95,6 +95,45 @@ namespace WsApp.Migrations
                     b.ToTable("Duels");
                 });
 
+            modelBuilder.Entity("WsApp.Models.PlacementCommand", b =>
+                {
+                    b.Property<int>("PlacementCommandId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CellId");
+
+                    b.Property<bool>("IsArmor");
+
+                    b.Property<bool>("SelectionButton0IsRemoved");
+
+                    b.Property<bool>("SelectionButton1IsRemoved");
+
+                    b.Property<bool>("SelectionButton2IsRemoved");
+
+                    b.Property<bool>("SelectionButton3IsRemoved");
+
+                    b.Property<bool>("SelectionButton4IsRemoved");
+
+                    b.Property<string>("SelectionButtonId");
+
+                    b.Property<int>("SelectionCount");
+
+                    b.Property<bool>("SelectionIsSelected");
+
+                    b.Property<int>("SelectionShipSelectionId");
+
+                    b.Property<int>("SelectionShipTypeId");
+
+                    b.Property<int>("SelectionSize");
+
+                    b.Property<string>("SocketId");
+
+                    b.HasKey("PlacementCommandId");
+
+                    b.ToTable("Commands");
+                });
+
             modelBuilder.Entity("WsApp.Models.Player", b =>
                 {
                     b.Property<int>("PlayerId")
@@ -142,6 +181,16 @@ namespace WsApp.Migrations
                     b.Property<int>("ShipSelectionId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Button0IsRemoved");
+
+                    b.Property<bool>("Button1IsRemoved");
+
+                    b.Property<bool>("Button2IsRemoved");
+
+                    b.Property<bool>("Button3IsRemoved");
+
+                    b.Property<bool>("Button4IsRemoved");
 
                     b.Property<string>("ButtonId");
 

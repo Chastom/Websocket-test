@@ -51,7 +51,7 @@ namespace WsApp
             ShipType shipType = shipTypeController.GetShipType(type);
             shipSelectionController.MarkSelection(shipType, player, buttonId);
 
-            await Clients.Caller.SendAsync("pingDisable", buttonId[6]);
+            await Clients.Caller.SendAsync("pingDisable", buttonId);
         }
 
         public void SelectStrategy(string strategy)
@@ -133,6 +133,23 @@ namespace WsApp
             await Clients.Caller.SendAsync("pingArmorCount", count);
         }
 
+        public async Task CommandUndo()
+        {
+            var socketId = Context.ConnectionId;
+            UndoResult result = placeShipCommand.Undo(socketId);
+            List<int> buttons = result.removedButtons;
+            foreach(var btn in buttons)
+            {
+                Console.WriteLine("=============================================================== ->>>>>>>> button" + btn);
+            }
+            int[] btns = buttons.ToArray();
+            if(result != null)
+            {
+                await Clients.Caller.SendAsync("undoShip", result.coordinate.x, result.coordinate.y);
+                await Clients.Caller.SendAsync("undoButtons", result.activeButton, btns);
+            }
+        }
+
         public async Task PlaceShipValidation(string row, string col)
         {
             var socketId = Context.ConnectionId;
@@ -207,16 +224,6 @@ namespace WsApp
             //        }
             //    }
             //}
-        }
-
-        public async Task RemoveShipType()
-        {
-            string type = "A1";
-            int shipCount = 1000;
-            if (shipCount == 0)
-            {
-                await Clients.Caller.SendAsync("pingRemoveType", type);
-            }
         }
 
         public async Task ReadySingleton()

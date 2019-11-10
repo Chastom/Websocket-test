@@ -87,7 +87,8 @@ namespace WsApp.Controllers
                 if (count == 0)
                 {
                     selection.IsSelected = false;
-                    _context.SaveChanges();
+                    SaveButton(selection);
+                    _context.SaveChanges();                    
                     return false;
                 }
                 size = type.Size;
@@ -116,7 +117,9 @@ namespace WsApp.Controllers
                         {
                             shipId = AddShip(arenaId, type.ShipTypeId, type.Type, type.Size, socketId, posX, posY);
                             //cell was created when adding a new ship
-                            ReturnCell(posX, posY, arenaId).ShipId = shipId;
+                            cell = ReturnCell(posX, posY, arenaId);
+                            cell.ShipId = shipId;
+                            SaveCommand(cell, selection, socketId);
                             _context.SaveChanges();
                             return true;
                         }
@@ -133,12 +136,66 @@ namespace WsApp.Controllers
                             return false;
                         }
                     }
-                    CreateCell(posX, posY, arenaId).ShipId = shipId;
+                    //creating a new cell for this ship
+                    cell = CreateCell(posX, posY, arenaId);
+                    cell.ShipId = shipId;
+                    SaveCommand(cell, selection, socketId);
                     _context.SaveChanges();
                     return true;
                 }
             }
             return false;
+        }
+
+        public void SaveButton(ShipSelection selection)
+        {
+            string buttonId = selection.ButtonId;
+            switch (buttonId)
+            {
+                case "0":
+                    selection.Button0IsRemoved = true;
+                    break;
+                case "1":
+                    selection.Button1IsRemoved = true;
+                    break;
+                case "2":
+                    selection.Button2IsRemoved = true;
+                    break;
+                case "3":
+                    selection.Button3IsRemoved = true;
+                    break;
+                case "4":
+                    selection.Button4IsRemoved = true;
+                    break;
+                default:
+                    break;
+            }
+            _context.SaveChanges();
+        }
+
+        //creating a record of this command, so it can be undone later
+        public void SaveCommand(Cell cell, ShipSelection selection, string socketId)
+        {
+            PlacementCommand command = new PlacementCommand();
+            command.CellId = cell.CellId;
+            command.IsArmor = false;
+            command.SocketId = socketId;
+
+            //saving selection current values
+            command.SelectionShipSelectionId = selection.ShipSelectionId;
+            command.SelectionCount = selection.Count;
+            command.SelectionIsSelected = selection.IsSelected;
+            command.SelectionSize = selection.Size;
+            command.SelectionShipTypeId = selection.ShipTypeId;
+            command.SelectionButtonId = selection.ButtonId;
+            command.SelectionButton0IsRemoved = selection.Button0IsRemoved;
+            command.SelectionButton1IsRemoved = selection.Button1IsRemoved;
+            command.SelectionButton2IsRemoved = selection.Button2IsRemoved;
+            command.SelectionButton3IsRemoved = selection.Button3IsRemoved;
+            command.SelectionButton4IsRemoved = selection.Button4IsRemoved;
+
+            _context.Commands.Add(command);
+            _context.SaveChanges();
         }
 
         public bool CorrectPlacement(ShipType type, ShipSelection selection, Ship ship, int arenaId, int posX, int posY)

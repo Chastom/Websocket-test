@@ -73,9 +73,51 @@ namespace WsApp.Controllers
             }
         }
 
-        public void Undo()
+        public UndoResult Undo(string socketId)
         {
-            throw new NotImplementedException();
+            PlacementCommand command = _context.Commands.Where(s => s.SocketId.Contains(socketId)).LastOrDefault();
+            if (command != null)
+            {
+                //restoring ShipSelection to previous iteration
+                ShipSelection selection = shipSelectionController.GetSelection(socketId);
+                //selection.ShipSelectionId = command.SelectionShipSelectionId;
+                selection.Count = command.SelectionCount;
+                selection.IsSelected = command.SelectionIsSelected;
+                selection.Size = command.SelectionSize;
+                selection.ShipTypeId = command.SelectionShipTypeId;
+                selection.ButtonId = command.SelectionButtonId;
+                selection.Button0IsRemoved = command.SelectionButton0IsRemoved;
+                selection.Button1IsRemoved = command.SelectionButton1IsRemoved;
+                selection.Button2IsRemoved = command.SelectionButton2IsRemoved;
+                selection.Button3IsRemoved = command.SelectionButton3IsRemoved;
+                selection.Button4IsRemoved = command.SelectionButton4IsRemoved;
+                _context.SaveChanges(); //can be removed later probably
+
+                List<bool> buttons = new List<bool>();
+                buttons.Add(command.SelectionButton0IsRemoved);
+                buttons.Add(command.SelectionButton1IsRemoved);
+                buttons.Add(command.SelectionButton2IsRemoved);
+                buttons.Add(command.SelectionButton3IsRemoved);
+                buttons.Add(command.SelectionButton4IsRemoved);
+
+                string activeButton = command.SelectionButtonId;
+                //deleting last created cell
+                Cell cell = GetCell(command.CellId);
+                _context.Cells.Remove(cell);                
+
+                _context.Commands.Remove(command);
+                _context.SaveChanges();
+                
+
+                return new UndoResult(new Coordinate(cell.PosX, cell.PosY), activeButton, buttons);
+
+            }
+            return null;
+        }
+
+        public Cell GetCell(int cellId)
+        {
+            return _context.Cells.Where(s => s.CellId == cellId).FirstOrDefault();
         }
     }
 }

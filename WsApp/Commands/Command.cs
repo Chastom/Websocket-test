@@ -9,6 +9,6 @@ namespace WsApp.Commands
     {
         CommandOutcome Execute(string socketId, int posX, int posY, int battleArenaId);
 
-	    void Undo();
+        UndoResult Undo(string socketId);
 	}
 }
