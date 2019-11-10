@@ -8,10 +8,6 @@ namespace WsApp.Strategies
 {
     public class BasicAttack : Strategy
     {
-        public BasicAttack() : base()
-        {
-        }
-
         public override List<CellOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships)
         {
             this.cells = cells;

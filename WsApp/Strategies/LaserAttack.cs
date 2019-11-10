@@ -6,10 +6,6 @@ namespace WsApp.Strategies
 {
     public class LaserAttack : Strategy
     {
-        public LaserAttack() : base()
-        {
-        }
-
         public override List<CellOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships)
         {
             this.cells = cells;

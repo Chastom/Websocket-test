@@ -59,6 +59,9 @@ namespace WsApp
                 case "Laser":
                     StrategyHolder.ChangeActiveStrategy(socketId, new LaserAttack());
                     break;
+                case "Bomb":
+                    StrategyHolder.ChangeActiveStrategy(socketId, new BombAttack());
+                    break;
                 //default case always sets strategy to Basic Attack
                 default:
                     StrategyHolder.ChangeActiveStrategy(socketId, new BasicAttack());

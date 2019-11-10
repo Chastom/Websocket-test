@@ -8,7 +8,6 @@ namespace WsApp.Strategies
 {
     public static class StrategyHolder
     {
-        public static Context context;
         public static List<PlayerStrategy> playersStrategies = new List<PlayerStrategy>();
 
         public static void AddStrategy(string socketId, Strategy strategy)

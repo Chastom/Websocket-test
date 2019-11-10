@@ -148,7 +148,9 @@
     document.getElementById('btnLaserAttack').onclick = function () {
         connection.invoke("SelectStrategy", "Laser");
     };
-    
+    document.getElementById('btnBombAttack').onclick = function () {
+        connection.invoke("SelectStrategy", "Bomb");
+    };
 
     document.getElementById('ready').onclick = function () {
         connection.invoke("ReadySingleton");
