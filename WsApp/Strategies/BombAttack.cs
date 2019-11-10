@@ -69,7 +69,7 @@ namespace WsApp.Strategies
 
         public override string ToString()
         {
-            return "[BOMB ATTACK]";
+            return "[BOMB  ATTACK]";
         }
     }
 }

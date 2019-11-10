@@ -14,6 +14,7 @@
         btn.innerText = "The game has started!";
         var btn = document.getElementById("shipPlacementMenu").hidden = true;
         var btn = document.getElementById("attackStrategyMenu").hidden = false;
+        ChangeButtonColor('btnBasicAttack');
     });
 
     connection.on("pingArmorCount", function (count) {
@@ -144,13 +145,37 @@
     };
     document.getElementById('btnBasicAttack').onclick = function () {
         connection.invoke("SelectStrategy", "Basic");
+        ChangeButtonColor('btnBasicAttack');
     };
     document.getElementById('btnLaserAttack').onclick = function () {
         connection.invoke("SelectStrategy", "Laser");
+        ChangeButtonColor('btnLaserAttack');
     };
     document.getElementById('btnBombAttack').onclick = function () {
         connection.invoke("SelectStrategy", "Bomb");
+        ChangeButtonColor('btnBombAttack');
     };
+
+    function ChangeButtonColor(id) {
+        var btn = document.getElementById(id);
+        btn.style.backgroundColor = "#0000ff";      
+        ResetOtherButtonsColors(id);
+    }
+
+    function ResetOtherButtonsColors(id) {
+        if (id != 'btnBasicAttack') {
+            var btn = document.getElementById('btnBasicAttack');
+            btn.style.backgroundColor = "#337ab7"; 
+        }
+        if (id != 'btnLaserAttack') {
+            var btn = document.getElementById('btnLaserAttack');
+            btn.style.backgroundColor = "#337ab7";
+        }
+        if (id != 'btnBombAttack') {
+            var btn = document.getElementById('btnBombAttack');
+            btn.style.backgroundColor = "#337ab7";
+        }
+    }
 
     document.getElementById('ready').onclick = function () {
         connection.invoke("ReadySingleton");
