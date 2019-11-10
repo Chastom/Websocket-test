@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WsApp.Commands;
 using WsApp.Controllers;
 using WsApp.Models;
 using WsApp.Strategies;
@@ -21,6 +22,7 @@ namespace WsApp
         private ShipSelectionController shipSelectionController;
         private ArmorSelectionController armorSelection;
         private StrategyController strategyController;
+        private PlaceShipCommand placeShipCommand;
 
         public SelectionHandler(Context context)
         {
@@ -34,6 +36,7 @@ namespace WsApp
             shipSelectionController = new ShipSelectionController(_context);
             armorSelection = new ArmorSelectionController(_context);
             strategyController = new StrategyController(_context);
+            placeShipCommand = new PlaceShipCommand(armorSelection, shipSelectionController, _context);
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -137,53 +140,73 @@ namespace WsApp
             int posY = Int32.Parse(col);
             int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
 
-            //armor placement
-            if (armorSelection.IsArmorSelected(socketId))
+            CommandOutcome commandOutcome = placeShipCommand.Execute(socketId, posX, posY, battleArenaId);
+            switch (commandOutcome.outcome)
             {
-                bool armored = armorSelection.ArmorUp(posX, posY, battleArenaId, socketId);
-                if (armored)
-                {
-                    int count = armorSelection.GetArmorCount(socketId);
-                    await Clients.Caller.SendAsync("pingArmorCount", count);
+                case PlacementOutcome.Armor:
+                    await Clients.Caller.SendAsync("pingArmorCount", commandOutcome.count);
                     await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
-                }
-                else
-                {
+                    break;
+                case PlacementOutcome.Ship:
+                    await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
+                    break;
+                case PlacementOutcome.LastShip:
+                    await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
+                    await Clients.Caller.SendAsync("pingRemove", commandOutcome.idToRemove);
+                    break;
+                    //default handles Invalid outcome
+                default:
                     await Clients.Caller.SendAsync("invalidSelection", row, col);
-                }
+                    break;
             }
-            //ship placement | cant place a ship if armor function is selected
-            else
-            {
-                if (!shipSelectionController.IsValid(socketId))
-                {
-                    await Clients.Caller.SendAsync("invalidSelection", row, col);
-                }
-                else
-                {
-                    bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
 
-                    if (canPlace)
-                    {
+            ////armor placement
+            //if (armorSelection.IsArmorSelected(socketId))
+            //{
+            //    bool armored = armorSelection.ArmorUp(posX, posY, battleArenaId, socketId);
+            //    if (armored)
+            //    {
+            //        int count = armorSelection.GetArmorCount(socketId);
+            //        await Clients.Caller.SendAsync("pingArmorCount", count);
+            //        await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
+            //    }
+            //    else
+            //    {
+            //        await Clients.Caller.SendAsync("invalidSelection", row, col);
+            //    }
+            //}
+            ////ship placement | cant place a ship if armor function is selected
+            //else
+            //{
+            //    if (!shipSelectionController.IsValid(socketId))
+            //    {
+            //        await Clients.Caller.SendAsync("invalidSelection", row, col);
+            //    }
+            //    else
+            //    {
+            //        bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
 
-                        bool placed = shipSelectionController.PlaceShip(socketId);
-                        if (placed)
-                        {
-                            await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
-                        }
-                        else
-                        {
-                            string id = shipSelectionController.GetButtonId(socketId);
-                            await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
-                            await Clients.Caller.SendAsync("pingRemove", id);
-                        }
-                    }
-                    else
-                    {
-                        await Clients.Caller.SendAsync("invalidSelection", row, col);
-                    }
-                }
-            }
+            //        if (canPlace)
+            //        {
+
+            //            bool placed = shipSelectionController.PlaceShip(socketId);
+            //            if (placed)
+            //            {
+            //                await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
+            //            }
+            //            else
+            //            {
+            //                string id = shipSelectionController.GetButtonId(socketId);
+            //                await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
+            //                await Clients.Caller.SendAsync("pingRemove", id);
+            //            }
+            //        }
+            //        else
+            //        {
+            //            await Clients.Caller.SendAsync("invalidSelection", row, col);
+            //        }
+            //    }
+            //}
         }
 
         public async Task RemoveShipType()
