@@ -17,13 +17,13 @@ namespace WsApp
             _context = context;
         }
 
-        public List<AttackOutcome> Attack(int posx, int posy, string socketId)
+        public List<CellOutcome> Attack(int posx, int posy, string socketId)
         {
             Strategy strategy = StrategyHolder.GetPlayerStrategy(socketId);
             List<Ship> ships = GetEnemyShips(GetOpponentSocketId(socketId));
             List<Cell> cells = GetEnemyCells(GetOpponentArenaId(socketId));
 
-            List<AttackOutcome> outcomes = strategy.Attack(posx, posy, cells, ships);
+            List<CellOutcome> outcomes = strategy.Attack(posx, posy, cells, ships);
             _context.SaveChanges();
             return outcomes;
         }

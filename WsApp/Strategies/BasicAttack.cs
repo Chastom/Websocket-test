@@ -12,29 +12,26 @@ namespace WsApp.Strategies
         {
         }
 
-        public override List<AttackOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships)
+        public override List<CellOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships)
         {
             this.cells = cells;
             this.ships = ships;
 
-            List<AttackOutcome> outcomes = new List<AttackOutcome>();
+            List<CellOutcome> outcomes = new List<CellOutcome>();
 
             Cell cell = ReturnCell(posx, posy);
 
             if (cell == null)
             {
-                Console.WriteLine("======================================================= MISSED ");
-                outcomes.Add(AttackOutcome.Missed);
+                outcomes.Add(new CellOutcome(AttackOutcome.Missed, posx, posy));
                 return outcomes;
             }
             else if (cell.IsHit != true)
             {
                 if (cell.IsArmored == true)
                 {
-                    Console.WriteLine("======================================================= ARMOR ");
                     cell.IsArmored = false;
-                    //_context.SaveChanges();
-                    outcomes.Add(AttackOutcome.Armor);
+                    outcomes.Add((new CellOutcome(AttackOutcome.Armor, posx, posy)));
                     return outcomes;
                 }
                 else
@@ -42,15 +39,12 @@ namespace WsApp.Strategies
                     cell.IsHit = true;
                     Ship ship = GetShip(cell.ShipId);
                     ship.RemainingTiles--;
-                    //_context.SaveChanges();
-                    Console.WriteLine("======================================================= HIT ");
-                    outcomes.Add(AttackOutcome.Hit);
+                    outcomes.Add(new CellOutcome(AttackOutcome.Hit, posx, posy));
                     return outcomes;
                 }
 
             }
-            Console.WriteLine("======================================================= INVALID ");
-            outcomes.Add(AttackOutcome.Invalid);
+            outcomes.Add(new CellOutcome(AttackOutcome.Invalid, posx, posy));
             return outcomes;
         }
 

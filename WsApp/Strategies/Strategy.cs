@@ -12,7 +12,7 @@ namespace WsApp.Strategies
         public List<Cell> cells;
         public List<Ship> ships;
 
-        public abstract List<AttackOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships);
+        public abstract List<CellOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships);
 
         //-----------------------------------------------------------
         //Db context methods implementation to eliminate context dependancy       

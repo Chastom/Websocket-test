@@ -67,29 +67,29 @@ namespace WsApp
 
                 //returns active caller's strategy
                 Strategy activeStrategy = StrategyHolder.GetPlayerStrategy(socketId);
-                //executing the strategy returns all affected cells as AttackOutcome 
-                List<AttackOutcome> outcomes = strategyController.Attack(posX, posY, socketId);
-                //for every outcome we inform both players
+                //executing the strategy returns all affected cells as AttackOutcome and cell coordinates
+                List<CellOutcome> outcomes = strategyController.Attack(posX, posY, socketId);
 
-                foreach(AttackOutcome attack in outcomes)
+                //for every outcome we inform both players
+                foreach(CellOutcome outcome in outcomes)
                 {
-                    switch (attack)
+                    switch (outcome.attackOutcome)
                     {
                         case AttackOutcome.Hit:
-                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Hit", false);
-                            await Clients.Caller.SendAsync("pingAttack", row, col, "Hit", true);
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Hit", false);
+                            await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Hit", true);
                             break;
                         case AttackOutcome.Armor:
                             duelsController.ChangeTurns(socketId);
-                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Armor", false);
-                            await Clients.Caller.SendAsync("pingAttack", row, col, "Armor", true);
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, outcome.posY, "Armor", false);
+                            await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", true);
                             break;
                         //Missed and Invalid realization not finished...
                         //For now, both trigger default switch
                         default:
                             duelsController.ChangeTurns(socketId);
-                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, col, "Missed", false);
-                            await Clients.Caller.SendAsync("pingAttack", row, col, "Missed", true);
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Missed", false);
+                            await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Missed", true);
                             //await Clients.Others.SendAsync("changedTurn");
                             break;
                     }
