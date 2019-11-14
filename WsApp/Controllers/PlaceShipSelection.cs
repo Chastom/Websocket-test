@@ -10,71 +10,16 @@ namespace WsApp.Controllers
 {
     public class PlaceShipSelection : SelectionTemplate
     {
-        private ArmorSelectionController armorSelection;
         private ShipSelectionController shipSelectionController;
         private Context _context;
         private CommandOutcome commandOutcome;
 
-        public PlaceShipSelection(ArmorSelectionController armorSelection, ShipSelectionController shipSelectionController, Context context)
+        public PlaceShipSelection(ShipSelectionController shipSelectionController, Context context)
         {
-            this.armorSelection = armorSelection;
             this.shipSelectionController = shipSelectionController;
             _context = context;
             commandOutcome = null;
         }
-
-        //public CommandOutcome Execute(string socketId, int posX, int posY, int battleArenaId)
-        //{
-        //    //armor placement
-        //    if (armorSelection.IsArmorSelected(socketId))
-        //    {
-        //        bool armored = armorSelection.ArmorUp(posX, posY, battleArenaId, socketId);
-        //        if (armored)
-        //        {
-        //            int count = armorSelection.GetArmorCount(socketId);
-        //            CommandOutcome outcome = new CommandOutcome(PlacementOutcome.Armor);
-        //            outcome.count = count;
-        //            return outcome;
-        //        }
-        //        else
-        //        {
-        //            return new CommandOutcome(PlacementOutcome.Invalid);
-        //        }
-        //    }
-        //    //ship placement | cant place a ship if armor function is selected
-        //    else
-        //    {
-        //        if (!shipSelectionController.IsValid(socketId))
-        //        {
-        //            return new CommandOutcome(PlacementOutcome.Invalid);
-        //        }
-        //        else
-        //        {
-        //            bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
-
-        //            if (canPlace)
-        //            {
-
-        //                bool placed = shipSelectionController.PlaceShip(socketId);
-        //                if (placed)
-        //                {
-        //                    return new CommandOutcome(PlacementOutcome.Ship);
-        //                }
-        //                else
-        //                {
-        //                    string id = shipSelectionController.GetButtonId(socketId);
-        //                    CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip);
-        //                    outcome.idToRemove = id;
-        //                    return outcome;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return new CommandOutcome(PlacementOutcome.Invalid);
-        //            }
-        //        }
-        //    }
-        //}
 
         public override bool PlaceSelection(string socketId, int posX, int posY, int battleArenaId)
         {

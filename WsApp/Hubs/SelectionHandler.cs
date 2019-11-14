@@ -7,6 +7,7 @@ using WsApp.Commands;
 using WsApp.Controllers;
 using WsApp.Models;
 using WsApp.Strategies;
+using WsApp.Template;
 
 namespace WsApp
 {
@@ -23,6 +24,7 @@ namespace WsApp
         private ArmorSelectionController armorSelection;
         private StrategyController strategyController;
         private PlaceShipSelection placeShipSelection;
+        private PlaceArmorSelection placeArmorSelection;
 
         public SelectionHandler(Context context)
         {
@@ -36,7 +38,8 @@ namespace WsApp
             shipSelectionController = new ShipSelectionController(_context);
             armorSelection = new ArmorSelectionController(_context);
             strategyController = new StrategyController(_context);
-            placeShipSelection = new PlaceShipSelection(armorSelection, shipSelectionController, _context);
+            placeShipSelection = new PlaceShipSelection(shipSelectionController, _context);
+            placeArmorSelection = new PlaceArmorSelection(armorSelection, _context);
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -160,7 +163,12 @@ namespace WsApp
             int posY = Int32.Parse(col);
             int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
 
-            CommandOutcome commandOutcome = placeShipSelection.Execute(socketId, posX, posY, battleArenaId);
+            SelectionParams param = new SelectionParams(socketId, posX, posY, battleArenaId);            
+            CommandOutcome commandOutcome = null;
+
+            //depending on client's selection, executing one of the two commands: place [ armor | ship ] selection
+            commandOutcome = armorSelection.IsArmorSelected(socketId) ? placeArmorSelection.Execute(param) : placeShipSelection.Execute(param);         
+
             switch (commandOutcome.outcome)
             {
                 case PlacementOutcome.Armor:
@@ -178,54 +186,6 @@ namespace WsApp
                     await Clients.Caller.SendAsync("invalidSelection", row, col);
                     break;
             }
-
-            ////armor placement
-            //if (armorSelection.IsArmorSelected(socketId))
-            //{
-            //    bool armored = armorSelection.ArmorUp(posX, posY, battleArenaId, socketId);
-            //    if (armored)
-            //    {
-            //        int count = armorSelection.GetArmorCount(socketId);
-            //        await Clients.Caller.SendAsync("pingArmorCount", count);
-            //        await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
-            //    }
-            //    else
-            //    {
-            //        await Clients.Caller.SendAsync("invalidSelection", row, col);
-            //    }
-            //}
-            ////ship placement | cant place a ship if armor function is selected
-            //else
-            //{
-            //    if (!shipSelectionController.IsValid(socketId))
-            //    {
-            //        await Clients.Caller.SendAsync("invalidSelection", row, col);
-            //    }
-            //    else
-            //    {
-            //        bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
-
-            //        if (canPlace)
-            //        {
-
-            //            bool placed = shipSelectionController.PlaceShip(socketId);
-            //            if (placed)
-            //            {
-            //                await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
-            //            }
-            //            else
-            //            {
-            //                string id = shipSelectionController.GetButtonId(socketId);
-            //                await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
-            //                await Clients.Caller.SendAsync("pingRemove", id);
-            //            }
-            //        }
-            //        else
-            //        {
-            //            await Clients.Caller.SendAsync("invalidSelection", row, col);
-            //        }
-            //    }
-            //}
         }
 
         public async Task ReadySingleton()
@@ -256,30 +216,6 @@ namespace WsApp
                 await Clients.Caller.SendAsync("pingMessage", playerId, "No available duels at the moment...");
             }
         }
-        //public async Task Ready()
-        //{
-        //    var socketId = Context.ConnectionId;
-        //    int playerId = playersController.GetPlayerId(socketId);
-        //    int battleArenaId = baController.GetBAId(playerId);
-
-        //    int dualCount = duelsController.CountDuels();
-        //    Console.WriteLine(dualCount);
-        //    if (dualCount == 0)
-        //    {
-        //        duelsController.StartDuel(socketId, battleArenaId);
-        //        await Clients.Caller.SendAsync("PingWaitingOponent", socketId);
-        //    }
-        //    if (dualCount == 1)
-        //    {
-        //        bool rez = duelsController.JoinDuel(socketId, battleArenaId);
-        //        if (rez == false)
-        //        {
-        //            await Clients.Caller.SendAsync("PingFullDual", socketId);
-        //        }
-        //        await Clients.All.SendAsync("PingGameIsStarted", socketId);
-        //    }
-        //}
-
 
         //messages
         public Task SendMessage(string message)
@@ -316,37 +252,4 @@ namespace WsApp
 
 
     }
-
-    //public static class StrategyHolder
-    //{
-    //    public static List<StrategySelector> strategySelectors = new List<StrategySelector>();
-
-    //    public static void AddStrategySelector(StrategySelector strategySelector)
-    //    {
-    //        strategySelectors.Add(strategySelector);
-    //        Console.WriteLine("==================================================== strategy added ->>> ");
-    //    }
-
-    //    public static void Print()
-    //    {
-    //        for (int i = 0; i < strategySelectors.Count; i++)
-    //        {
-    //            Console.WriteLine("============================================== STRATEGY --------> " + i);
-    //        }
-    //    }
-        
-    //}
-
-    //public class StrategySelector
-    //{
-    //    public string socketId;
-    //    public Strategy activeStrategy;
-
-    //    public StrategySelector(string id, Strategy active)
-    //    {
-    //        socketId = id;
-    //        activeStrategy = active;
-    //    }
-    //}
-
 }

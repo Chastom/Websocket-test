@@ -7,11 +7,11 @@ using WsApp.Commands;
 namespace WsApp.Template
 {
     public abstract class SelectionTemplate : Command
-    {
+    {        
         //template method
-        public CommandOutcome Execute(string socketId, int posX, int posY, int battleArenaId)
+        public CommandOutcome Execute(SelectionParams param)
         {
-            bool placed = PlaceSelection(socketId, posX, posY, battleArenaId);
+            bool placed = PlaceSelection(param.socketId, param.posX, param.posY, param.battleArenaId);
 
             if (placed)
             {
