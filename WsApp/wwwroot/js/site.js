@@ -182,6 +182,10 @@
         connection.invoke("SelectStrategy", "Bomb");
         ChangeButtonColor('btnBombAttack');
     };
+    document.getElementById('btnCrossAttack').onclick = function () {
+        connection.invoke("SelectStrategy", "Cross");
+        ChangeButtonColor('btnCrossAttack');
+    };
 
     function ChangeButtonColor(id) {
         var btn = document.getElementById(id);
@@ -200,6 +204,10 @@
         }
         if (id != 'btnBombAttack') {
             var btn = document.getElementById('btnBombAttack');
+            btn.style.backgroundColor = "#337ab7";
+        }
+        if (id != 'btnCrossAttack') {
+            var btn = document.getElementById('btnCrossAttack');
             btn.style.backgroundColor = "#337ab7";
         }
     }

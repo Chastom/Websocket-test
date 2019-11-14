@@ -65,6 +65,9 @@ namespace WsApp
                 case "Bomb":
                     StrategyHolder.ChangeActiveStrategy(socketId, new BombAttack());
                     break;
+                case "Cross":
+                    StrategyHolder.ChangeActiveStrategy(socketId, new CrossAttack());
+                    break;
                 //default case always sets strategy to Basic Attack
                 default:
                     StrategyHolder.ChangeActiveStrategy(socketId, new BasicAttack());
@@ -102,7 +105,7 @@ namespace WsApp
                             break;
                         case AttackOutcome.Armor:
                             duelsController.ChangeTurns(socketId);
-                            await Clients.Client(enemySockeId).SendAsync("pingAttack", row, outcome.posY, "Armor", false);
+                            await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", false);
                             await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", true);
                             break;
                         //Missed and Invalid realization not finished...
