@@ -22,7 +22,7 @@ namespace WsApp
         private ShipSelectionController shipSelectionController;
         private ArmorSelectionController armorSelection;
         private StrategyController strategyController;
-        private PlaceShipCommand placeShipCommand;
+        private PlaceShipSelection placeShipSelection;
 
         public SelectionHandler(Context context)
         {
@@ -36,7 +36,7 @@ namespace WsApp
             shipSelectionController = new ShipSelectionController(_context);
             armorSelection = new ArmorSelectionController(_context);
             strategyController = new StrategyController(_context);
-            placeShipCommand = new PlaceShipCommand(armorSelection, shipSelectionController, _context);
+            placeShipSelection = new PlaceShipSelection(armorSelection, shipSelectionController, _context);
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -139,7 +139,7 @@ namespace WsApp
         public async Task CommandUndo()
         {
             var socketId = Context.ConnectionId;
-            UndoResult result = placeShipCommand.Undo(socketId);
+            UndoResult result = placeShipSelection.Undo(socketId);
             List<int> buttons = result.removedButtons;
             foreach(var btn in buttons)
             {
@@ -160,7 +160,7 @@ namespace WsApp
             int posY = Int32.Parse(col);
             int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
 
-            CommandOutcome commandOutcome = placeShipCommand.Execute(socketId, posX, posY, battleArenaId);
+            CommandOutcome commandOutcome = placeShipSelection.Execute(socketId, posX, posY, battleArenaId);
             switch (commandOutcome.outcome)
             {
                 case PlacementOutcome.Armor:
@@ -174,8 +174,7 @@ namespace WsApp
                     await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
                     await Clients.Caller.SendAsync("pingRemove", commandOutcome.idToRemove);
                     break;
-                    //default handles Invalid outcome
-                default:
+                case PlacementOutcome.Invalid:
                     await Clients.Caller.SendAsync("invalidSelection", row, col);
                     break;
             }
