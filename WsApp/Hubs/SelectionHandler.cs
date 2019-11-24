@@ -8,6 +8,7 @@ using WsApp.Controllers;
 using WsApp.Models;
 using WsApp.Strategies;
 using WsApp.Template;
+using WsApp.Iterators;
 
 namespace WsApp
 {
