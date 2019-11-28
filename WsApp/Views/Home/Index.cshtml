@@ -1,9 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        i {
+            border: solid black;
+            border-width: 0 5px 5px 0;
+            display: inline-block;
+            padding: 6px;
+            border-color: #28a4a4;
+        }
+    </style>
+</head>
 
+<div align="center" style="margin: 20px; padding-left: 30px;">
+    <p><b>Player turn</b></p>
+    <p id="turnArrow"><i class="right"></i></p>
+</div>
 <div class="container top-space">
-
     <div class="col-xs-6">
         My fleet:
 
