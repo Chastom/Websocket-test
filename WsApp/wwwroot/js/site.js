@@ -21,8 +21,17 @@
         var text = 'Armor left: ' + count;
         document.getElementById("armorCount").innerText = text;
     });
-
-
+    
+    connection.on("changedTurn", function (direction) {
+        var arrow = document.getElementById('turnArrow');
+        if (direction == 'right') {
+            arrow.className = 'right';
+            arrow.style.transform = "rotate(-45deg)";            
+        } else {
+            arrow.className = 'left';
+            arrow.style.transform = "rotate(135deg)";
+        }
+    });
 
     connection.on("invalidTurn", function (row, col) {
         var cell = document.getElementById('grid2').rows[row].cells[col];
@@ -216,16 +225,7 @@
         connection.invoke("ReadySingleton");
         var btn = document.getElementById("ready");
         btn.innerText = "Searching for opponent...";
-        btn.disabled = true;
-
-        var arrow = document.getElementById('turnArrow');
-        if (arrow.className == 'right') {
-            arrow.className = 'left';
-            arrow.style.transform = "rotate(135deg)";
-        } else {
-            arrow.className = 'right';
-            arrow.style.transform = "rotate(-45deg)";
-        }
+        btn.disabled = true;        
     };
 
     //========== can be removed later ===========

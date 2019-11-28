@@ -9,6 +9,7 @@ using WsApp.Models;
 using WsApp.Strategies;
 using WsApp.Template;
 using WsApp.Iterators;
+using WsApp.Proxy;
 
 namespace WsApp
 {
@@ -26,6 +27,7 @@ namespace WsApp
         private StrategyController strategyController;
         private PlaceShipSelection placeShipSelection;
         private PlaceArmorSelection placeArmorSelection;
+        private ProxyPlayerTurn proxyPlayerTurn;
 
         public SelectionHandler(Context context)
         {
@@ -41,6 +43,7 @@ namespace WsApp
             strategyController = new StrategyController(_context);
             placeShipSelection = new PlaceShipSelection(shipSelectionController, _context);
             placeArmorSelection = new PlaceArmorSelection(armorSelection, _context);
+            proxyPlayerTurn = new ProxyPlayerTurn(_context);
         }
 
         public async Task AddPlayer(string socketId, string selection)
@@ -112,13 +115,15 @@ namespace WsApp
                             await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", false);
                             await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", true);
                             break;
-                        //Missed and Invalid realization not finished...
-                        //For now, both trigger default switch
+                        //For now, both [Missed and Invalid] trigger default switch
                         default:
                             duelsController.ChangeTurns(socketId);
                             await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Missed", false);
                             await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Missed", true);
-                            //await Clients.Others.SendAsync("changedTurn");
+                            //turn change using the proxy class
+                            TurnOutcome turn = proxyPlayerTurn.ChangeTurn();
+                            await Clients.Client(turn.InactiveId).SendAsync("changedTurn", turn.CallerTurn);
+                            await Clients.Client(turn.ActiveId).SendAsync("changedTurn", turn.OpponetTurn);
                             break;
                     }
                 }  
@@ -208,9 +213,13 @@ namespace WsApp
                 duel.SecondPlayerSocketId = socketId;
                 duel.SecondPlayerBAId = battleArenaId;
                 _context.SaveChanges();
-                string firstTurnSocketId = duelsController.SetTurn(duel);
+                string firstTurnSocketId = duelsController.SetTurn(duel);                
                 await Clients.All.SendAsync("pingMessage", null, "The game has started!");
                 await Clients.All.SendAsync("pingGameStarted");
+
+                TurnOutcome turn = proxyPlayerTurn.GetCurrentTurn();
+                await Clients.Client(turn.InactiveId).SendAsync("changedTurn", turn.CallerTurn);
+                await Clients.Client(turn.ActiveId).SendAsync("changedTurn", turn.OpponetTurn);
             }
             else
             {
