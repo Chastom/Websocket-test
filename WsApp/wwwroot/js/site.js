@@ -50,6 +50,7 @@
             messageText = 'id [' + userId + ']: ' + message;
         }
         $('#selections').append('<li>' + messageText + '</li');
+        $('#selections').scrollTop($('#selections').prop('scrollHeight'));
     });
 
     connection.on("pingShipPlaced", function (row, col, armored) {

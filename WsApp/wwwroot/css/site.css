@@ -31,6 +31,13 @@ body {
     background-color: #cca300 !important;
 }
 
+.messages {
+    background: white;
+    position: relative;
+    height: 40px;
+    max-height: 40px;
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

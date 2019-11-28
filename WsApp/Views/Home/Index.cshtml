@@ -11,6 +11,18 @@
             padding: 6px;
             border-color: #28a4a4;
         }
+
+        body {
+            background: radial-gradient(ellipse at center, rgba(255,254,234,1) 0%, rgba(255,254,234,1) 35%, #B7E8EB 100%);
+        }
+
+        .messages {
+            background: #eafafa;
+            position: relative;
+            height: 100px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <div align="center" style="margin: 20px; padding-left: 30px;">
@@ -19,7 +31,7 @@
 </div>
 <div class="container top-space">
     <div class="col-xs-6">
-        My fleet:
+        <div align="center" style="font-style: italic;">My fleet</div>
 
         <table id="grid1" class="table table-bordered" style="background-color:#e6f9ff">
             <tbody>
@@ -63,7 +75,7 @@
     </div>
 
     <div class="col-xs-6">
-        Enemy fleet:
+        <div align="center" style="font-style: italic;">Enemy fleet</div>
         <table id="grid2" class="table table-bordered" style="background-color:lightgrey">
             <tbody>
                 @for (int i = 0; i < 15; i++)
@@ -78,24 +90,14 @@
             </tbody>
         </table>
     </div>
-
     <button id="ready" class="btn btn-success btn-block" type="submit" disabled>Ready</button>
     <div class="row">
         <div class="col-sm-3"><button id="buttonTesting" type="button" class="btn btn-secondary">[TESTING ONLY] Activate "Ready"</button></div>
         <div class="col-sm-3"><button id="buttonTesting2" type="button" class="btn btn-secondary">[TESTING ONLY] Remove Duels</button></div>
     </div>
-    <br><br>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="col-xs-6">
-                <ul id="selections"></ul>
-            </div>
-            <div class="col-xs-6">
-                <ul id="attacks"></ul>
-            </div>
-            <input class="form-control" id="selection-content" />
-        </div>
-    </div>
+    <br>
+        <ul id="selections" class="messages"></ul>
+        <input class="form-control" id="selection-content" />
 
 </div>
 
