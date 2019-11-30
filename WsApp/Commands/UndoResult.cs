@@ -7,13 +7,13 @@ namespace WsApp.Commands
 {
     public class UndoResult
     {
-        public Coordinate coordinate;
+        public List<Coordinate> coordinates;
         public string activeButton;
         public List<int> removedButtons;
 
-        public UndoResult(Coordinate coordinate, string activeButton, List<bool> buttons)
+        public UndoResult(List<Coordinate> coordinates, string activeButton, List<bool> buttons)
         {
-            this.coordinate = coordinate;
+            this.coordinates = coordinates;
             this.activeButton = activeButton;
 
             removedButtons = new List<int>();

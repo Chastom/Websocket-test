@@ -96,16 +96,39 @@ namespace WsApp.Controllers
                 buttons.Add(command.SelectionButton4IsRemoved);
 
                 string activeButton = command.SelectionButtonId;
-                //deleting last created cell
-                Cell cell = GetCell(command.CellId);
-                _context.Cells.Remove(cell);
+                ////deleting last created cell
+                //Cell cell = GetCell(command.CellId);
+                //_context.Cells.Remove(cell);
 
+
+                //deleting all cells with the last place ship id
+                List<Coordinate> coordinates = new List<Coordinate>();
+                Ship shipToRemove = GetShip(GetCell(command.CellId).ShipId);
+                List<Cell> cells = GetCellsByShip(GetCell(command.CellId).ShipId);
+                foreach(var cell in cells)
+                {
+                    coordinates.Add(new Coordinate(cell.PosX, cell.PosY));
+                    _context.Cells.Remove(cell);
+                    _context.SaveChanges();
+                }
+
+                _context.Ships.Remove(shipToRemove);
                 _context.Commands.Remove(command);
                 _context.SaveChanges();
 
-                return new UndoResult(new Coordinate(cell.PosX, cell.PosY), activeButton, buttons);
+                return new UndoResult(coordinates, activeButton, buttons);
             }
             return null;
+        }
+
+        public List<Cell> GetCellsByShip(int shipId)
+        {
+            return _context.Cells.Where(s => s.ShipId == shipId).ToList();
+        }
+
+        public Ship GetShip(int shipId)
+        {
+            return _context.Ships.Where(s => s.ShipId == shipId).FirstOrDefault();
         }
 
         public Cell GetCell(int cellId)

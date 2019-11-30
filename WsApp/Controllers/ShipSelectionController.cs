@@ -101,7 +101,7 @@ namespace WsApp.Controllers
         }
 
         public List<CommandOutcome> ValidatePlacement(string socketId, int posX, int posY, int arenaId)
-        {
+        {            
             ShipSelection selection = GetSelection(socketId);
             ShipType type = GetShipType(socketId);
             Cell cell = ReturnCell(posX, posY, arenaId);
@@ -109,11 +109,12 @@ namespace WsApp.Controllers
             List<CommandOutcome> commands = new List<CommandOutcome>();
 
             if (cell == null)
-            {
+            {                
                 if (NoCellsNearby(posX, posY, arenaId, type))
                 {
                     List<Ship> ships = GetShipsByType(type.ShipTypeId, socketId);
                     int shipId = 0;
+                    Console.WriteLine("!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!~~~~~~~~~~~~~ + COUNT[" + selection.Count + "] SIZE[" + selection.Size + "]");
                     if (ships.Count < type.Count - selection.Count + 1)
                     {
                         if (NoShipNearby(posX, posY, arenaId, new Ship(), true))
@@ -153,7 +154,6 @@ namespace WsApp.Controllers
                         {
                             cell = CreateCell(posX, posY, arenaId);
                             cell.ShipId = shipId;
-                            SaveCommand(cell, selection, socketId);
                             if (PlaceShip(socketId))
                             {
                                 commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX, posY));
@@ -177,7 +177,6 @@ namespace WsApp.Controllers
                                 {
                                     cell = CreateCell(posX + i, posY, arenaId);
                                     cell.ShipId = shipId;
-                                    SaveCommand(cell, selection, socketId);
 
                                     if (PlaceShip(socketId))
                                     {
@@ -201,7 +200,6 @@ namespace WsApp.Controllers
                                 {
                                     cell = CreateCell(posX - i, posY, arenaId);
                                     cell.ShipId = shipId;
-                                    SaveCommand(cell, selection, socketId);
 
                                     if (PlaceShip(socketId))
                                     {
@@ -225,7 +223,6 @@ namespace WsApp.Controllers
                                 {
                                     cell = CreateCell(posX, posY + i, arenaId);
                                     cell.ShipId = shipId;
-                                    SaveCommand(cell, selection, socketId);
 
                                     if (PlaceShip(socketId))
                                     {
@@ -249,7 +246,6 @@ namespace WsApp.Controllers
                                 {
                                     cell = CreateCell(posX, posY - i, arenaId);
                                     cell.ShipId = shipId;
-                                    SaveCommand(cell, selection, socketId);
 
                                     if (PlaceShip(socketId))
                                     {

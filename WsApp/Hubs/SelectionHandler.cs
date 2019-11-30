@@ -157,7 +157,10 @@ namespace WsApp
             int[] btns = buttons.ToArray();
             if(result != null)
             {
-                await Clients.Caller.SendAsync("undoShip", result.coordinate.x, result.coordinate.y);
+                foreach(var coordinate in result.coordinates)
+                {
+                    await Clients.Caller.SendAsync("undoShip", coordinate.x, coordinate.y);
+                }                
                 await Clients.Caller.SendAsync("undoButtons", result.activeButton, btns);
             }
         }
