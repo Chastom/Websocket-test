@@ -169,30 +169,67 @@ namespace WsApp
             int posY = Int32.Parse(col);
             int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
 
-            SelectionParams param = new SelectionParams(socketId, posX, posY, battleArenaId);            
-            CommandOutcome commandOutcome = null;
+            SelectionParams param = new SelectionParams(socketId, posX, posY, battleArenaId);           
+            
+            //CommandOutcome commandOutcome = null;
 
-            //depending on client's selection, executing one of the two commands: place [ armor | ship ] selection
-            commandOutcome = armorSelection.IsArmorSelected(socketId) ? placeArmorSelection.Execute(param) : placeShipSelection.Execute(param);         
+            ////depending on client's selection, executing one of the two commands: place [ armor | ship ] selection
+            //commandOutcome = armorSelection.IsArmorSelected(socketId) ? placeArmorSelection.Execute(param) : placeShipSelection.Execute(param);         
+            List<CommandOutcome> outcomes = armorSelection.IsArmorSelected(socketId) ? placeArmorSelection.Execute(param) : placeShipSelection.Execute(param);
 
-            switch (commandOutcome.outcome)
+            foreach(var commandOutcome in outcomes)
             {
-                case PlacementOutcome.Armor:
-                    await Clients.Caller.SendAsync("pingArmorCount", commandOutcome.count);
-                    await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
-                    break;
-                case PlacementOutcome.Ship:
-                    await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
-                    break;
-                case PlacementOutcome.LastShip:
-                    await Clients.Caller.SendAsync("pingShipPlaced", row, col, false);
-                    await Clients.Caller.SendAsync("pingRemove", commandOutcome.idToRemove);
-                    break;
-                case PlacementOutcome.Invalid:
-                    await Clients.Caller.SendAsync("invalidSelection", row, col);
-                    break;
-            }
+                switch (commandOutcome.outcome)
+                {
+                    case PlacementOutcome.Armor:
+                        await Clients.Caller.SendAsync("pingArmorCount", commandOutcome.count);
+                        await Clients.Caller.SendAsync("pingShipPlaced", row, col, true);
+                        break;
+                    case PlacementOutcome.Ship:
+                        await Clients.Caller.SendAsync("pingShipPlaced", commandOutcome.posX, commandOutcome.posY, false);
+                        break;
+                    case PlacementOutcome.LastShip:
+                        await Clients.Caller.SendAsync("pingShipPlaced", commandOutcome.posX, commandOutcome.posY, false);
+                        await Clients.Caller.SendAsync("pingRemove", commandOutcome.idToRemove);
+                        break;
+                    case PlacementOutcome.Invalid:
+                        await Clients.Caller.SendAsync("invalidSelection", row, col);
+                        break;
+                }
+            }            
         }
+
+        //public List<CommandOutcome> GetCommandOutcomes(SelectionParams param)
+        //{
+        //    List<CommandOutcome> commands = new List<CommandOutcome>();
+        //    if (armorSelection.IsArmorSelected(param.socketId))
+        //    {
+        //        commands.Add(placeArmorSelection.Execute(param));
+        //    }
+        //    else
+        //    {
+        //        ShipSelection selection = shipSelectionController.GetSelection(param.socketId);
+        //        ShipType ship = shipSelectionController.GetShipType(param.socketId);
+        //        if (selection.IsSelected)
+        //        {
+        //            if (ship.Size - selection.Size == 1)
+        //            {
+        //                for (int i = 0; i < selection.Size; i++)
+        //                {
+        //                    CommandOutcome command = null;
+        //                    SelectionParams temp = new SelectionParams(param.socketId, param.posX + i, param.posY, param.battleArenaId);
+        //                    command = placeShipSelection.Execute(param);
+        //                    commands.Add(command);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            commands.Add(placeShipSelection.Execute(param));
+        //        }
+        //    }
+        //    return commands;
+        //}
 
         public async Task ReadySingleton()
         {

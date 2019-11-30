@@ -21,12 +21,12 @@
         var text = 'Armor left: ' + count;
         document.getElementById("armorCount").innerText = text;
     });
-    
+
     connection.on("changedTurn", function (direction) {
         var arrow = document.getElementById('turnArrow');
         if (direction == 'right') {
             arrow.className = 'right';
-            arrow.style.transform = "rotate(-45deg)";            
+            arrow.style.transform = "rotate(-45deg)";
         } else {
             arrow.className = 'left';
             arrow.style.transform = "rotate(135deg)";
@@ -86,7 +86,10 @@
         } else if (attackOutcome == 'Armor') {
             cell.style.backgroundColor = '#696969';
         } else {
-            cell.style.backgroundColor = '#386C99';
+            //if the cell is already painted (e.g. red for hit), we don't repaint the cell to blue color
+            if (!cell.style.backgroundColor) {
+                cell.style.backgroundColor = '#386C99';
+            }
         }
     });
 
@@ -226,7 +229,7 @@
         connection.invoke("ReadySingleton");
         var btn = document.getElementById("ready");
         btn.innerText = "Searching for opponent...";
-        btn.disabled = true;        
+        btn.disabled = true;
     };
 
     //========== can be removed later ===========

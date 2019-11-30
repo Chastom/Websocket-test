@@ -12,54 +12,60 @@ namespace WsApp.Controllers
     {
         private ShipSelectionController shipSelectionController;
         private Context _context;
-        private CommandOutcome commandOutcome;
+        private List<CommandOutcome> commandOutcomes;
 
         public PlaceShipSelection(ShipSelectionController shipSelectionController, Context context)
         {
             this.shipSelectionController = shipSelectionController;
             _context = context;
-            commandOutcome = null;
+            //commandOutcome = null;
+            commandOutcomes = new List<CommandOutcome>();
         }
 
         public override bool PlaceSelection(string socketId, int posX, int posY, int battleArenaId)
         {
             if (!shipSelectionController.IsValid(socketId))
             {
-                commandOutcome = new CommandOutcome(PlacementOutcome.Invalid);
+                commandOutcomes.Add(new CommandOutcome(PlacementOutcome.Invalid));
                 return false;
             }
             else
             {
-                bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
+                commandOutcomes = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
+                return true;
+                //bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
 
-                if (canPlace)
-                {
-
-                    bool placed = shipSelectionController.PlaceShip(socketId);
-                    if (placed)
-                    {
-                        commandOutcome = new CommandOutcome(PlacementOutcome.Ship);
-                        return true;
-                    }
-                    else
-                    {
-                        string id = shipSelectionController.GetButtonId(socketId);
-                        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip);
-                        outcome.idToRemove = id;
-                        commandOutcome = outcome;
-                        return true;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+                //if (canPlace)
+                //{
+                //    bool placed = shipSelectionController.PlaceShip(socketId);
+                //    if (placed)
+                //    {
+                //        commandOutcome = new CommandOutcome(PlacementOutcome.Ship);
+                //        return true;
+                //    }
+                //    else
+                //    {
+                //        string id = shipSelectionController.GetButtonId(socketId);
+                //        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip);
+                //        outcome.idToRemove = id;
+                //        commandOutcome = outcome;
+                //        return true;
+                //    }
+                //}
+                //else
+                //{
+                //    return false;
+                //}
             }
         }
 
-        public override CommandOutcome GetSelectionOutcome()
+        //public override CommandOutcome GetSelectionOutcome()
+        //{
+        //    return commandOutcome;
+        //}
+        public override List<CommandOutcome> GetSelectionOutcome()
         {
-            return commandOutcome;
+            return commandOutcomes;
         }
 
         public override UndoResult Undo(string socketId)

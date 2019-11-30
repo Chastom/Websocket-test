@@ -12,13 +12,14 @@ namespace WsApp.Controllers
     {
         private ArmorSelectionController armorSelection;
         private Context _context;
-        private CommandOutcome commandOutcome;
+        private List<CommandOutcome> commandOutcomes;
 
         public PlaceArmorSelection(ArmorSelectionController armorSelection, Context context)
         {
             this.armorSelection = armorSelection;
             _context = context;
-            commandOutcome = null;
+            //commandOutcome = null;
+            commandOutcomes = new List<CommandOutcome>();
         }
 
         public override bool PlaceSelection(string socketId, int posX, int posY, int battleArenaId)
@@ -29,7 +30,8 @@ namespace WsApp.Controllers
                 int count = armorSelection.GetArmorCount(socketId);
                 CommandOutcome outcome = new CommandOutcome(PlacementOutcome.Armor);
                 outcome.count = count;
-                commandOutcome = outcome;
+                //commandOutcome = outcome;
+                commandOutcomes.Add(outcome);
                 return true;
             }
             else
@@ -38,9 +40,13 @@ namespace WsApp.Controllers
             }
         }
 
-        public override CommandOutcome GetSelectionOutcome()
+        //public override CommandOutcome GetSelectionOutcome()
+        //{
+        //    return commandOutcome;
+        //}
+        public override List<CommandOutcome> GetSelectionOutcome()
         {
-            return commandOutcome;
+            return commandOutcomes;
         }
 
         public override UndoResult Undo(string socketId)

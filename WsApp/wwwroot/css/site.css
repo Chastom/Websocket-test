@@ -14,10 +14,10 @@ body {
     border: 2px solid #999999;
 }
 
-    .table td:hover {
-        color: #000000;
-        cursor: pointer;
-    }
+.table td:hover {
+    color: #000000;
+    cursor: pointer;
+}
 
 #grid1 td:hover {
     background-color: dimgrey;

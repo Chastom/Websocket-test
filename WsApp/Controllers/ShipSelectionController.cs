@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WsApp.Commands;
 using WsApp.Models;
 
 namespace WsApp.Controllers
@@ -88,7 +89,7 @@ namespace WsApp.Controllers
                 {
                     selection.IsSelected = false;
                     SaveButton(selection);
-                    _context.SaveChanges();                    
+                    _context.SaveChanges();
                     return false;
                 }
                 size = type.Size;
@@ -99,11 +100,13 @@ namespace WsApp.Controllers
             return true;
         }
 
-        public bool ValidatePlacement(string socketId, int posX, int posY, int arenaId)
+        public List<CommandOutcome> ValidatePlacement(string socketId, int posX, int posY, int arenaId)
         {
             ShipSelection selection = GetSelection(socketId);
             ShipType type = GetShipType(socketId);
             Cell cell = ReturnCell(posX, posY, arenaId);
+
+            List<CommandOutcome> commands = new List<CommandOutcome>();
 
             if (cell == null)
             {
@@ -120,12 +123,23 @@ namespace WsApp.Controllers
                             cell = ReturnCell(posX, posY, arenaId);
                             cell.ShipId = shipId;
                             SaveCommand(cell, selection, socketId);
+                            if (PlaceShip(socketId))
+                            {
+                                commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX, posY));
+                            }
+                            else
+                            {
+                                string id = GetButtonId(socketId);
+                                CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip, posX, posY);
+                                outcome.idToRemove = id;
+                                commands.Add(outcome);
+
+                            }
                             _context.SaveChanges();
-                            return true;
                         }
                         else
                         {
-                            return false;
+                            commands.Add(new CommandOutcome(PlacementOutcome.Invalid));
                         }
                     }
                     else
@@ -133,18 +147,138 @@ namespace WsApp.Controllers
                         shipId = ships[ships.Count - 1].ShipId;
                         if (!CorrectPlacement(type, selection, ships[ships.Count - 1], arenaId, posX, posY))
                         {
-                            return false;
+                            commands.Add(new CommandOutcome(PlacementOutcome.Invalid));
+                        }
+                        else
+                        {
+                            cell = CreateCell(posX, posY, arenaId);
+                            cell.ShipId = shipId;
+                            SaveCommand(cell, selection, socketId);
+                            if (PlaceShip(socketId))
+                            {
+                                commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX, posY));
+                            }
+                            else
+                            {
+                                string id = GetButtonId(socketId);
+                                CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip, posX, posY);
+                                outcome.idToRemove = id;
+                                commands.Add(outcome);
+
+                            }
+                            _context.SaveChanges();
+
+                            Ship ship = GetShip(shipId);
+                            Cell preCell = GetCell(ship.CellId);
+                            if (preCell.PosX < posX)
+                            {
+                                //RIGHT
+                                for (int i = 1; i < ship.RemainingTiles - 1; i++)
+                                {
+                                    cell = CreateCell(posX + i, posY, arenaId);
+                                    cell.ShipId = shipId;
+                                    SaveCommand(cell, selection, socketId);
+
+                                    if (PlaceShip(socketId))
+                                    {
+                                        commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX + i, posY));
+                                    }
+                                    else
+                                    {
+                                        string id = GetButtonId(socketId);
+                                        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip, posX + i, posY);
+                                        outcome.idToRemove = id;
+                                        commands.Add(outcome);
+
+                                    }
+                                    _context.SaveChanges();
+                                }
+                            }
+                            else if (preCell.PosX > posX)
+                            {
+                                //LEFT
+                                for (int i = 1; i < ship.RemainingTiles - 1; i++)
+                                {
+                                    cell = CreateCell(posX - i, posY, arenaId);
+                                    cell.ShipId = shipId;
+                                    SaveCommand(cell, selection, socketId);
+
+                                    if (PlaceShip(socketId))
+                                    {
+                                        commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX - i, posY));
+                                    }
+                                    else
+                                    {
+                                        string id = GetButtonId(socketId);
+                                        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip, posX - i, posY);
+                                        outcome.idToRemove = id;
+                                        commands.Add(outcome);
+
+                                    }
+                                    _context.SaveChanges();
+                                }
+                            }
+                            else if (preCell.PosY < posY)
+                            {
+                                //UP
+                                for (int i = 1; i < ship.RemainingTiles - 1; i++)
+                                {
+                                    cell = CreateCell(posX, posY + i, arenaId);
+                                    cell.ShipId = shipId;
+                                    SaveCommand(cell, selection, socketId);
+
+                                    if (PlaceShip(socketId))
+                                    {
+                                        commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX, posY + i));
+                                    }
+                                    else
+                                    {
+                                        string id = GetButtonId(socketId);
+                                        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip, posX, posY + i);
+                                        outcome.idToRemove = id;
+                                        commands.Add(outcome);
+
+                                    }
+                                    _context.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                //DOWN
+                                for (int i = 1; i < ship.RemainingTiles - 1; i++)
+                                {
+                                    cell = CreateCell(posX, posY - i, arenaId);
+                                    cell.ShipId = shipId;
+                                    SaveCommand(cell, selection, socketId);
+
+                                    if (PlaceShip(socketId))
+                                    {
+                                        commands.Add(new CommandOutcome(PlacementOutcome.Ship, posX, posY - i));
+                                    }
+                                    else
+                                    {
+                                        string id = GetButtonId(socketId);
+                                        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip, posX, posY - i);
+                                        outcome.idToRemove = id;
+                                        commands.Add(outcome);
+
+                                    }
+                                    _context.SaveChanges();
+                                }
+                            }
                         }
                     }
-                    //creating a new cell for this ship
-                    cell = CreateCell(posX, posY, arenaId);
-                    cell.ShipId = shipId;
-                    SaveCommand(cell, selection, socketId);
-                    _context.SaveChanges();
-                    return true;
+                }
+                else
+                {
+                    commands.Add(new CommandOutcome(PlacementOutcome.Invalid));
                 }
             }
-            return false;
+            else
+            {
+                commands.Add(new CommandOutcome(PlacementOutcome.Invalid));
+            }
+            return commands;
         }
 
         public void SaveButton(ShipSelection selection)
@@ -341,6 +475,11 @@ namespace WsApp.Controllers
         public Ship GetShip(int shipId)
         {
             return _context.Ships.Where(s => s.ShipId.Equals(shipId)).FirstOrDefault();
+        }
+
+        public Cell GetCell(int cellId)
+        {
+            return _context.Cells.Where(s => s.CellId.Equals(cellId)).FirstOrDefault();
         }
 
         public Cell CreateCell(int x, int y, int arenaId)

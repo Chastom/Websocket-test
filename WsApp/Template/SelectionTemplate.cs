@@ -9,18 +9,20 @@ namespace WsApp.Template
     public abstract class SelectionTemplate : Command
     {        
         //template method
-        public CommandOutcome Execute(SelectionParams param)
+        public List<CommandOutcome> Execute(SelectionParams param)
         {
+            List<CommandOutcome> outcomes = new List<CommandOutcome>();
             bool placed = PlaceSelection(param.socketId, param.posX, param.posY, param.battleArenaId);
 
             if (placed)
             {
-                CommandOutcome outcome = GetSelectionOutcome();
-                return outcome;
+                outcomes = GetSelectionOutcome();
+                return outcomes;
             }
             else
             {
-                return new CommandOutcome(PlacementOutcome.Invalid);
+                outcomes.Add(new CommandOutcome(PlacementOutcome.Invalid));
+                return outcomes;
             }
 
         }
@@ -29,7 +31,8 @@ namespace WsApp.Template
 
         public abstract bool PlaceSelection(string socketId, int posX, int posY, int battleArenaId);
 
-        public abstract CommandOutcome GetSelectionOutcome();
+        //public abstract CommandOutcome GetSelectionOutcome();
+        public abstract List<CommandOutcome> GetSelectionOutcome();
 
     }
 }

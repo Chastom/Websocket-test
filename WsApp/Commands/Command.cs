@@ -8,7 +8,7 @@ namespace WsApp.Commands
 {
     public interface Command
     {
-        CommandOutcome Execute(SelectionParams param);
+        List<CommandOutcome> Execute(SelectionParams param);
 
         UndoResult Undo(string socketId);
 	}
