@@ -14,6 +14,7 @@
         btn.innerText = "The game has started!";
         var btn = document.getElementById("shipPlacementMenu").hidden = true;
         var btn = document.getElementById("attackStrategyMenu").hidden = false;
+        var btn = document.getElementById("hitStreakMenu").hidden = false;        
         ChangeButtonColor('btnBasicAttack');
     });
 
@@ -83,13 +84,36 @@
         var cell = document.getElementById(tableId).rows[row].cells[col];
         if (attackOutcome == 'Hit') {
             cell.style.backgroundColor = '#ff6666';
+            if (isAttacker) {
+                //if the attacker hit the ship, we increment the hit streak counter
+                var streak = document.getElementById("hitStreak");
+                var temp = parseInt(streak.textContent, 10) + 1;
+                streak.textContent = temp;
+                if (temp > 9) {
+                    document.getElementById("hiddenAttack").hidden = false;
+                }
+            }            
         } else if (attackOutcome == 'Armor') {
+            if (isAttacker) {
+                //same for hitting the armor
+                var streak = document.getElementById("hitStreak");
+                var temp = parseInt(streak.textContent, 10) + 1;
+                streak.textContent = temp;
+                if (temp > 9) {
+                    document.getElementById("hiddenAttack").hidden = false;
+                }
+            }   
             cell.style.backgroundColor = '#696969';
         } else {
             //if the cell is already painted (e.g. red for hit), we don't repaint the cell to blue color
             if (!cell.style.backgroundColor) {
                 cell.style.backgroundColor = '#386C99';
             }
+            if (isAttacker) {
+                //if the attacker missed, his hit streak counter is reset
+                document.getElementById("hitStreak").textContent = 0;
+                document.getElementById("hiddenAttack").hidden = true;
+            }     
         }
     });
 

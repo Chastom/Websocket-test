@@ -80,6 +80,21 @@ namespace WsApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HitStreaks",
+                columns: table => new
+                {
+                    HitStreakId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SocketId = table.Column<string>(nullable: true),
+                    Streak = table.Column<int>(nullable: false),
+                    ReachGoal = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HitStreaks", x => x.HitStreakId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Players",
                 columns: table => new
                 {
@@ -206,6 +221,9 @@ namespace WsApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Duels");
+
+            migrationBuilder.DropTable(
+                name: "HitStreaks");
 
             migrationBuilder.DropTable(
                 name: "Ships");

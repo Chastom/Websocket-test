@@ -18,7 +18,6 @@ namespace WsApp.Controllers
         {
             this.armorSelection = armorSelection;
             _context = context;
-            //commandOutcome = null;
             commandOutcomes = new List<CommandOutcome>();
         }
 
@@ -30,7 +29,6 @@ namespace WsApp.Controllers
                 int count = armorSelection.GetArmorCount(socketId);
                 CommandOutcome outcome = new CommandOutcome(PlacementOutcome.Armor);
                 outcome.count = count;
-                //commandOutcome = outcome;
                 commandOutcomes.Add(outcome);
                 return true;
             }
@@ -40,10 +38,6 @@ namespace WsApp.Controllers
             }
         }
 
-        //public override CommandOutcome GetSelectionOutcome()
-        //{
-        //    return commandOutcome;
-        //}
         public override List<CommandOutcome> GetSelectionOutcome()
         {
             return commandOutcomes;

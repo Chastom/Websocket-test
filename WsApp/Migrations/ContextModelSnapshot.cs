@@ -95,6 +95,23 @@ namespace WsApp.Migrations
                     b.ToTable("Duels");
                 });
 
+            modelBuilder.Entity("WsApp.Models.HitStreak", b =>
+                {
+                    b.Property<int>("HitStreakId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ReachGoal");
+
+                    b.Property<string>("SocketId");
+
+                    b.Property<int>("Streak");
+
+                    b.HasKey("HitStreakId");
+
+                    b.ToTable("HitStreaks");
+                });
+
             modelBuilder.Entity("WsApp.Models.PlacementCommand", b =>
                 {
                     b.Property<int>("PlacementCommandId")

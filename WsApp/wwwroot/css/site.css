@@ -14,10 +14,10 @@ body {
     border: 2px solid #999999;
 }
 
-.table td:hover {
-    color: #000000;
-    cursor: pointer;
-}
+    .table td:hover {
+        color: #000000;
+        cursor: pointer;
+    }
 
 #grid1 td:hover {
     background-color: dimgrey;
@@ -37,6 +37,71 @@ body {
     height: 40px;
     max-height: 40px;
 }
+
+i {
+    border: solid black;
+    border-width: 0 5px 5px 0;
+    display: inline-block;
+    padding: 6px;
+    border-color: #28a4a4;
+}
+
+body {
+    background: radial-gradient(ellipse at center, rgba(255,254,234,1) 0%, rgba(255,254,234,1) 35%, #B7E8EB 100%);
+}
+
+.messages {
+    background: #eafafa;
+    position: relative;
+    height: 100px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+#pirate {
+    width: 100px;
+    height: 100px;
+    background-image: url(https://i.ibb.co/ZYbFcQ5/pirate-2.png);
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+}
+
+.btn-primary2 {
+    background-color: #b38600;
+    color: #000;
+}
+
+.btn-primary2:hover {
+    background-color: #0000cc;
+    color: #000;
+}
+
+.btn-3:hover {
+    background-color: #0000ff !important;
+}
+
+@keyframes glowing {
+    0% {
+        box-shadow: 0 0 -10px #1c1a0f;
+    }
+
+    40% {
+        box-shadow: 0 0 20px #1c1a0f;
+    }
+
+    60% {
+        box-shadow: 0 0 20px #1c1a0f;
+    }
+
+    100% {
+        box-shadow: 0 0 -10px #1c1a0f;
+    }
+}
+
+.button-glow {
+    animation: glowing 5000ms infinite;
+}
+
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */

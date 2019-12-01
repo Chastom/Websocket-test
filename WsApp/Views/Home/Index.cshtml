@@ -2,28 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 <head>
+    <link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        i {
-            border: solid black;
-            border-width: 0 5px 5px 0;
-            display: inline-block;
-            padding: 6px;
-            border-color: #28a4a4;
-        }
-
-        body {
-            background: radial-gradient(ellipse at center, rgba(255,254,234,1) 0%, rgba(255,254,234,1) 35%, #B7E8EB 100%);
-        }
-
-        .messages {
-            background: #eafafa;
-            position: relative;
-            height: 100px;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-    </style>
 </head>
 <div align="center" style="margin: 20px; padding-left: 30px;">
     <p><b>Player turn</b></p>
@@ -50,10 +30,10 @@
         <div class="row" id="shipPlacementMenu">
             <div class="col-sm-7">
                 <button id="button0" class="btn btn-primary" type="submit">8x1</button>
-                <button id="button1" class="btn btn-primary" type="submit">4x1</button>
+                <button id="button1" class="btn btn-primary" type="submit">4x2</button>
                 <button id="button2" class="btn btn-primary" type="submit">3x1</button>
-                <button id="button3" class="btn btn-primary" type="submit">2x1</button>
-                <button id="button4" class="btn btn-primary" type="submit">1x1</button>
+                <button id="button3" class="btn btn-primary" type="submit">2x2</button>
+                <button id="button4" class="btn btn-primary" type="submit">1x5</button>
             </div>
             <div class="col">
                 <button id="btnUndo" class="btn btn-primary" type="submit">UNDO</button>
@@ -64,13 +44,12 @@
         <div hidden id="attackStrategyMenu">
             <p><b>Choose your attack!</b></p>
             <div>
-                <button id="btnBasicAttack" style="background-color:#337ab7" class="btn btn-primary" type="submit">Basic</button>
-                <button id="btnLaserAttack" class="btn btn-primary" type="submit">Laser</button>
-                <button id="btnBombAttack" class="btn btn-primary" type="submit">Bomb</button>
-                <button id="btnCrossAttack" class="btn btn-primary" type="submit">Cross</button>
+                <button id="btnBasicAttack" style="background-color:#337ab7" class="btn btn-primary btn-3" type="submit">Basic</button>
+                <button id="btnLaserAttack" class="btn btn-primary btn-3" type="submit">Laser</button>
+                <button id="btnBombAttack" class="btn btn-primary btn-3" type="submit">Bomb</button>
+                <button id="btnCrossAttack" class="btn btn-primary btn-3" type="submit">Cross</button>
             </div>
         </div>
-
 
         <hr>
     </div>
@@ -90,6 +69,20 @@
                 }
             </tbody>
         </table>
+        <div hidden id="hitStreakMenu" class="row">
+            <div style="margin-top: -18px;">
+                <div class="col-sm-5" style="margin-top: 18px;">
+
+                    <a class="em em-fire" aria-role="presentation" aria-label="FIRE"></a><b style="margin: 3.5px;">Hit streak</b><a class="em em-fire" aria-role="presentation" aria-label="FIRE"></a>
+
+
+                    <p style="margin-right: 20px; margin-left: 52.5px;" id="hitStreak">0</p>
+                </div>
+                <div hidden id="hiddenAttack" class="col" style="margin-bottom: 2px;">
+                    <button id="pirate" type="button" class="btn btn-lg btn-primary2 button-glow"></button>
+                </div>
+            </div>
+        </div>
     </div>
     <button id="ready" class="btn btn-success btn-block" type="submit" disabled>Ready</button>
     <div class="row">
@@ -97,8 +90,8 @@
         <div class="col-sm-3"><button id="buttonTesting2" type="button" class="btn btn-secondary">[TESTING ONLY] Remove Duels</button></div>
     </div>
     <br>
-        <ul id="selections" class="messages"></ul>
-        <input class="form-control" id="selection-content" />
+    <ul id="selections" class="messages"></ul>
+    <input class="form-control" id="selection-content" />
 </div>
 
 

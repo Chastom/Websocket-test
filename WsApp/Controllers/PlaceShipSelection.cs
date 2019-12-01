@@ -18,7 +18,6 @@ namespace WsApp.Controllers
         {
             this.shipSelectionController = shipSelectionController;
             _context = context;
-            //commandOutcome = null;
             commandOutcomes = new List<CommandOutcome>();
         }
 
@@ -32,37 +31,10 @@ namespace WsApp.Controllers
             else
             {
                 commandOutcomes = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
-                return true;
-                //bool canPlace = shipSelectionController.ValidatePlacement(socketId, posX, posY, battleArenaId);
-
-                //if (canPlace)
-                //{
-                //    bool placed = shipSelectionController.PlaceShip(socketId);
-                //    if (placed)
-                //    {
-                //        commandOutcome = new CommandOutcome(PlacementOutcome.Ship);
-                //        return true;
-                //    }
-                //    else
-                //    {
-                //        string id = shipSelectionController.GetButtonId(socketId);
-                //        CommandOutcome outcome = new CommandOutcome(PlacementOutcome.LastShip);
-                //        outcome.idToRemove = id;
-                //        commandOutcome = outcome;
-                //        return true;
-                //    }
-                //}
-                //else
-                //{
-                //    return false;
-                //}
+                return true;                
             }
         }
 
-        //public override CommandOutcome GetSelectionOutcome()
-        //{
-        //    return commandOutcome;
-        //}
         public override List<CommandOutcome> GetSelectionOutcome()
         {
             return commandOutcomes;
@@ -75,7 +47,6 @@ namespace WsApp.Controllers
             {
                 //restoring ShipSelection to previous iteration
                 ShipSelection selection = shipSelectionController.GetSelection(socketId);
-                //selection.ShipSelectionId = command.SelectionShipSelectionId;
                 selection.Count = command.SelectionCount;
                 selection.IsSelected = command.SelectionIsSelected;
                 selection.Size = command.SelectionSize;
@@ -86,7 +57,7 @@ namespace WsApp.Controllers
                 selection.Button2IsRemoved = command.SelectionButton2IsRemoved;
                 selection.Button3IsRemoved = command.SelectionButton3IsRemoved;
                 selection.Button4IsRemoved = command.SelectionButton4IsRemoved;
-                _context.SaveChanges(); //can be removed later probably
+                _context.SaveChanges();
 
                 List<bool> buttons = new List<bool>();
                 buttons.Add(command.SelectionButton0IsRemoved);
@@ -96,10 +67,6 @@ namespace WsApp.Controllers
                 buttons.Add(command.SelectionButton4IsRemoved);
 
                 string activeButton = command.SelectionButtonId;
-                ////deleting last created cell
-                //Cell cell = GetCell(command.CellId);
-                //_context.Cells.Remove(cell);
-
 
                 //deleting all cells with the last place ship id
                 List<Coordinate> coordinates = new List<Coordinate>();

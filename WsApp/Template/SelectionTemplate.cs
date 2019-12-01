@@ -24,14 +24,12 @@ namespace WsApp.Template
                 outcomes.Add(new CommandOutcome(PlacementOutcome.Invalid));
                 return outcomes;
             }
-
         }
 
         public abstract UndoResult Undo(string socketId);
 
         public abstract bool PlaceSelection(string socketId, int posX, int posY, int battleArenaId);
 
-        //public abstract CommandOutcome GetSelectionOutcome();
         public abstract List<CommandOutcome> GetSelectionOutcome();
 
     }

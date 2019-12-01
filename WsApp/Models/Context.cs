@@ -21,5 +21,6 @@ namespace WsApp.Models
         public DbSet<Duel> Duels { get; set; }
         public DbSet<ArmorSelection> ArmorSelections { get; set; }
         public DbSet<PlacementCommand> Commands { get; set; }
+        public DbSet<HitStreak> HitStreaks { get; set; }
     }
 }

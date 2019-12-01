@@ -150,10 +150,6 @@ namespace WsApp
             var socketId = Context.ConnectionId;
             UndoResult result = placeShipSelection.Undo(socketId);
             List<int> buttons = result.removedButtons;
-            foreach(var btn in buttons)
-            {
-                Console.WriteLine("=============================================================== ->>>>>>>> button" + btn);
-            }
             int[] btns = buttons.ToArray();
             if(result != null)
             {
@@ -173,11 +169,8 @@ namespace WsApp
             int battleArenaId = baController.GetBAId(playersController.GetPlayerId(socketId));
 
             SelectionParams param = new SelectionParams(socketId, posX, posY, battleArenaId);           
-            
-            //CommandOutcome commandOutcome = null;
 
-            ////depending on client's selection, executing one of the two commands: place [ armor | ship ] selection
-            //commandOutcome = armorSelection.IsArmorSelected(socketId) ? placeArmorSelection.Execute(param) : placeShipSelection.Execute(param);         
+            //depending on client's selection, executing one of the two commands: place [ armor | ship ] selection        
             List<CommandOutcome> outcomes = armorSelection.IsArmorSelected(socketId) ? placeArmorSelection.Execute(param) : placeShipSelection.Execute(param);
 
             foreach(var commandOutcome in outcomes)
@@ -201,38 +194,6 @@ namespace WsApp
                 }
             }            
         }
-
-        //public List<CommandOutcome> GetCommandOutcomes(SelectionParams param)
-        //{
-        //    List<CommandOutcome> commands = new List<CommandOutcome>();
-        //    if (armorSelection.IsArmorSelected(param.socketId))
-        //    {
-        //        commands.Add(placeArmorSelection.Execute(param));
-        //    }
-        //    else
-        //    {
-        //        ShipSelection selection = shipSelectionController.GetSelection(param.socketId);
-        //        ShipType ship = shipSelectionController.GetShipType(param.socketId);
-        //        if (selection.IsSelected)
-        //        {
-        //            if (ship.Size - selection.Size == 1)
-        //            {
-        //                for (int i = 0; i < selection.Size; i++)
-        //                {
-        //                    CommandOutcome command = null;
-        //                    SelectionParams temp = new SelectionParams(param.socketId, param.posX + i, param.posY, param.battleArenaId);
-        //                    command = placeShipSelection.Execute(param);
-        //                    commands.Add(command);
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            commands.Add(placeShipSelection.Execute(param));
-        //        }
-        //    }
-        //    return commands;
-        //}
 
         public async Task ReadySingleton()
         {
