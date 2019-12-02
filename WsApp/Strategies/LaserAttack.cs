@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using WsApp.Models;
+using WsApp.VisitorPattern;
 
 namespace WsApp.Strategies
 {
-    public class LaserAttack : Strategy
+    public class LaserAttack : Strategy, Visitable
     {
+        public List<CellOutcome> Accept(Visitor visitor)
+        {
+            return visitor.visit(this);
+        }
+
         public override List<CellOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships)
         {
             this.cells = cells;

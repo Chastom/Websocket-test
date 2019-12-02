@@ -194,6 +194,13 @@
         connection.invoke("CommandUndo");
     };
 
+    document.getElementById('pirate').onclick = function () {
+        connection.invoke("HiddenAttack");
+        document.getElementById("hitStreak").textContent = 0;
+        document.getElementById("hiddenAttack").hidden = true;
+    };
+    
+
     document.getElementById('btnArmor').onclick = function () {
         connection.invoke("SelectArmor");
         var btn = document.getElementById("btnArmor");

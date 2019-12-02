@@ -10,6 +10,7 @@ using WsApp.Strategies;
 using WsApp.Template;
 using WsApp.Iterators;
 using WsApp.Proxy;
+using WsApp.VisitorPattern;
 
 namespace WsApp
 {
@@ -127,6 +128,43 @@ namespace WsApp
                             break;
                     }
                 }  
+            }
+        }
+
+        public async Task HiddenAttack()
+        {
+            var socketId = Context.ConnectionId;
+            string enemySockeId = duelsController.GetOpponentSocketId(socketId);
+            List<Ship> ships = strategyController.GetEnemyShips(strategyController.GetOpponentSocketId(socketId));
+            List<Cell> cells = strategyController.GetEnemyCells(strategyController.GetOpponentArenaId(socketId));
+
+            AttackChangerVisitor atackChangerVisitor = new AttackChangerVisitor(cells, ships);
+            //cia active strategy tegul visitina ========
+            List<CellOutcome> outcomes = atackChangerVisitor.visit(new BasicAttack());
+            foreach (CellOutcome outcome in outcomes)
+            {
+                switch (outcome.attackOutcome)
+                {
+                    case AttackOutcome.Hit:
+                        await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Hit", false);
+                        await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Hit", true);
+                        break;
+                    case AttackOutcome.Armor:
+                        duelsController.ChangeTurns(socketId);
+                        await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", false);
+                        await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Armor", true);
+                        break;
+                    //For now, both [Missed and Invalid] trigger default switch
+                    default:
+                        duelsController.ChangeTurns(socketId);
+                        await Clients.Client(enemySockeId).SendAsync("pingAttack", outcome.posX, outcome.posY, "Missed", false);
+                        await Clients.Caller.SendAsync("pingAttack", outcome.posX, outcome.posY, "Missed", true);
+                        //turn change using the proxy class
+                        TurnOutcome turn = proxyPlayerTurn.ChangeTurn();
+                        await Clients.Client(turn.InactiveId).SendAsync("changedTurn", turn.CallerTurn);
+                        await Clients.Client(turn.ActiveId).SendAsync("changedTurn", turn.OpponetTurn);
+                        break;
+                }
             }
         }
 
