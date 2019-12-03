@@ -14,7 +14,7 @@
         btn.innerText = "The game has started!";
         var btn = document.getElementById("shipPlacementMenu").hidden = true;
         var btn = document.getElementById("attackStrategyMenu").hidden = false;
-        var btn = document.getElementById("hitStreakMenu").hidden = false;        
+        var btn = document.getElementById("hitStreakMenu").hidden = false;
         ChangeButtonColor('btnBasicAttack');
     });
 
@@ -92,7 +92,7 @@
                 if (temp > 9) {
                     document.getElementById("hiddenAttack").hidden = false;
                 }
-            }            
+            }
         } else if (attackOutcome == 'Armor') {
             if (isAttacker) {
                 //same for hitting the armor
@@ -102,7 +102,7 @@
                 if (temp > 9) {
                     document.getElementById("hiddenAttack").hidden = false;
                 }
-            }   
+            }
             cell.style.backgroundColor = '#696969';
         } else {
             //if the cell is already painted (e.g. red for hit), we don't repaint the cell to blue color
@@ -113,7 +113,7 @@
                 //if the attacker missed, his hit streak counter is reset
                 document.getElementById("hitStreak").textContent = 0;
                 document.getElementById("hiddenAttack").hidden = true;
-            }     
+            }
         }
     });
 
@@ -195,11 +195,29 @@
     };
 
     document.getElementById('pirate').onclick = function () {
+        for (var i = 0; i < 15; i++) {
+            for (var j = 0; j < 15; j++) {
+                var cell = document.getElementById('grid2').rows[i].cells[j];
+                var previous = cell.style.backgroundColor;
+                ChangeRowColor(cell, previous);
+            }
+        }
+        setTimeout(function () { SpecialHiddenAttack(); }, 1000);
+        
+    };
+
+    function SpecialHiddenAttack() {
         connection.invoke("HiddenAttack");
         document.getElementById("hitStreak").textContent = 0;
         document.getElementById("hiddenAttack").hidden = true;
-    };
-    
+    }
+
+    function ChangeRowColor(cell, previous) {
+        cell.setAttribute('style', 'background-color:#000000 !important');
+        setTimeout(function () {
+            cell.style.backgroundColor = previous;
+        }, 900);
+    }
 
     document.getElementById('btnArmor').onclick = function () {
         connection.invoke("SelectArmor");
