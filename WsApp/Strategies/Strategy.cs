@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WsApp.Controllers;
 using WsApp.Models;
+using WsApp.VisitorPattern;
 
 namespace WsApp.Strategies
 {
@@ -14,9 +15,11 @@ namespace WsApp.Strategies
 
         public abstract List<CellOutcome> Attack(int posx, int posy, List<Cell> cells, List<Ship> ships);
 
+        public abstract  List<CellOutcome> Accept(Visitor visitor);
+
         //-----------------------------------------------------------
         //Db context methods implementation to eliminate context dependancy       
-      
+
         public Cell ReturnCell(int posx, int posy)
         {
             foreach(var cell in cells)

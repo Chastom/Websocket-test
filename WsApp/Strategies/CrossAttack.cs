@@ -7,7 +7,7 @@ namespace WsApp.Strategies
 {
     public class CrossAttack : Strategy, Visitable
     {
-        public List<CellOutcome> Accept(Visitor visitor)
+        public override List<CellOutcome> Accept(Visitor visitor)
         {
             return visitor.visit(this);
         }

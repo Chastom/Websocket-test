@@ -139,8 +139,8 @@ namespace WsApp
             List<Cell> cells = strategyController.GetEnemyCells(strategyController.GetOpponentArenaId(socketId));
 
             AttackChangerVisitor atackChangerVisitor = new AttackChangerVisitor(cells, ships);
-            //cia active strategy tegul visitina ========
-            List<CellOutcome> outcomes = atackChangerVisitor.visit(new BasicAttack());
+            Strategy activeStrategy = StrategyHolder.GetPlayerStrategy(socketId);
+            List<CellOutcome> outcomes = activeStrategy.Accept(atackChangerVisitor);
             foreach (CellOutcome outcome in outcomes)
             {
                 switch (outcome.attackOutcome)

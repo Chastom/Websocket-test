@@ -9,7 +9,7 @@ namespace WsApp.Strategies
 {
     public class BasicAttack : Strategy, Visitable
     {
-        public List<CellOutcome> Accept(Visitor visitor)
+        public override List<CellOutcome> Accept(Visitor visitor)
         {
             return visitor.visit(this);
         }
