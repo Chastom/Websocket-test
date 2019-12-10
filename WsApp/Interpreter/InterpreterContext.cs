@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WsApp.ChainOfResponsibility;
 
 namespace WsApp.Interpreter
 {
@@ -18,7 +19,7 @@ namespace WsApp.Interpreter
 
         public string getOutput()
         {
-            switch (_input)
+            /*switch (_input)
             {
                 case "!undo":
                     _output = "undoCommand";
@@ -35,7 +36,14 @@ namespace WsApp.Interpreter
                 default:
                     _output = "message";
                     return _output;
-            }
+            }*/
+
+            Handler curses = new CursewordHandler();
+            Handler commands = new CommandHandler();
+            curses.SetSuccessor(commands);
+
+            _output = curses.HandleRequest(_input);
+            return _output;
         }
     }
 }

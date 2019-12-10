@@ -34,25 +34,12 @@ namespace WsApp.Iterators
                 }
                 item = i.Next();
             }
-
-            //for (int i = 0; i < playersStrategies.Count; i++)
-            //{
-            //    if (playersStrategies[i].socketId.Equals(socketId))
-            //    {
-            //        playersStrategies[i].activeStrategy = strategy;
-            //        Console.WriteLine("=========================================================== STRATEGY UPDATED TO -> " + playersStrategies[i].activeStrategy.ToString());
-            //        break;
-            //    }
-            //}
         }
 
         public static void Print()
         {
-            //for (int i = 0; i < playersStrategies.Count; i++)
-            //{
-            //    Console.WriteLine("============================================== STRATEGY --------> "
-            //        + i + "  player: " + playersStrategies[i].socketId + "  strategy: " + playersStrategies[i].activeStrategy.ToString());
-            //}
+            Console.WriteLine("============================================== STRATEGY --------> ");
+ 
         }
 
         public static Strategy GetPlayerStrategy(string socketId)
@@ -68,13 +55,6 @@ namespace WsApp.Iterators
                 }
                 item = i.Next();
             }
-            //for (int i = 0; i < playersStrategies.Count; i++)
-            //{
-            //    if (playersStrategies[i].socketId == socketId)
-            //    {
-            //        return playersStrategies[i].activeStrategy;
-            //    }
-            //}
             return null;
         }
     }
