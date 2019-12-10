@@ -11,6 +11,7 @@ using WsApp.Template;
 using WsApp.Iterators;
 using WsApp.Proxy;
 using WsApp.VisitorPattern;
+using WsApp.Interpreter;
 
 namespace WsApp
 {
@@ -270,7 +271,25 @@ namespace WsApp
         public Task SendMessage(string message)
         {
             int userId = playersController.GetPlayerId(Context.ConnectionId);
-            return Clients.All.SendAsync("pingMessage", userId, message);
+
+            InterpreterContext messageContext = new InterpreterContext(message);
+            AbstractExpression expr = new ConcreteExpression();
+
+            switch (expr.Interpret(messageContext))
+            {
+                case 0:
+                    return Clients.All.SendAsync("pingMessage", userId, message);
+                case 1:
+                    Task.Run(async () => { await CommandUndo(); }).Wait();
+                    message = "Undo command activated!";
+                    return Clients.All.SendAsync("pingMessage", userId, message);
+                case 2:
+                    message = "****";
+                    return Clients.All.SendAsync("pingMessage", userId, message);
+                default:
+                    message = "ERROR!";
+                    return Clients.All.SendAsync("pingMessage", userId, message);
+            }
         }
 
         public override async Task OnConnectedAsync()
